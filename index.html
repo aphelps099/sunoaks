@@ -195,8 +195,10 @@
             letter-spacing: 0.06em;
             text-transform: uppercase;
             transition: all var(--duration) var(--ease);
+            cursor: pointer;
+            border: none;
         }
-        
+
         .header-cta:hover {
             background: var(--grey-700);
         }
@@ -665,23 +667,33 @@
 
         .explore-menu {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 80px;
+            right: 48px;
             width: 90%;
-            max-width: 800px;
+            max-width: 600px;
             background: var(--white);
             border: 2px solid var(--sun);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.15);
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.5s var(--ease-out);
+            transform: translateY(-20px);
+            transition: all 0.4s var(--ease-out);
             overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .explore-menu {
+                right: 24px;
+                left: 24px;
+                width: auto;
+            }
         }
 
         .explore-menu.is-open {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0);
         }
 
         .explore-menu-bg {
@@ -736,55 +748,49 @@
         .explore-menu-content {
             position: relative;
             z-index: 1;
-            padding: 80px 60px 60px;
+            padding: 48px 40px 32px;
         }
 
         @media (max-width: 768px) {
             .explore-menu-content {
-                padding: 60px 32px 40px;
+                padding: 40px 24px 24px;
             }
         }
 
         .explore-menu-title {
             font-family: var(--font-serif);
-            font-size: clamp(28px, 4vw, 40px);
+            font-size: clamp(24px, 3vw, 28px);
             font-weight: 500;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             color: var(--black);
         }
 
         .explore-menu-subtitle {
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
             color: var(--grey-500);
-            margin-bottom: 48px;
+            margin-bottom: 32px;
         }
 
         .explore-menu-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        @media (max-width: 640px) {
-            .explore-menu-grid {
-                grid-template-columns: 1fr;
-            }
+            grid-template-columns: 1fr;
+            gap: 8px;
         }
 
         .explore-menu-item {
             display: flex;
-            flex-direction: column;
-            padding: 24px;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
             background: var(--cream);
-            border: 1px solid transparent;
+            border-left: 3px solid transparent;
             transition: all var(--duration) var(--ease);
         }
 
         .explore-menu-item:hover {
             background: var(--white);
-            border-color: var(--sun);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-left-color: var(--sun);
+            transform: translateX(4px);
         }
 
         .explore-menu-item-number {
@@ -792,21 +798,25 @@
             font-weight: 600;
             letter-spacing: 0.1em;
             color: var(--sun);
-            margin-bottom: 8px;
+            min-width: 24px;
+        }
+
+        .explore-menu-item-content {
+            flex: 1;
         }
 
         .explore-menu-item-title {
             font-family: var(--font-serif);
-            font-size: 1.125rem;
+            font-size: 1rem;
             font-weight: 500;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             color: var(--black);
         }
 
         .explore-menu-item-desc {
-            font-size: 0.8125rem;
+            font-size: 0.75rem;
             color: var(--grey-400);
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .explore-menu-overlay {
@@ -1385,7 +1395,7 @@
             <a href="#manifesto" class="header-link">Story</a>
             <a href="#chapters" class="header-link">Chapters</a>
             <a href="#architecture" class="header-link">Services</a>
-            <a href="#chapters" class="header-cta">Explore</a>
+            <button class="header-cta" id="headerExploreButton">Explore</button>
             <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
                 <span class="nav-toggle-inner">
                     <span class="nav-toggle-line"></span>
@@ -1512,12 +1522,12 @@
                     <div class="hero-stat-value">6</div>
                     <div class="hero-stat-label">Acres</div>
                 </div>
-                <button class="hero-cta" id="exploreButton">
-                    Explore
+                <a href="#architecture" class="hero-cta">
+                    View Services
                     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 8h10M9 4l4 4-4 4"/>
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
     </section>
@@ -1795,38 +1805,50 @@
             <div class="explore-menu-grid">
                 <a href="pages/01-foundation.html" class="explore-menu-item">
                     <span class="explore-menu-item-number">01</span>
-                    <h3 class="explore-menu-item-title">Brand Foundation</h3>
-                    <p class="explore-menu-item-desc">Our story, essence, and promise</p>
+                    <div class="explore-menu-item-content">
+                        <h3 class="explore-menu-item-title">Brand Foundation</h3>
+                        <p class="explore-menu-item-desc">Our story, essence, and promise</p>
+                    </div>
                 </a>
 
                 <a href="pages/membership-resources.html" class="explore-menu-item">
                     <span class="explore-menu-item-number">02</span>
-                    <h3 class="explore-menu-item-title">Membership</h3>
-                    <p class="explore-menu-item-desc">Join the Sun Oaks family</p>
+                    <div class="explore-menu-item-content">
+                        <h3 class="explore-menu-item-title">Membership</h3>
+                        <p class="explore-menu-item-desc">Join the Sun Oaks family</p>
+                    </div>
                 </a>
 
                 <a href="pages/personal-training-sales.html" class="explore-menu-item">
                     <span class="explore-menu-item-number">03</span>
-                    <h3 class="explore-menu-item-title">Personal Training</h3>
-                    <p class="explore-menu-item-desc">One-on-one fitness coaching</p>
+                    <div class="explore-menu-item-content">
+                        <h3 class="explore-menu-item-title">Personal Training</h3>
+                        <p class="explore-menu-item-desc">One-on-one fitness coaching</p>
+                    </div>
                 </a>
 
                 <a href="#architecture" class="explore-menu-item">
                     <span class="explore-menu-item-number">04</span>
-                    <h3 class="explore-menu-item-title">Services</h3>
-                    <p class="explore-menu-item-desc">Seven distinct experiences</p>
+                    <div class="explore-menu-item-content">
+                        <h3 class="explore-menu-item-title">Services</h3>
+                        <p class="explore-menu-item-desc">Seven distinct experiences</p>
+                    </div>
                 </a>
 
                 <a href="#manifesto" class="explore-menu-item">
                     <span class="explore-menu-item-number">05</span>
-                    <h3 class="explore-menu-item-title">Our Story</h3>
-                    <p class="explore-menu-item-desc">64 years of community</p>
+                    <div class="explore-menu-item-content">
+                        <h3 class="explore-menu-item-title">Our Story</h3>
+                        <p class="explore-menu-item-desc">64 years of community</p>
+                    </div>
                 </a>
 
                 <a href="#chapters" class="explore-menu-item">
                     <span class="explore-menu-item-number">06</span>
-                    <h3 class="explore-menu-item-title">Brand Resources</h3>
-                    <p class="explore-menu-item-desc">10 chapters of content</p>
+                    <div class="explore-menu-item-content">
+                        <h3 class="explore-menu-item-title">Brand Resources</h3>
+                        <p class="explore-menu-item-desc">10 chapters of content</p>
+                    </div>
                 </a>
             </div>
         </div>
@@ -1896,7 +1918,7 @@
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // Explore Menu
-        const exploreButton = document.getElementById('exploreButton');
+        const headerExploreButton = document.getElementById('headerExploreButton');
         const exploreMenu = document.getElementById('exploreMenu');
         const exploreOverlay = document.getElementById('exploreOverlay');
         const exploreMenuClose = document.getElementById('exploreMenuClose');
@@ -1914,9 +1936,9 @@
             document.body.style.overflow = '';
         }
 
-        // Open menu on button click
-        if (exploreButton) {
-            exploreButton.addEventListener('click', (e) => {
+        // Open menu on header button click
+        if (headerExploreButton) {
+            headerExploreButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 openExploreMenu();
             });
