@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services — Sun Oaks</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+            --sun: #F7B500;
+            --pool: #0891A8;
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --duration: 0.4s;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); font-weight: 400; line-height: 1.6; color: var(--black); background: var(--cream); -webkit-font-smoothing: antialiased; }
+        ::selection { background: var(--sun); color: var(--black); }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(250, 249, 247, 0.98);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        @media (max-width: 768px) { .header { padding: 20px 24px; } }
+
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--grey-600);
+            transition: all var(--duration);
+        }
+        .header-back:hover { color: var(--black); gap: 12px; }
+        .header-back svg { width: 16px; height: 16px; }
+
+        /* Service Hero */
+        .service-hero {
+            padding: 160px 48px 80px;
+            background: var(--black);
+            color: var(--white);
+            position: relative;
+        }
+        @media (max-width: 768px) { .service-hero { padding: 120px 24px 60px; } }
+
+        .service-hero-content {
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .service-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            background: var(--sun);
+            color: var(--black);
+            margin-bottom: 32px;
+        }
+        .service-icon svg { width: 36px; height: 36px; }
+
+        .service-badge {
+            position: absolute;
+            top: 160px;
+            right: 48px;
+            padding: 12px 24px;
+            background: var(--sun);
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+        @media (max-width: 768px) {
+            .service-badge {
+                position: static;
+                display: inline-block;
+                margin-bottom: 24px;
+            }
+        }
+
+        .service-hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(40px, 6vw, 64px);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .service-hero p {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--grey-300);
+        }
+
+        /* Service Grid */
+        .services-grid {
+            padding: 80px 48px;
+            background: var(--cream);
+        }
+        @media (max-width: 768px) { .services-grid { padding: 60px 24px; } }
+
+        .services-grid-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .services-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        .services-header h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+        .services-header p {
+            font-size: 1.125rem;
+            color: var(--grey-500);
+        }
+
+        .services-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: var(--white);
+            overflow: hidden;
+            transition: all var(--duration);
+            border: 1px solid var(--silver);
+        }
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+            border-color: var(--sun);
+        }
+
+        .service-card-image {
+            width: 100%;
+            height: 280px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .service-card-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+        }
+
+        .service-card-content {
+            padding: 32px;
+        }
+
+        .service-card-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .service-card-desc {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--grey-600);
+            margin-bottom: 20px;
+        }
+
+        .service-card-stat {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--sun);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 32px 48px;
+            background: var(--black);
+            border-top: 1px solid var(--grey-800);
+        }
+        @media (max-width: 768px) { .footer { padding: 32px 24px; } }
+        .footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-logo {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+        .footer-info {
+            font-size: 0.8125rem;
+            color: var(--grey-500);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="../index.html" class="header-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 8H3M7 4l-4 4 4 4"/>
+            </svg>
+            <span>Back</span>
+        </a>
+    </header>
+
+    <!-- Service Hero -->
+    <section class="service-hero">
+        <div class="service-badge">70+ PER WEEK</div>
+        <div class="service-hero-content">
+            <div class="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </div>
+            <h1>Group Classes</h1>
+            <p>Cardio, strength, cycling, and mind-body classes 7 days a week. Never miss a workout with easy signup using our Sun Oaks app.</p>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="services-grid">
+        <div class="services-grid-content">
+            <div class="services-header">
+                <h2>All Services</h2>
+                <p>Seven distinct experiences under one roof</p>
+            </div>
+
+            <div class="services-cards">
+                <!-- Group Classes -->
+                <div class="service-card">
+                    <div class="service-card-image" style="background-image: url('../images/photos/Home%20%20Redding%20Gym%20(7).jpg');"></div>
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Group Fitness</h3>
+                        <p class="service-card-desc">Over 130 weekly classes including cardio, strength training, cycling, yoga, and mind-body workouts.</p>
+                        <span class="service-card-stat">130+ Classes Weekly</span>
+                    </div>
+                </div>
+
+                <!-- Tennis -->
+                <div class="service-card">
+                    <div class="service-card-image" style="background-image: url('../images/photos/Home%20%20Redding%20Gym%20(20).jpg');"></div>
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Tennis</h3>
+                        <p class="service-card-desc">10 courts total—7 outdoor and 3 indoor. The only indoor tennis courts in the North State.</p>
+                        <span class="service-card-stat">10 Courts</span>
+                    </div>
+                </div>
+
+                <!-- Pickleball -->
+                <div class="service-card">
+                    <div class="service-card-image" style="background-image: url('../images/photos/Home%20%20Redding%20Gym%20(16).jpg');"></div>
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Pickleball</h3>
+                        <p class="service-card-desc">4 dedicated pickleball courts for America's fastest-growing sport. Open play and leagues available.</p>
+                        <span class="service-card-stat">4 Dedicated Courts</span>
+                    </div>
+                </div>
+
+                <!-- Aquatics -->
+                <div class="service-card">
+                    <div class="service-card-image" style="background-image: url('../images/photos/sun-oaks-outside-pool.jpg');"></div>
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Aquatics</h3>
+                        <p class="service-card-desc">3 pools including year-round heated lap pool, plus 2 relaxing spas for recovery and wellness.</p>
+                        <span class="service-card-stat">3 Pools + 2 Spas</span>
+                    </div>
+                </div>
+
+                <!-- Kids -->
+                <div class="service-card">
+                    <div class="service-card-image" style="background-image: url('../images/photos/Home%20%20Redding%20Gym%20(12).jpg');"></div>
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Kids Programs</h3>
+                        <p class="service-card-desc">Kids Club, swim lessons, youth sports, and summer camps. Where generations of Redding families learned to swim.</p>
+                        <span class="service-card-stat">All Ages Welcome</span>
+                    </div>
+                </div>
+
+                <!-- Personal Training -->
+                <div class="service-card">
+                    <div class="service-card-image" style="background-image: url('../images/photos/Home%20%20Redding%20Gym%20(17).jpg');"></div>
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Personal Training</h3>
+                        <p class="service-card-desc">One-on-one coaching tailored to your goals. Work with certified trainers who know your name and your story.</p>
+                        <span class="service-card-stat">Certified Trainers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">Sun Oaks</div>
+            <div class="footer-info">3452 Argyle Rd, Redding, CA 96002 · (530) 221-4405</div>
+        </div>
+    </footer>
+</body>
+</html>
