@@ -662,79 +662,86 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════
-           EXPLORE MENU
+           EXPLORE MENU - Full Screen
            ═══════════════════════════════════════════════════════════════ */
 
         .explore-menu {
             position: fixed;
-            top: 80px;
-            right: 48px;
-            width: 90%;
-            max-width: 600px;
-            background: var(--white);
-            border: 2px solid var(--sun);
-            box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+            inset: 0;
+            background: #1A1A1A;
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-20px);
-            transition: all 0.4s var(--ease-out);
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .explore-menu {
-                right: 24px;
-                left: 24px;
-                width: auto;
-            }
+            transition: all 0.5s var(--ease-out);
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .explore-menu.is-open {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
         }
 
         .explore-menu-bg {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 150%;
-            height: 150%;
-            opacity: 0.04;
-            color: #D4C5B0;
+            width: 120vmax;
+            height: 120vmax;
+            opacity: 0.03;
+            color: var(--cream);
             pointer-events: none;
+            z-index: 0;
         }
 
         .explore-menu-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            width: 40px;
-            height: 40px;
+            position: fixed;
+            top: 32px;
+            right: 48px;
+            width: 48px;
+            height: 48px;
             background: none;
-            border: none;
+            border: 2px solid var(--cream);
+            border-radius: 50%;
             cursor: pointer;
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform var(--duration);
+            transition: all var(--duration);
         }
 
         .explore-menu-close:hover {
             transform: rotate(90deg);
+            border-color: var(--sun);
+            background: rgba(247, 181, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .explore-menu-close {
+                top: 24px;
+                right: 24px;
+                width: 44px;
+                height: 44px;
+            }
         }
 
         .explore-menu-close::before,
         .explore-menu-close::after {
             content: '';
             position: absolute;
-            width: 24px;
+            width: 20px;
             height: 2px;
-            background: var(--black);
+            background: var(--cream);
+            transition: background var(--duration);
+        }
+
+        .explore-menu-close:hover::before,
+        .explore-menu-close:hover::after {
+            background: var(--sun);
         }
 
         .explore-menu-close::before {
@@ -748,57 +755,94 @@
         .explore-menu-content {
             position: relative;
             z-index: 1;
-            padding: 48px 40px 32px;
+            width: 100%;
+            max-width: 1000px;
+            padding: 120px 48px 80px;
         }
 
         @media (max-width: 768px) {
             .explore-menu-content {
-                padding: 40px 24px 24px;
+                padding: 100px 24px 60px;
             }
         }
 
         .explore-menu-title {
             font-family: var(--font-serif);
-            font-size: clamp(24px, 3vw, 28px);
+            font-size: clamp(32px, 5vw, 56px);
             font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--black);
+            margin-bottom: 12px;
+            color: var(--cream);
+            letter-spacing: -0.02em;
         }
 
         .explore-menu-subtitle {
-            font-size: 0.875rem;
-            color: var(--grey-500);
-            margin-bottom: 32px;
+            font-size: clamp(0.9375rem, 2vw, 1.125rem);
+            color: rgba(250, 249, 247, 0.6);
+            margin-bottom: 64px;
+            letter-spacing: 0.02em;
+        }
+
+        @media (max-width: 768px) {
+            .explore-menu-subtitle {
+                margin-bottom: 48px;
+            }
         }
 
         .explore-menu-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 8px;
+            gap: 12px;
         }
 
         .explore-menu-item {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
-            background: var(--cream);
-            border-left: 3px solid transparent;
+            gap: 24px;
+            padding: 28px 32px;
+            background: rgba(250, 249, 247, 0.03);
+            border-left: 4px solid transparent;
+            border-radius: 2px;
             transition: all var(--duration) var(--ease);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .explore-menu-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg,
+                rgba(247, 181, 0, 0.05) 0%,
+                transparent 100%);
+            opacity: 0;
+            transition: opacity var(--duration);
         }
 
         .explore-menu-item:hover {
-            background: var(--white);
+            background: rgba(250, 249, 247, 0.06);
             border-left-color: var(--sun);
-            transform: translateX(4px);
+            transform: translateX(8px);
+        }
+
+        .explore-menu-item:hover::before {
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            .explore-menu-item {
+                padding: 24px 20px;
+                gap: 16px;
+            }
         }
 
         .explore-menu-item-number {
-            font-size: 0.6875rem;
-            font-weight: 600;
+            font-size: 0.875rem;
+            font-weight: 700;
             letter-spacing: 0.1em;
             color: var(--sun);
-            min-width: 24px;
+            min-width: 32px;
+            text-align: center;
+            font-family: var(--font-display);
         }
 
         .explore-menu-item-content {
@@ -807,32 +851,23 @@
 
         .explore-menu-item-title {
             font-family: var(--font-serif);
-            font-size: 1rem;
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
             font-weight: 500;
-            margin-bottom: 2px;
-            color: var(--black);
+            margin-bottom: 4px;
+            color: var(--cream);
+            letter-spacing: -0.01em;
         }
 
         .explore-menu-item-desc {
-            font-size: 0.75rem;
-            color: var(--grey-400);
-            line-height: 1.4;
+            font-size: clamp(0.875rem, 1.5vw, 0.9375rem);
+            color: #0891A8;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
         }
 
+        /* No overlay needed for full-screen menu */
         .explore-menu-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(13, 13, 12, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 1999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s var(--ease);
-        }
-
-        .explore-menu-overlay.is-open {
-            opacity: 1;
-            visibility: visible;
+            display: none;
         }
 
         /* ═══════════════════════════════════════════════════════════════
@@ -1776,11 +1811,8 @@
             </div>
         </div>
     </section>
-    
-    <!-- Explore Menu Overlay -->
-    <div class="explore-menu-overlay" id="exploreOverlay"></div>
 
-    <!-- Explore Menu -->
+    <!-- Explore Menu - Full Screen -->
     <div class="explore-menu" id="exploreMenu">
         <!-- Logo Background -->
         <div class="explore-menu-bg">
@@ -1917,22 +1949,19 @@
         
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Explore Menu
+        // Explore Menu - Full Screen
         const headerExploreButton = document.getElementById('headerExploreButton');
         const exploreMenu = document.getElementById('exploreMenu');
-        const exploreOverlay = document.getElementById('exploreOverlay');
         const exploreMenuClose = document.getElementById('exploreMenuClose');
         const exploreMenuLinks = document.querySelectorAll('.explore-menu-item');
 
         function openExploreMenu() {
             exploreMenu.classList.add('is-open');
-            exploreOverlay.classList.add('is-open');
             document.body.style.overflow = 'hidden';
         }
 
         function closeExploreMenu() {
             exploreMenu.classList.remove('is-open');
-            exploreOverlay.classList.remove('is-open');
             document.body.style.overflow = '';
         }
 
@@ -1949,11 +1978,6 @@
             exploreMenuClose.addEventListener('click', closeExploreMenu);
         }
 
-        // Close menu on overlay click
-        if (exploreOverlay) {
-            exploreOverlay.addEventListener('click', closeExploreMenu);
-        }
-
         // Close menu on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && exploreMenu.classList.contains('is-open')) {
@@ -1961,12 +1985,10 @@
             }
         });
 
-        // Close menu when clicking internal links (anchors)
+        // Close menu when clicking any link
         exploreMenuLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                if (link.getAttribute('href').startsWith('#')) {
-                    closeExploreMenu();
-                }
+            link.addEventListener('click', () => {
+                closeExploreMenu();
             });
         });
     </script>
