@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Sun Oaks — Where Redding Grows</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+
+            --sun: #F7B500;
+            --sun-hover: #FFBF00;
+            --sun-light: #FFF8E5;
+            --pool: #0891A8;
+            --pool-light: #0BA4BD;
+            --pool-bg: #E5F5F7;
+
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+            --font-display: 'Jost', 'Futura', sans-serif;
+
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.4s;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--black);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--sun);
+            color: var(--black);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════ */
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 48px;
+            background: transparent;
+            transition: all var(--duration) var(--ease);
+        }
+
+        .header.is-scrolled {
+            background: rgba(250, 249, 247, 0.98);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 1px 0 rgba(13, 13, 12, 0.08);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 24px;
+            }
+        }
+
+        .header-logo {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color var(--duration);
+        }
+
+        .header.is-scrolled .header-logo {
+            color: var(--black);
+        }
+
+        .header-logo .star {
+            color: var(--sun);
+            font-size: 1.2em;
+            line-height: 1;
+        }
+
+        .header-contact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--white);
+            transition: color var(--duration);
+        }
+
+        .header.is-scrolled .header-contact {
+            color: var(--black);
+        }
+
+        .header-contact svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 640px) {
+            .header-contact span {
+                display: none;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HERO - Full Screen with Background Image
+           ═══════════════════════════════════════════════════════════════ */
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(13, 13, 12, 0.3) 0%,
+                rgba(13, 13, 12, 0.5) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            padding: 180px 48px 120px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 140px 32px 80px;
+            }
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: transparent;
+            border: 2px solid var(--sun);
+            color: var(--sun);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 0.2s forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 0.4s forwards;
+        }
+
+        .hero-title .grow {
+            font-style: italic;
+            color: var(--sun);
+        }
+
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.25rem;
+            }
+        }
+
+        .hero-desc {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            line-height: 1.6;
+            color: rgba(250, 249, 247, 0.9);
+            margin-bottom: 48px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 0.6s forwards;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 48px;
+            background: var(--sun);
+            color: var(--black);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: all var(--duration) var(--ease);
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 0.8s forwards;
+        }
+
+        .hero-cta:hover {
+            background: var(--sun-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(247, 181, 0, 0.4);
+        }
+
+        .hero-cta svg {
+            width: 16px;
+            height: 16px;
+            transition: transform var(--duration);
+        }
+
+        .hero-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 640px) {
+            .hero-cta {
+                padding: 18px 36px;
+                font-size: 0.9375rem;
+            }
+        }
+
+        .hero-secondary {
+            margin-top: 24px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 1s forwards;
+        }
+
+        .hero-secondary a {
+            color: rgba(250, 249, 247, 0.8);
+            font-size: 0.9375rem;
+            border-bottom: 1px solid rgba(250, 249, 247, 0.3);
+            transition: all var(--duration);
+        }
+
+        .hero-secondary a:hover {
+            color: var(--white);
+            border-bottom-color: var(--white);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: rgba(250, 249, 247, 0.6);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 1.2s forwards;
+            z-index: 2;
+        }
+
+        .hero-scroll-line {
+            width: 1px;
+            height: 32px;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(250, 249, 247, 0.4) 100%
+            );
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.4; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(8px); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-scroll {
+                bottom: 32px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CONTENT PLACEHOLDER (for future sections)
+           ═══════════════════════════════════════════════════════════════ */
+
+        .content-section {
+            padding: 120px 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .content-section {
+                padding: 80px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-logo">
+            <span>SUN</span>
+            <span class="star">★</span>
+            <span>OAKS</span>
+        </div>
+        <a href="tel:5302214405" class="header-contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <span>(530) 221-4405</span>
+        </a>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <!-- Background Image -->
+        <div class="hero-bg">
+            <img src="../images/photos/Home%20%20Redding%20Gym%20(16).jpg" alt="Pickleball at Sun Oaks" />
+        </div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                $0 ENROLLMENT THIS MONTH
+            </div>
+
+            <h1 class="hero-title">
+                Where Redding has<br>come to <span class="grow">grow</span> for 64<br>years.
+            </h1>
+
+            <p class="hero-desc">
+                Three generations of families. Morning swimmers. After-school tennis kids. This is more than a gym—it's where you belong.
+            </p>
+
+            <a href="#memberships" class="hero-cta">
+                Choose Your Membership
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                </svg>
+            </a>
+
+            <div class="hero-secondary">
+                or <a href="#tour">schedule a free tour</a> first
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="hero-scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Future Content Sections -->
+    <section class="content-section" id="memberships">
+        <!-- Membership tiers will go here -->
+    </section>
+
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('is-scrolled', window.scrollY > 60);
+        });
+    </script>
+</body>
+</html>
