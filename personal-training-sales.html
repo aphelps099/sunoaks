@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Training Sales — Sun Oaks Brand House</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+            
+            --sun: #F7B500;
+            --sun-hover: #FFBF00;
+            --sun-light: #FFF8E5;
+            --pool: #0891A8;
+            --pool-light: #0BA4BD;
+            --pool-bg: #E5F5F7;
+            --success: #2E7D32;
+            --success-bg: #E8F5E9;
+            --energy: #E85D04;
+            --energy-bg: #FFF3ED;
+            
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+            
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.4s;
+        }
+        
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--black);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        ::selection {
+            background: var(--sun);
+            color: var(--black);
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(250, 249, 247, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 24px;
+            }
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        
+        .header-back:hover {
+            color: var(--black);
+        }
+        
+        .header-back svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .header-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--grey-200);
+        }
+        
+        .header-chapter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+        
+        .header-chapter span {
+            color: var(--energy);
+        }
+        
+        .header-badge {
+            padding: 6px 12px;
+            background: var(--energy-bg);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--energy);
+        }
+        
+        @media (max-width: 600px) {
+            .header-badge {
+                display: none;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HERO
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .hero {
+            padding: 160px 48px 80px;
+            background: linear-gradient(135deg, var(--black) 0%, #1a1612 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 24px 60px;
+            }
+        }
+        
+        .hero-accent {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(232, 93, 4, 0.1) 100%);
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.2s forwards;
+        }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-eyebrow-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--energy);
+            color: var(--white);
+        }
+        
+        .hero-eyebrow-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .hero-eyebrow-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-300);
+        }
+        
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+            max-width: 700px;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.3s forwards;
+        }
+        
+        .hero-title em {
+            font-style: italic;
+            color: var(--energy);
+        }
+        
+        .hero-desc {
+            font-size: 1.125rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-300);
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.4s forwards;
+        }
+        
+        /* Revenue callout */
+        .hero-revenue {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 48px;
+            margin-top: 48px;
+            padding-top: 48px;
+            border-top: 1px solid var(--grey-700);
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.5s forwards;
+        }
+        
+        @media (max-width: 600px) {
+            .hero-revenue {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+        
+        .hero-revenue-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .hero-revenue-value {
+            font-family: var(--font-sans);
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1;
+            color: var(--sun);
+        }
+        
+        .hero-revenue-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-top: 8px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           TOC
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .toc {
+            padding: 48px;
+            background: var(--white);
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        @media (max-width: 768px) {
+            .toc {
+                padding: 32px 24px;
+            }
+        }
+        
+        .toc-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 40px;
+        }
+        
+        .toc-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        
+        .toc-link:hover {
+            color: var(--black);
+        }
+        
+        .toc-link-num {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--energy);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           SECTION BASE
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section {
+            padding: 100px 48px;
+        }
+        
+        @media (max-width: 768px) {
+            .section {
+                padding: 70px 24px;
+            }
+        }
+        
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            margin-bottom: 48px;
+        }
+        
+        .section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--energy);
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+        
+        .section-desc {
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+            max-width: 600px;
+            margin-top: 16px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           THE OPPORTUNITY
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--opportunity {
+            background: var(--cream);
+        }
+        
+        .opportunity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+        
+        @media (max-width: 900px) {
+            .opportunity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .opportunity-insight {
+            padding: 40px;
+            background: var(--white);
+            border: 1px solid var(--silver);
+        }
+        
+        .opportunity-insight-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--energy-bg);
+            color: var(--energy);
+            margin-bottom: 24px;
+        }
+        
+        .opportunity-insight-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .opportunity-insight-title {
+            font-family: var(--font-serif);
+            font-size: 1.375rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .opportunity-insight-text {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+        
+        .opportunity-insight-stat {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--silver);
+        }
+        
+        .opportunity-insight-stat-value {
+            font-family: var(--font-sans);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--energy);
+        }
+        
+        .opportunity-insight-stat-label {
+            font-size: 0.875rem;
+            color: var(--grey-500);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           PACKAGES
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--packages {
+            background: var(--white);
+        }
+        
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        
+        @media (max-width: 1000px) {
+            .packages-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .package-card {
+            background: var(--pearl);
+            padding: 32px;
+            position: relative;
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .package-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+        }
+        
+        .package-card.is-popular {
+            background: var(--energy);
+            color: var(--white);
+        }
+        
+        .package-card.is-popular::before {
+            content: 'Best Value';
+            position: absolute;
+            top: -10px;
+            left: 24px;
+            padding: 4px 10px;
+            background: var(--black);
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+        
+        .package-sessions {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 8px;
+        }
+        
+        .package-card.is-popular .package-sessions {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .package-name {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        
+        .package-pricing {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        .package-card.is-popular .package-pricing {
+            border-color: rgba(255,255,255,0.2);
+        }
+        
+        .package-total {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        
+        .package-total-value {
+            font-family: var(--font-sans);
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+        
+        .package-total-label {
+            font-size: 0.875rem;
+            color: var(--grey-400);
+        }
+        
+        .package-card.is-popular .package-total-label {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .package-per-session {
+            font-size: 0.875rem;
+            color: var(--grey-500);
+        }
+        
+        .package-card.is-popular .package-per-session {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .package-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .package-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+        
+        .package-feature svg {
+            width: 14px;
+            height: 14px;
+            color: var(--success);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .package-card.is-popular .package-feature svg {
+            color: var(--sun);
+        }
+        
+        /* Selling points */
+        .packages-tips {
+            margin-top: 48px;
+            padding: 32px;
+            background: var(--sun-light);
+            border-left: 4px solid var(--sun);
+        }
+        
+        .packages-tips-title {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .packages-tips-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 32px;
+        }
+        
+        @media (max-width: 768px) {
+            .packages-tips-list {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .packages-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.875rem;
+            color: var(--grey-600);
+        }
+        
+        .packages-tip svg {
+            width: 14px;
+            height: 14px;
+            color: var(--sun);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           CONSULTATION FRAMEWORK
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--consultation {
+            background: var(--pearl);
+        }
+        
+        .consultation-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .consultation-step {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 32px;
+            padding: 40px;
+            background: var(--white);
+            border: 1px solid var(--silver);
+        }
+        
+        @media (max-width: 600px) {
+            .consultation-step {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 28px;
+            }
+        }
+        
+        .consultation-step-num {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--energy);
+            color: var(--white);
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .consultation-step-content {
+            flex: 1;
+        }
+        
+        .consultation-step-title {
+            font-family: var(--font-sans);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .consultation-step-time {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 16px;
+        }
+        
+        .consultation-step-desc {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+            margin-bottom: 20px;
+        }
+        
+        .consultation-step-questions {
+            padding: 20px 24px;
+            background: var(--pearl);
+            border-left: 3px solid var(--energy);
+        }
+        
+        .consultation-step-questions-title {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--energy);
+            margin-bottom: 12px;
+        }
+        
+        .consultation-step-questions-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .consultation-step-questions-list li {
+            font-family: var(--font-serif);
+            font-size: 0.9375rem;
+            font-style: italic;
+            color: var(--grey-600);
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .consultation-step-questions-list li::before {
+            content: '"';
+            position: absolute;
+            left: 0;
+            color: var(--energy);
+            font-weight: 600;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           TRAINER MATCHING
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--trainers {
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        .section--trainers .section-label {
+            color: var(--sun);
+        }
+        
+        .trainers-intro {
+            font-size: 1.0625rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-300);
+            max-width: 700px;
+            margin-bottom: 48px;
+        }
+        
+        .trainers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        @media (max-width: 900px) {
+            .trainers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .trainer-card {
+            padding: 32px;
+            background: var(--grey-800);
+            border: 1px solid var(--grey-700);
+        }
+        
+        .trainer-card-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--grey-700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--grey-400);
+        }
+        
+        .trainer-card-name {
+            font-family: var(--font-sans);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .trainer-card-specialty {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--energy);
+            margin-bottom: 16px;
+        }
+        
+        .trainer-card-ideal {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 8px;
+        }
+        
+        .trainer-card-clients {
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--grey-300);
+        }
+        
+        .trainer-card-cue {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--grey-700);
+        }
+        
+        .trainer-card-cue-label {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 8px;
+        }
+        
+        .trainer-card-cue-text {
+            font-family: var(--font-serif);
+            font-size: 0.875rem;
+            font-style: italic;
+            color: var(--grey-300);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           OBJECTIONS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--objections {
+            background: var(--cream);
+        }
+        
+        .objections-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .objection-card {
+            background: var(--white);
+            border: 1px solid var(--silver);
+            overflow: hidden;
+        }
+        
+        .objection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            cursor: pointer;
+            transition: background var(--duration);
+        }
+        
+        .objection-header:hover {
+            background: var(--pearl);
+        }
+        
+        .objection-question {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .objection-question-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--energy-bg);
+            color: var(--energy);
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .objection-toggle {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform var(--duration);
+        }
+        
+        .objection-toggle svg {
+            width: 16px;
+            height: 16px;
+            color: var(--grey-400);
+        }
+        
+        .objection-card.is-open .objection-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .objection-body {
+            padding: 0 32px 32px;
+            padding-left: 80px;
+            display: none;
+        }
+        
+        .objection-card.is-open .objection-body {
+            display: block;
+        }
+        
+        .objection-response {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-600);
+            margin-bottom: 20px;
+        }
+        
+        .objection-script {
+            font-family: var(--font-serif);
+            font-size: 0.9375rem;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--grey-600);
+            padding: 16px 20px;
+            background: var(--success-bg);
+            border-left: 3px solid var(--success);
+        }
+        
+        .objection-script-label {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-style: normal;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--success);
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           CLOSING TECHNIQUES
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--closing {
+            background: var(--white);
+        }
+        
+        .closing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .closing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .closing-card {
+            padding: 32px;
+            background: var(--pearl);
+            border-left: 4px solid var(--energy);
+        }
+        
+        .closing-card-title {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .closing-card-when {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            margin-bottom: 16px;
+        }
+        
+        .closing-card-script {
+            font-family: var(--font-serif);
+            font-size: 0.9375rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--grey-600);
+            padding: 16px 20px;
+            background: var(--white);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           FOLLOW-UP SEQUENCES
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--followup {
+            background: var(--energy);
+            color: var(--white);
+        }
+        
+        .section--followup .section-label {
+            color: var(--black);
+            opacity: 0.5;
+        }
+        
+        .section--followup .section-title {
+            color: var(--white);
+        }
+        
+        .section--followup .section-desc {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .followup-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-top: 48px;
+        }
+        
+        .followup-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 32px;
+            padding: 32px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .followup-item:last-child {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 600px) {
+            .followup-item {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        
+        .followup-when {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--sun);
+        }
+        
+        .followup-content h4 {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .followup-content p {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 12px;
+        }
+        
+        .followup-template {
+            font-family: var(--font-serif);
+            font-size: 0.875rem;
+            font-style: italic;
+            line-height: 1.6;
+            padding: 16px 20px;
+            background: rgba(0,0,0,0.2);
+            border-left: 3px solid var(--sun);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .footer {
+            padding: 32px 48px;
+            background: var(--black);
+            color: var(--white);
+            border-top: 1px solid var(--grey-700);
+        }
+        
+        @media (max-width: 768px) {
+            .footer {
+                padding: 32px 24px;
+            }
+        }
+        
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .footer-sep {
+            width: 1px;
+            height: 16px;
+            background: var(--grey-600);
+        }
+        
+        .footer-tag {
+            font-size: 0.875rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit a {
+            color: var(--sun);
+        }
+        
+        @media (max-width: 600px) {
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 8H3M7 4l-4 4 4 4"/>
+                </svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>Sales</span> Personal Training</span>
+        </div>
+        <div class="header-badge">High-Value Service</div>
+    </header>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-accent"></div>
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                <div class="hero-eyebrow-icon">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="8" cy="8" r="6"/>
+                        <path d="M8 5v3l2 2"/>
+                    </svg>
+                </div>
+                <span class="hero-eyebrow-text">Sales Resources</span>
+            </div>
+            
+            <h1 class="hero-title">Personal Training <em>Sales</em></h1>
+            
+            <p class="hero-desc">PT is your highest-margin service. These tools help your team identify opportunities, run effective consultations, and convert interested members into committed clients.</p>
+            
+            <div class="hero-revenue">
+                <div class="hero-revenue-item">
+                    <div class="hero-revenue-value">$75-95</div>
+                    <div class="hero-revenue-label">Per Session Rate</div>
+                </div>
+                <div class="hero-revenue-item">
+                    <div class="hero-revenue-value">68%</div>
+                    <div class="hero-revenue-label">Gross Margin</div>
+                </div>
+                <div class="hero-revenue-item">
+                    <div class="hero-revenue-value">4.2x</div>
+                    <div class="hero-revenue-label">LTV vs. Membership Only</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- TOC -->
+    <div class="toc">
+        <div class="toc-content">
+            <a href="#opportunity" class="toc-link"><span class="toc-link-num">01</span> The Opportunity</a>
+            <a href="#packages" class="toc-link"><span class="toc-link-num">02</span> Package Pricing</a>
+            <a href="#consultation" class="toc-link"><span class="toc-link-num">03</span> Consultation Framework</a>
+            <a href="#trainers" class="toc-link"><span class="toc-link-num">04</span> Trainer Matching</a>
+            <a href="#objections" class="toc-link"><span class="toc-link-num">05</span> Objection Handling</a>
+            <a href="#closing" class="toc-link"><span class="toc-link-num">06</span> Closing Techniques</a>
+            <a href="#followup" class="toc-link"><span class="toc-link-num">07</span> Follow-Up Sequences</a>
+        </div>
+    </div>
+    
+    <!-- The Opportunity -->
+    <section class="section section--opportunity" id="opportunity">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">01 The Opportunity</div>
+                <h2 class="section-title">Why personal training matters</h2>
+                <p class="section-desc">Understanding the business case helps you sell with conviction.</p>
+            </div>
+            
+            <div class="opportunity-grid reveal">
+                <div class="opportunity-insight">
+                    <div class="opportunity-insight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <h3 class="opportunity-insight-title">Revenue Per Member</h3>
+                    <p class="opportunity-insight-text">Members who train add $200-400/month in additional revenue. A PT client paying $300/month for training plus $89 for membership generates 4x more revenue than a membership-only member.</p>
+                    <div class="opportunity-insight-stat">
+                        <span class="opportunity-insight-stat-value">$389</span>
+                        <span class="opportunity-insight-stat-label">average PT client monthly spend</span>
+                    </div>
+                </div>
+                
+                <div class="opportunity-insight">
+                    <div class="opportunity-insight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="opportunity-insight-title">Retention Impact</h3>
+                    <p class="opportunity-insight-text">PT clients stay 2.3x longer than membership-only members. The relationship with their trainer creates accountability that keeps them coming back—even when motivation dips.</p>
+                    <div class="opportunity-insight-stat">
+                        <span class="opportunity-insight-stat-value">34 mo</span>
+                        <span class="opportunity-insight-stat-label">average PT client tenure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Packages -->
+    <section class="section section--packages" id="packages">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">02 Package Pricing</div>
+                <h2 class="section-title">Four packages, clear value</h2>
+                <p class="section-desc">Always present packages—never single sessions. Commitment drives results.</p>
+            </div>
+            
+            <div class="packages-grid reveal">
+                <div class="package-card">
+                    <div class="package-sessions">4 Sessions</div>
+                    <h3 class="package-name">Starter</h3>
+                    <div class="package-pricing">
+                        <div class="package-total">
+                            <span class="package-total-value">$380</span>
+                            <span class="package-total-label">total</span>
+                        </div>
+                        <div class="package-per-session">$95 per session</div>
+                    </div>
+                    <ul class="package-features">
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Initial assessment
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Custom program design
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Form coaching
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="package-card">
+                    <div class="package-sessions">8 Sessions</div>
+                    <h3 class="package-name">Foundation</h3>
+                    <div class="package-pricing">
+                        <div class="package-total">
+                            <span class="package-total-value">$680</span>
+                            <span class="package-total-label">total</span>
+                        </div>
+                        <div class="package-per-session">$85 per session</div>
+                    </div>
+                    <ul class="package-features">
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Everything in Starter
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Nutrition guidance
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Progress check-in
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="package-card is-popular">
+                    <div class="package-sessions">12 Sessions</div>
+                    <h3 class="package-name">Transformation</h3>
+                    <div class="package-pricing">
+                        <div class="package-total">
+                            <span class="package-total-value">$900</span>
+                            <span class="package-total-label">total</span>
+                        </div>
+                        <div class="package-per-session">$75 per session</div>
+                    </div>
+                    <ul class="package-features">
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Everything in Foundation
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Body composition tracking
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Between-session support
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Program evolution
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="package-card">
+                    <div class="package-sessions">20 Sessions</div>
+                    <h3 class="package-name">Committed</h3>
+                    <div class="package-pricing">
+                        <div class="package-total">
+                            <span class="package-total-value">$1,400</span>
+                            <span class="package-total-label">total</span>
+                        </div>
+                        <div class="package-per-session">$70 per session</div>
+                    </div>
+                    <ul class="package-features">
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Everything in Transformation
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Priority scheduling
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Monthly reassessment
+                        </li>
+                        <li class="package-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Best per-session rate
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="packages-tips reveal">
+                <div class="packages-tips-title">Selling Points to Emphasize</div>
+                <div class="packages-tips-list">
+                    <div class="packages-tip">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                        Larger packages = lower per-session cost (show the math)
+                    </div>
+                    <div class="packages-tip">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                        12-session is "best value" — most results at best price point
+                    </div>
+                    <div class="packages-tip">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                        Sessions never expire — no pressure, use at your pace
+                    </div>
+                    <div class="packages-tip">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                        Can be shared with household members on Family plan
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Consultation Framework -->
+    <section class="section section--consultation" id="consultation">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">03 Consultation Framework</div>
+                <h2 class="section-title">The 30-minute PT consultation</h2>
+                <p class="section-desc">A structured conversation that uncovers needs, builds trust, and leads naturally to a recommendation.</p>
+            </div>
+            
+            <div class="consultation-grid reveal">
+                <div class="consultation-step">
+                    <div class="consultation-step-num">1</div>
+                    <div class="consultation-step-content">
+                        <h4 class="consultation-step-title">Warm-Up & Rapport</h4>
+                        <div class="consultation-step-time">5 Minutes</div>
+                        <p class="consultation-step-desc">Start casual. Learn about them as a person before diving into fitness. This isn't small talk—it's intelligence gathering that helps you personalize your recommendation.</p>
+                        <div class="consultation-step-questions">
+                            <div class="consultation-step-questions-title">Questions to Ask</div>
+                            <ul class="consultation-step-questions-list">
+                                <li>How long have you been a member here?"</li>
+                                <li>What's your usual workout routine look like?"</li>
+                                <li>What do you do for work? Active job or desk job?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="consultation-step">
+                    <div class="consultation-step-num">2</div>
+                    <div class="consultation-step-content">
+                        <h4 class="consultation-step-title">Goal Discovery</h4>
+                        <div class="consultation-step-time">8 Minutes</div>
+                        <p class="consultation-step-desc">Go deeper than surface goals. "Lose weight" isn't specific enough. Find the emotional driver—the wedding, the health scare, the desire to keep up with kids.</p>
+                        <div class="consultation-step-questions">
+                            <div class="consultation-step-questions-title">Questions to Ask</div>
+                            <ul class="consultation-step-questions-list">
+                                <li>If we fast-forward 90 days, what does success look like for you?"</li>
+                                <li>What made you decide now is the time to try training?"</li>
+                                <li>What have you tried before? What worked, what didn't?"</li>
+                                <li>On a scale of 1-10, how important is achieving this goal?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="consultation-step">
+                    <div class="consultation-step-num">3</div>
+                    <div class="consultation-step-content">
+                        <h4 class="consultation-step-title">Obstacle Mapping</h4>
+                        <div class="consultation-step-time">5 Minutes</div>
+                        <p class="consultation-step-desc">Understand what's gotten in the way before. These obstacles become the reasons why they need a trainer—accountability, knowledge, motivation.</p>
+                        <div class="consultation-step-questions">
+                            <div class="consultation-step-questions-title">Questions to Ask</div>
+                            <ul class="consultation-step-questions-list">
+                                <li>What usually gets in the way of consistency for you?"</li>
+                                <li>When you've fallen off track before, what happened?"</li>
+                                <li>What would make this time different?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="consultation-step">
+                    <div class="consultation-step-num">4</div>
+                    <div class="consultation-step-content">
+                        <h4 class="consultation-step-title">The Recommendation</h4>
+                        <div class="consultation-step-time">7 Minutes</div>
+                        <p class="consultation-step-desc">Now you have everything you need. Connect their goals and obstacles to a specific trainer and package. Make it feel tailored, not scripted.</p>
+                        <div class="consultation-step-questions">
+                            <div class="consultation-step-questions-title">Framework</div>
+                            <ul class="consultation-step-questions-list">
+                                <li>Based on [goal], I think [Trainer] would be perfect for you because..."</li>
+                                <li>Given that [obstacle] has been challenging, I'd recommend [package] because..."</li>
+                                <li>The investment is [price], which breaks down to [per session] per session."</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="consultation-step">
+                    <div class="consultation-step-num">5</div>
+                    <div class="consultation-step-content">
+                        <h4 class="consultation-step-title">Handle & Close</h4>
+                        <div class="consultation-step-time">5 Minutes</div>
+                        <p class="consultation-step-desc">Address concerns, answer questions, and ask for the commitment. Don't leave it open-ended—always ask for a decision or a clear next step.</p>
+                        <div class="consultation-step-questions">
+                            <div class="consultation-step-questions-title">Closing Questions</div>
+                            <ul class="consultation-step-questions-list">
+                                <li>What questions do you have about getting started?"</li>
+                                <li>Does Tuesday or Thursday work better for your first session?"</li>
+                                <li>Should I get you scheduled with [Trainer] this week?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Trainer Matching -->
+    <section class="section section--trainers" id="trainers">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">04 Trainer Matching</div>
+                <h2 class="section-title">Match the client to the trainer</h2>
+            </div>
+            
+            <p class="trainers-intro reveal">The right trainer-client match is everything. A mismatch leads to early dropout. Use these profiles to guide your recommendations.</p>
+            
+            <div class="trainers-grid reveal">
+                <div class="trainer-card">
+                    <div class="trainer-card-avatar">MR</div>
+                    <h4 class="trainer-card-name">Mike Rodriguez</h4>
+                    <div class="trainer-card-specialty">Strength & Conditioning</div>
+                    <div class="trainer-card-ideal">Ideal For</div>
+                    <p class="trainer-card-clients">Men 30-55, athletic background, goal-oriented, responds to direct coaching style. Wants to get stronger or train for a specific event.</p>
+                    <div class="trainer-card-cue">
+                        <div class="trainer-card-cue-label">Listen For</div>
+                        <p class="trainer-card-cue-text">"I used to play sports..." or "I want to deadlift my bodyweight" or "I'm training for a Spartan race"</p>
+                    </div>
+                </div>
+                
+                <div class="trainer-card">
+                    <div class="trainer-card-avatar">SL</div>
+                    <h4 class="trainer-card-name">Sarah Lin</h4>
+                    <div class="trainer-card-specialty">Weight Loss & Lifestyle</div>
+                    <div class="trainer-card-ideal">Ideal For</div>
+                    <p class="trainer-card-clients">Women 35-60, new to fitness or returning after a break. Needs encouragement and patience. Often dealing with confidence issues.</p>
+                    <div class="trainer-card-cue">
+                        <div class="trainer-card-cue-label">Listen For</div>
+                        <p class="trainer-card-cue-text">"I don't really know what I'm doing" or "I feel intimidated" or "I've tried everything"</p>
+                    </div>
+                </div>
+                
+                <div class="trainer-card">
+                    <div class="trainer-card-avatar">JT</div>
+                    <h4 class="trainer-card-name">James Turner</h4>
+                    <div class="trainer-card-specialty">Senior Fitness & Mobility</div>
+                    <div class="trainer-card-ideal">Ideal For</div>
+                    <p class="trainer-card-clients">Members 55+, may have physical limitations, joint issues, or medical considerations. Wants to stay active and independent.</p>
+                    <div class="trainer-card-cue">
+                        <div class="trainer-card-cue-label">Listen For</div>
+                        <p class="trainer-card-cue-text">"My doctor said I should exercise" or "I have a bad knee" or "I just want to be able to play with my grandkids"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Objections -->
+    <section class="section section--objections" id="objections">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">05 Objection Handling</div>
+                <h2 class="section-title">Turning hesitation into commitment</h2>
+                <p class="section-desc">PT objections are different from membership objections. The stakes feel higher. Here's how to respond.</p>
+            </div>
+            
+            <div class="objections-grid reveal">
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">$</span>
+                            "It's too expensive."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">This is the most common objection. Reframe the cost in terms of value and investment in themselves. Compare to other things they spend money on.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "I hear you—it is an investment. Let me ask: what would it be worth to you to actually achieve [their goal]? When you break it down, the 12-session package is about $75 per session, which is less than a nice dinner out. Except this investment compounds—the knowledge and habits you build stay with you forever."
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">?</span>
+                            "I can figure it out myself."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">Don't argue—agree and expand. Yes, they could. But the question is whether they will, and how long it will take.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "You absolutely could—there's tons of information out there. But here's what I've seen: most people who try to figure it out alone spend months or years doing things that don't work. A trainer compresses that learning curve. You get the right program from day one, proper form so you don't get injured, and someone who adjusts the plan as you progress. Is time something you have plenty of, or would you rather get results faster?"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">⏱</span>
+                            "I don't have time."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">Time is often a proxy for priority. Help them see that training actually saves time by making workouts more efficient.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "I get it—you're busy. Here's the thing: most people who work out on their own spend time wandering between machines, figuring out what to do. With a trainer, every minute is purposeful. A 45-minute session with [Trainer] is more effective than 90 minutes on your own. Plus, the accountability means you actually show up. Would two 45-minute sessions per week be possible?"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">😰</span>
+                            "I want to get in shape first."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">This is fear disguised as logic. Gently point out the contradiction and normalize starting exactly where they are.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "I hear that a lot, and I totally understand the instinct. But think about it: that's like saying 'I want to get healthy before I see a doctor.' The whole point of working with a trainer is to meet you where you are. [Trainer] has worked with people at every fitness level—including plenty who hadn't exercised in years. You don't need to prepare for training. Training IS the preparation."
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">🤔</span>
+                            "I need to think about it."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">There's usually something specific behind this. Probe gently to find the real concern.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "Of course—it's a decision worth making thoughtfully. Can I ask what specifically you want to think through? Sometimes when people say that, there's a question I haven't answered well. Is it the cost, the time commitment, or something about whether it'll actually work for you?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Closing Techniques -->
+    <section class="section section--closing" id="closing">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">06 Closing Techniques</div>
+                <h2 class="section-title">Four ways to secure the commitment</h2>
+                <p class="section-desc">Read the prospect and choose the approach that fits their personality.</p>
+            </div>
+            
+            <div class="closing-grid reveal">
+                <div class="closing-card">
+                    <h4 class="closing-card-title">The Choice Close</h4>
+                    <p class="closing-card-when">When they're interested but haven't chosen a package</p>
+                    <div class="closing-card-script">"Based on your goals, I'd recommend either the 8-session Foundation or the 12-session Transformation. The 12 gives you better per-session value and more time to build habits. Which feels right for where you're at?"</div>
+                </div>
+                
+                <div class="closing-card">
+                    <h4 class="closing-card-title">The Calendar Close</h4>
+                    <p class="closing-card-when">When they're ready but need a push to start</p>
+                    <div class="closing-card-script">"[Trainer] has availability Tuesday at 6pm and Thursday at 7am. Which works better for your first session? I'll get you on the calendar right now."</div>
+                </div>
+                
+                <div class="closing-card">
+                    <h4 class="closing-card-title">The Vision Close</h4>
+                    <p class="closing-card-when">When they need to reconnect with their motivation</p>
+                    <div class="closing-card-script">"You told me [their goal] is really important to you. Imagine it's 90 days from now and you've been training consistently. How would that feel? What would be different? That's what we're signing up for today."</div>
+                </div>
+                
+                <div class="closing-card">
+                    <h4 class="closing-card-title">The Trial Close</h4>
+                    <p class="closing-card-when">When they're hesitant despite being a good fit</p>
+                    <div class="closing-card-script">"Here's what I'd suggest: start with the 4-session Starter. Commit to one month with [Trainer]. If after four sessions you don't feel like it's worth it, no pressure to continue. But I think you'll be hooked."</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Follow-Up Sequences -->
+    <section class="section section--followup" id="followup">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">07 Follow-Up Sequences</div>
+                <h2 class="section-title">When they don't buy today</h2>
+                <p class="section-desc">Most people won't commit on the first conversation. A good follow-up sequence keeps the door open.</p>
+            </div>
+            
+            <div class="followup-timeline reveal">
+                <div class="followup-item">
+                    <div class="followup-when">Same Day</div>
+                    <div class="followup-content">
+                        <h4>The Thank You Text</h4>
+                        <p>Personal, brief, no pressure. Just appreciation and an open door.</p>
+                        <div class="followup-template">"Hey [Name], great meeting you today! Let me know if any questions come up about training. I'm here whenever you're ready. – [Your name]"</div>
+                    </div>
+                </div>
+                
+                <div class="followup-item">
+                    <div class="followup-when">Day 3</div>
+                    <div class="followup-content">
+                        <h4>The Value Add</h4>
+                        <p>Share something useful—not a sales pitch. Build trust and stay top of mind.</p>
+                        <div class="followup-template">"Hey [Name], I was thinking about your [goal]. Here's a quick tip that might help even before you start training: [relevant tip]. Let me know how it goes!"</div>
+                    </div>
+                </div>
+                
+                <div class="followup-item">
+                    <div class="followup-when">Day 7</div>
+                    <div class="followup-content">
+                        <h4>The Check-In</h4>
+                        <p>Casual follow-up. Reference their specific situation.</p>
+                        <div class="followup-template">"Hi [Name], just checking in. Have you had a chance to think about what we discussed? [Trainer] has some openings next week if you want to get started. No rush—just wanted to keep you posted."</div>
+                    </div>
+                </div>
+                
+                <div class="followup-item">
+                    <div class="followup-when">Day 14</div>
+                    <div class="followup-content">
+                        <h4>The Final Reach</h4>
+                        <p>Last active outreach. Give them an easy way to re-engage.</p>
+                        <div class="followup-template">"Hey [Name], I'll keep this short—I know you're busy. If training is still on your radar, I'd love to help you get started. If timing isn't right, no worries at all. Just reply 'later' and I'll check back in a month, or 'ready' and I'll get you scheduled this week."</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
+            <div class="footer-credit">
+                Designed by <a href="https://look-serious.com">Look Serious</a> · 2026
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Objection accordions
+        document.querySelectorAll('.objection-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const card = header.parentElement;
+                const isOpen = card.classList.contains('is-open');
+                
+                document.querySelectorAll('.objection-card').forEach(c => {
+                    c.classList.remove('is-open');
+                });
+                
+                if (!isOpen) {
+                    card.classList.add('is-open');
+                }
+            });
+        });
+        
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
