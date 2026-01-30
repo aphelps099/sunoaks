@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +31,8 @@
             --sun-dark: #C99200;
             --pool: #0891A8;
             --pool-light: #E5F5F7;
+            --pool-dark: #066A7A;
+            --pool-deep: #034752;
 
             --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
             --font-serif: 'Newsreader', Georgia, serif;
@@ -44,7 +47,7 @@
         ::selection { background: var(--sun); color: var(--black); }
         a { color: inherit; text-decoration: none; }
 
-        /* Minimal Header */
+        /* Header */
         .header {
             position: fixed;
             top: 0;
@@ -52,192 +55,171 @@
             right: 0;
             z-index: 1000;
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
             align-items: center;
-            padding: 24px 48px;
-            background: rgba(250, 249, 247, 0.98);
+            padding: 20px 48px;
+            background: transparent;
+            transition: all var(--duration);
+        }
+        .header.scrolled {
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--silver);
-            transition: all var(--duration) var(--ease);
         }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: 20px 24px;
-            }
-        }
+        @media (max-width: 768px) { .header { padding: 16px 24px; } }
 
         .header-back {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.9375rem;
+            font-size: 0.8125rem;
             font-weight: 500;
-            color: var(--grey-600);
-            transition: all var(--duration);
-            text-decoration: none;
+            color: var(--white);
+            transition: color var(--duration);
         }
+        .header.scrolled .header-back { color: var(--grey-600); }
+        .header-back:hover { opacity: 0.7; }
+        .header-back svg { width: 16px; height: 16px; }
 
-        .header-back:hover {
-            color: var(--black);
-            gap: 12px;
+        .header-phone {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--white);
+            transition: color var(--duration);
         }
+        .header.scrolled .header-phone { color: var(--grey-600); }
+        .header-phone svg { width: 16px; height: 16px; }
+        @media (max-width: 600px) { .header-phone span { display: none; } }
 
-        .header-back svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        /* Hero - Full viewport, photo-driven */
+        /* Hero - Full viewport */
         .hero {
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-end;
             position: relative;
             overflow: hidden;
             background: var(--black);
         }
 
-        .hero-bg {
+        .hero-photo {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg,
-                rgba(0,0,0,0.25) 0%,
-                rgba(0,0,0,0.45) 40%,
-                rgba(0,0,0,0.65) 100%
+            background: url('images/Home  Redding Gym (16).jpg') center center / cover no-repeat;
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.2) 0%,
+                rgba(0,0,0,0.1) 30%,
+                rgba(0,0,0,0.5) 70%,
+                rgba(0,0,0,0.85) 100%
             );
             z-index: 1;
         }
 
-        /* Hero photo */
-        .hero-photo {
-            position: absolute;
-            inset: 0;
-            background: url('../images/photos/Home%20%20Redding%20Gym%20(16).jpg') center center / cover no-repeat;
-            z-index: 0;
-        }
-
-        /* Sun Oaks Emblem */
+        /* Emblem in hero */
         .hero-emblem {
             position: absolute;
-            right: -10%;
+            right: -5%;
             top: 50%;
             transform: translateY(-50%);
-            width: 85vh;
-            height: 85vh;
-            max-width: 750px;
-            max-height: 750px;
+            width: 70vh;
+            height: 70vh;
+            max-width: 650px;
+            max-height: 650px;
             z-index: 0;
             pointer-events: none;
         }
         @media (max-width: 1200px) {
-            .hero-emblem {
-                right: -20%;
-                width: 75vh;
-                height: 75vh;
-            }
+            .hero-emblem { right: -15%; width: 60vh; height: 60vh; }
         }
         @media (max-width: 768px) {
-            .hero-emblem {
-                right: -35%;
-                top: 55%;
-                width: 90vh;
-                height: 90vh;
-            }
+            .hero-emblem { right: -30%; top: 40%; width: 80vh; height: 80vh; }
         }
 
-        .hero-emblem svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
+        .hero-emblem svg { width: 100%; height: 100%; overflow: visible; }
 
-        /* Draw-in animation for the emblem paths */
         .emblem-path {
             fill: none;
             stroke: rgba(255,255,255,0.06);
             stroke-width: 0.5;
             stroke-dasharray: 2000;
             stroke-dashoffset: 2000;
-            animation: drawPath 3s ease-out 0.5s forwards;
+            animation: drawPath 3s ease-out forwards;
         }
-
         .emblem-fill {
-            fill: rgba(255,255,255,0.04);
+            fill: rgba(255,255,255,0.03);
             opacity: 0;
             animation: fadeInFill 2s ease-out 1.5s forwards;
         }
 
-        @keyframes drawPath {
-            to { stroke-dashoffset: 0; }
-        }
+        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+        @keyframes fadeInFill { to { opacity: 1; } }
 
-        @keyframes fadeInFill {
-            to { opacity: 1; }
-        }
-
-        /* Staggered timing for different paths */
         .emblem-path-1 { animation-delay: 0.3s; }
-        .emblem-path-2 { animation-delay: 0.6s; }
-        .emblem-path-3 { animation-delay: 0.9s; }
-        .emblem-path-4 { animation-delay: 1.2s; }
-
+        .emblem-path-2 { animation-delay: 0.5s; }
+        .emblem-path-3 { animation-delay: 0.7s; }
         .emblem-fill-1 { animation-delay: 1.2s; }
         .emblem-fill-2 { animation-delay: 1.4s; }
         .emblem-fill-3 { animation-delay: 1.6s; }
-        .emblem-fill-4 { animation-delay: 1.8s; }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            text-align: center;
-            padding: 0 24px;
+            padding: 0 48px 100px;
             max-width: 800px;
         }
+        @media (max-width: 768px) { .hero-content { padding: 0 24px 80px; } }
 
         .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: rgba(247,181,0,0.15);
-            border: 1px solid rgba(247,181,0,0.3);
-            margin-bottom: 32px;
-            opacity: 0;
-            animation: fadeUp 0.6s ease 0.3s forwards;
-        }
-        .hero-badge-text {
-            font-size: 0.75rem;
-            font-weight: 600;
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--sun);
+            font-size: 0.6875rem;
+            font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--sun);
+            color: var(--black);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.2s forwards;
         }
 
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .hero-title {
             font-family: var(--font-serif);
-            font-size: clamp(36px, 6vw, 72px);
+            font-size: clamp(40px, 7vw, 80px);
             font-weight: 400;
-            line-height: 1.1;
+            line-height: 1.0;
             color: var(--white);
             margin-bottom: 24px;
             opacity: 0;
-            animation: fadeUp 0.6s ease 0.4s forwards;
+            animation: fadeUp 0.6s ease 0.3s forwards;
         }
         .hero-title em { font-style: italic; color: var(--sun); }
 
         .hero-subtitle {
             font-size: 1.25rem;
             line-height: 1.6;
-            color: var(--grey-300);
-            margin-bottom: 48px;
-            max-width: 550px;
-            margin-left: auto;
-            margin-right: auto;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+            max-width: 500px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.4s forwards;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
             opacity: 0;
             animation: fadeUp 0.6s ease 0.5s forwards;
         }
@@ -245,40 +227,29 @@
         .hero-cta {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 20px 48px;
+            gap: 10px;
+            padding: 18px 36px;
             background: var(--sun);
             color: var(--black);
-            font-size: 1rem;
+            font-size: 0.875rem;
             font-weight: 600;
             letter-spacing: 0.05em;
             text-transform: uppercase;
             transition: all var(--duration);
-            opacity: 0;
-            animation: fadeUp 0.6s ease 0.6s forwards;
         }
-        .hero-cta:hover {
-            background: var(--white);
-            transform: translateY(-2px);
-        }
-        .hero-cta svg { width: 20px; height: 20px; transition: transform var(--duration); }
-        .hero-cta:hover svg { transform: translateX(4px); }
+        .hero-cta:hover { background: var(--white); transform: translateY(-2px); }
+        .hero-cta svg { width: 18px; height: 18px; }
 
-        .hero-secondary {
-            display: block;
-            margin-top: 20px;
-            font-size: 0.875rem;
-            color: var(--grey-400);
-            opacity: 0;
-            animation: fadeUp 0.6s ease 0.7s forwards;
-        }
-        .hero-secondary a {
+        .hero-cta--secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
             color: var(--white);
-            border-bottom: 1px solid var(--grey-600);
-            padding-bottom: 2px;
-            transition: border-color var(--duration);
         }
-        .hero-secondary a:hover { border-color: var(--sun); }
+        .hero-cta--secondary:hover {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
 
         .hero-scroll {
             position: absolute;
@@ -286,86 +257,232 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: var(--grey-500);
-            font-size: 0.6875rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
             opacity: 0;
-            animation: fadeUp 0.6s ease 0.8s forwards;
+            animation: fadeUp 0.6s ease 0.7s forwards;
         }
         .hero-scroll-line {
             width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, var(--grey-500), transparent);
+            height: 50px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
         }
 
-        /* Social Proof Bar */
-        .proof-bar {
-            padding: 48px;
-            background: var(--white);
-            border-bottom: 1px solid var(--silver);
+        /* Stats Bar */
+        .stats {
+            padding: 0 48px;
+            background: var(--black);
         }
-        @media (max-width: 768px) { .proof-bar { padding: 32px 24px; } }
+        @media (max-width: 768px) { .stats { padding: 0 24px; } }
 
-        .proof-bar-content {
-            max-width: 1000px;
+        .stats-grid {
+            max-width: 1100px;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 32px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .stats-item {
+            padding: 40px 24px;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .stats-item:last-child { border-right: none; }
         @media (max-width: 768px) {
-            .proof-bar-content {
-                justify-content: center;
-                text-align: center;
-            }
+            .stats-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .stats-item:nth-child(2) { border-right: none; }
+            .stats-item:nth-child(3), .stats-item:nth-child(4) { border-bottom: none; }
         }
 
-        .proof-stat {
-            display: flex;
-            flex-direction: column;
-        }
-        .proof-stat-value {
+        .stats-value {
             font-family: var(--font-serif);
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 400;
-            color: var(--black);
+            color: var(--sun);
             line-height: 1;
         }
-        .proof-stat-label {
+        .stats-label {
             font-size: 0.75rem;
-            color: var(--grey-500);
-            margin-top: 4px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .proof-quote {
-            max-width: 400px;
-            padding-left: 24px;
-            border-left: 2px solid var(--sun);
+        /* Benefits - Bento Grid */
+        .benefits {
+            padding: 120px 48px;
+            background: var(--white);
         }
-        @media (max-width: 900px) { .proof-quote { display: none; } }
-        .proof-quote-text {
+        @media (max-width: 768px) { .benefits { padding: 80px 24px; } }
+
+        .benefits-header {
+            max-width: 1200px;
+            margin: 0 auto 64px;
+            text-align: center;
+        }
+        .benefits-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sun-dark);
+            margin-bottom: 16px;
+        }
+        .benefits-title {
             font-family: var(--font-serif);
-            font-style: italic;
-            font-size: 1rem;
-            color: var(--grey-600);
-            margin-bottom: 8px;
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 400;
         }
-        .proof-quote-author {
-            font-size: 0.75rem;
-            color: var(--grey-400);
+
+        .benefits-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto auto;
+            gap: 16px;
+        }
+        @media (max-width: 900px) {
+            .benefits-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 600px) {
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+
+        .benefit-card {
+            background: var(--cream);
+            padding: 40px 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--duration);
+        }
+        .benefit-card:hover {
+            background: var(--sun-light);
+        }
+
+        .benefit-card--featured {
+            grid-column: span 2;
+            grid-row: span 2;
+            background: var(--black);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .benefit-card--featured:hover { background: var(--grey-800); }
+        @media (max-width: 900px) {
+            .benefit-card--featured { grid-column: span 2; grid-row: span 1; min-height: 350px; }
+        }
+        @media (max-width: 600px) {
+            .benefit-card--featured { grid-column: span 1; }
+        }
+
+        .benefit-card--pool {
+            background: var(--pool-deep);
+            color: var(--white);
+        }
+        .benefit-card--pool:hover { background: var(--pool-dark); }
+
+        .benefit-card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+            color: var(--sun-dark);
+            margin-bottom: 20px;
+        }
+        .benefit-card--featured .benefit-card-icon,
+        .benefit-card--pool .benefit-card-icon {
+            background: var(--sun);
+            color: var(--black);
+        }
+        .benefit-card-icon svg { width: 24px; height: 24px; }
+
+        .benefit-card-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .benefit-card--featured .benefit-card-name {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 400;
+        }
+
+        .benefit-card-desc {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--grey-500);
+        }
+        .benefit-card--featured .benefit-card-desc,
+        .benefit-card--pool .benefit-card-desc {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .benefit-card-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            background: var(--sun);
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+
+        /* Access List */
+        .access {
+            padding: 100px 48px;
+            background: var(--pearl);
+        }
+        @media (max-width: 768px) { .access { padding: 70px 24px; } }
+
+        .access-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .access-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .access-title {
+            font-family: var(--font-serif);
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 400;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px 48px;
+        }
+        @media (max-width: 768px) { .access-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 32px; } }
+        @media (max-width: 500px) { .access-grid { grid-template-columns: 1fr; } }
+
+        .access-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9375rem;
+            color: var(--grey-600);
+        }
+        .access-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--sun-dark);
+            flex-shrink: 0;
         }
 
         /* Pricing Section */
         .pricing {
             padding: 120px 48px;
-            background: var(--cream);
+            background: var(--white);
         }
         @media (max-width: 768px) { .pricing { padding: 80px 24px; } }
 
@@ -380,7 +497,7 @@
             font-weight: 600;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: var(--sun-dark);
+            color: var(--pool);
             margin-bottom: 16px;
         }
         .pricing-title {
@@ -397,7 +514,6 @@
             margin: 0 auto;
         }
 
-        /* Pricing Cards */
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -406,23 +522,19 @@
         @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; } }
 
         .pricing-card {
-            background: var(--white);
-            border: 1px solid var(--silver);
+            background: var(--cream);
             padding: 40px 32px;
             position: relative;
             transition: all var(--duration);
         }
         .pricing-card:hover {
-            border-color: var(--grey-300);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            transform: translateY(-4px);
         }
 
         .pricing-card--featured {
-            border: 2px solid var(--sun);
-            background: var(--sun-light);
-        }
-        .pricing-card--featured:hover {
-            border-color: var(--sun);
+            background: var(--black);
+            color: var(--white);
         }
 
         .pricing-card-badge {
@@ -442,32 +554,30 @@
         .pricing-card-name {
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 8px;
-            text-align: center;
+            margin-bottom: 4px;
         }
         .pricing-card-desc {
             font-size: 0.875rem;
             color: var(--grey-500);
-            text-align: center;
             margin-bottom: 24px;
         }
+        .pricing-card--featured .pricing-card-desc { color: var(--grey-400); }
 
         .pricing-card-price {
-            text-align: center;
             padding: 24px 0;
             border-top: 1px solid var(--silver);
             border-bottom: 1px solid var(--silver);
             margin-bottom: 24px;
         }
         .pricing-card--featured .pricing-card-price {
-            border-color: rgba(199,146,0,0.3);
+            border-color: var(--grey-700);
         }
+
         .pricing-card-amount {
             font-family: var(--font-serif);
             font-size: 3rem;
             font-weight: 400;
             line-height: 1;
-            color: var(--black);
         }
         .pricing-card-amount span {
             font-size: 1.25rem;
@@ -478,6 +588,8 @@
             color: var(--grey-500);
             margin-top: 4px;
         }
+        .pricing-card--featured .pricing-card-period { color: var(--grey-400); }
+
         .pricing-card-savings {
             display: inline-block;
             margin-top: 8px;
@@ -499,16 +611,12 @@
             font-size: 0.9375rem;
             color: var(--grey-600);
             padding: 10px 0;
-            border-bottom: 1px solid var(--pearl);
         }
-        .pricing-card--featured .pricing-card-features li {
-            border-color: rgba(199,146,0,0.2);
-        }
-        .pricing-card-features li:last-child { border-bottom: none; }
+        .pricing-card--featured .pricing-card-features li { color: rgba(255,255,255,0.8); }
         .pricing-card-features svg {
             width: 18px;
             height: 18px;
-            color: var(--sun-dark);
+            color: var(--sun);
             flex-shrink: 0;
             margin-top: 2px;
         }
@@ -528,165 +636,80 @@
             background: var(--sun);
             color: var(--black);
         }
-        .pricing-card-cta--primary:hover {
-            background: var(--sun-dark);
-        }
+        .pricing-card-cta--primary:hover { background: #FFD54F; }
         .pricing-card-cta--secondary {
             background: var(--black);
             color: var(--white);
         }
-        .pricing-card-cta--secondary:hover {
-            background: var(--grey-700);
+        .pricing-card-cta--secondary:hover { background: var(--grey-700); }
+        .pricing-card--featured .pricing-card-cta--secondary {
+            background: var(--white);
+            color: var(--black);
         }
+        .pricing-card--featured .pricing-card-cta--secondary:hover { background: var(--sun); }
 
         /* Promo Banner */
+        .promo {
+            padding: 0 48px 120px;
+            background: var(--white);
+        }
+        @media (max-width: 768px) { .promo { padding: 0 24px 80px; } }
+
         .promo-banner {
-            margin-top: 48px;
-            padding: 32px;
-            background: var(--black);
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 48px;
+            background: linear-gradient(135deg, var(--sun) 0%, #FFD54F 100%);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 24px;
+            gap: 32px;
             flex-wrap: wrap;
         }
         @media (max-width: 768px) {
-            .promo-banner {
-                flex-direction: column;
-                text-align: center;
-            }
+            .promo-banner { flex-direction: column; text-align: center; padding: 32px 24px; }
         }
-        .promo-banner-text {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .promo-banner-icon {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--sun);
+
+        .promo-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
             color: var(--black);
-            flex-shrink: 0;
+            margin-bottom: 4px;
         }
-        .promo-banner-icon svg { width: 24px; height: 24px; }
-        .promo-banner h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
+        .promo-text p {
+            font-size: 0.9375rem;
+            color: var(--grey-700);
+        }
+        .promo-cta {
+            padding: 16px 40px;
+            background: var(--black);
             color: var(--white);
-        }
-        .promo-banner p {
             font-size: 0.875rem;
-            color: var(--grey-400);
-        }
-        .promo-banner-cta {
-            padding: 14px 32px;
-            background: var(--sun);
-            color: var(--black);
-            font-size: 0.8125rem;
             font-weight: 600;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            white-space: nowrap;
             transition: all var(--duration);
         }
-        .promo-banner-cta:hover { background: var(--white); }
-
-        /* What's Included */
-        .included {
-            padding: 120px 48px;
-            background: var(--white);
-        }
-        @media (max-width: 768px) { .included { padding: 80px 24px; } }
-
-        .included-content { max-width: 1100px; margin: 0 auto; }
-
-        .included-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-        .included-label {
-            font-size: 0.6875rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--pool);
-            margin-bottom: 16px;
-        }
-        .included-title {
-            font-family: var(--font-serif);
-            font-size: clamp(28px, 3.5vw, 40px);
-            font-weight: 400;
-            line-height: 1.15;
-        }
-
-        .included-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 32px;
-        }
-        @media (max-width: 900px) { .included-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 500px) { .included-grid { grid-template-columns: 1fr; } }
-
-        .included-item {
-            text-align: center;
-            padding: 32px 24px;
-            background: var(--pearl);
-            transition: all var(--duration);
-        }
-        .included-item:hover {
-            background: var(--sun-light);
-        }
-        .included-item-icon {
-            width: 56px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            background: var(--white);
-            color: var(--pool);
-        }
-        .included-item-icon svg { width: 28px; height: 28px; }
-        .included-item h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .included-item p {
-            font-size: 0.8125rem;
-            color: var(--grey-500);
-            line-height: 1.5;
-        }
+        .promo-cta:hover { background: var(--grey-800); }
 
         /* FAQ */
         .faq {
             padding: 100px 48px;
-            background: var(--pearl);
+            background: var(--cream);
         }
         @media (max-width: 768px) { .faq { padding: 70px 24px; } }
 
-        .faq-content {
-            max-width: 700px;
-            margin: 0 auto;
-        }
+        .faq-content { max-width: 700px; margin: 0 auto; }
 
-        .faq-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
+        .faq-header { text-align: center; margin-bottom: 48px; }
         .faq-title {
             font-family: var(--font-serif);
             font-size: clamp(28px, 3.5vw, 36px);
             font-weight: 400;
         }
 
-        .faq-list { }
-        .faq-item {
-            border-bottom: 1px solid var(--silver);
-        }
+        .faq-item { border-bottom: 1px solid var(--silver); }
         .faq-question {
             display: flex;
             justify-content: space-between;
@@ -722,18 +745,63 @@
         /* Final CTA */
         .final-cta {
             padding: 120px 48px;
-            background: linear-gradient(135deg, #0D0D0C 0%, #1A1918 100%);
+            background: var(--black);
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         @media (max-width: 768px) { .final-cta { padding: 80px 24px; } }
 
-        .final-cta-content { max-width: 700px; margin: 0 auto; }
+        /* Emblem in final CTA */
+        .final-cta-emblem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @media (max-width: 768px) { .final-cta-emblem { width: 350px; height: 350px; } }
+
+        .final-cta-emblem svg { width: 100%; height: 100%; }
+
+        .cta-emblem-path {
+            fill: none;
+            stroke: rgba(255,255,255,0.04);
+            stroke-width: 0.5;
+            stroke-dasharray: 3000;
+            stroke-dashoffset: 3000;
+            opacity: 0;
+        }
+        .cta-emblem-fill {
+            fill: rgba(255,255,255,0.02);
+            opacity: 0;
+        }
+        .final-cta-emblem.is-visible .cta-emblem-path {
+            opacity: 1;
+            animation: drawPath 3.5s ease-out forwards;
+        }
+        .final-cta-emblem.is-visible .cta-emblem-path:nth-child(4) { animation-delay: 0s; }
+        .final-cta-emblem.is-visible .cta-emblem-path:nth-child(5) { animation-delay: 0.3s; }
+        .final-cta-emblem.is-visible .cta-emblem-path:nth-child(6) { animation-delay: 0.6s; }
+        .final-cta-emblem.is-visible .cta-emblem-fill {
+            animation: fadeInFill 2s ease-out 1.2s forwards;
+        }
+
+        .final-cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
 
         .final-cta-title {
             font-family: var(--font-serif);
-            font-size: clamp(32px, 4vw, 48px);
+            font-size: clamp(32px, 4vw, 52px);
             font-weight: 400;
-            line-height: 1.15;
+            line-height: 1.1;
             color: var(--white);
             margin-bottom: 24px;
         }
@@ -763,16 +831,14 @@
             background: var(--white);
             transform: translateY(-2px);
         }
+        .final-cta-button svg { width: 20px; height: 20px; }
 
         .final-cta-phone {
             margin-top: 24px;
             font-size: 0.9375rem;
             color: var(--grey-500);
         }
-        .final-cta-phone a {
-            color: var(--white);
-            font-weight: 500;
-        }
+        .final-cta-phone a { color: var(--white); font-weight: 500; }
 
         /* Footer */
         .footer {
@@ -797,10 +863,7 @@
             text-transform: uppercase;
             color: var(--white);
         }
-        .footer-info {
-            font-size: 0.8125rem;
-            color: var(--grey-500);
-        }
+        .footer-info { font-size: 0.8125rem; color: var(--grey-500); }
         .footer-info a { color: var(--grey-400); }
 
         /* Mobile Sticky CTA */
@@ -826,9 +889,7 @@
             align-items: center;
             gap: 16px;
         }
-        .mobile-cta-text {
-            font-size: 0.875rem;
-        }
+        .mobile-cta-text { font-size: 0.875rem; }
         .mobile-cta-text strong { display: block; font-weight: 600; }
         .mobile-cta-text span { color: var(--grey-500); font-size: 0.75rem; }
         .mobile-cta-button {
@@ -851,83 +912,173 @@
     <!-- Header -->
     <header class="header" id="header">
         <a href="../index.html" class="header-back">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M13 8H3M7 4l-4 4 4 4"/>
-            </svg>
-            <span>Back</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
+            Brand House
+        </a>
+        <a href="tel:5302214405" class="header-phone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>(530) 221-4405</span>
         </a>
     </header>
 
     <!-- Hero -->
     <section class="hero">
         <div class="hero-photo"></div>
+        <div class="hero-overlay"></div>
 
-        <!-- Animated Sun Oaks Emblem - Draw-in Effect -->
+        <!-- Animated Sun Oaks Emblem -->
         <div class="hero-emblem">
             <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer ring / main shape - stroke draws in first -->
-                <path class="emblem-path emblem-path-1" d="M217.67,141.01l-7.95-.23c-1.26-.04-1.92-4.59-.84-5.35,11.88-6.19,23.49-20.79,18.38-36.25-48.69,56.74-123.53,70.69-187.8,32.84-8.81-40.57,16.11-83.35,57.81-96.2s85.67,8.01,102.65,48.26l9.79,8.4,15.84-6.74C214.85,30.45,158.01-3.62,105.21,11.06,50.5,26.27,20.56,83.3,38.83,136.5c16.03,46.68,66.62,77.69,116.32,61.72-11.22-29.61,16.83,10,41.32-21.61-2.99-2.78-6.78-3.34-10.69-4.12,3.08-9.84,33.88-.02,31.89-31.48Z"/>
-
-                <path class="emblem-path emblem-path-2" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
-
-                <path class="emblem-path emblem-path-3" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
-
-                <path class="emblem-path emblem-path-4" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
-
-                <!-- Fill fades in after stroke draws -->
-                <path class="emblem-fill emblem-fill-1" d="M217.67,141.01l-7.95-.23c-1.26-.04-1.92-4.59-.84-5.35,11.88-6.19,23.49-20.79,18.38-36.25-48.69,56.74-123.53,70.69-187.8,32.84-8.81-40.57,16.11-83.35,57.81-96.2s85.67,8.01,102.65,48.26l9.79,8.4,15.84-6.74C214.85,30.45,158.01-3.62,105.21,11.06,50.5,26.27,20.56,83.3,38.83,136.5c16.03,46.68,66.62,77.69,116.32,61.72-11.22-29.61,16.83,10,41.32-21.61-2.99-2.78-6.78-3.34-10.69-4.12,3.08-9.84,33.88-.02,31.89-31.48Z"/>
-
-                <path class="emblem-fill emblem-fill-2" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
-
-                <path class="emblem-fill emblem-fill-3" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
-
-                <path class="emblem-fill emblem-fill-4" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
+                <path class="emblem-path emblem-path-1" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
+                <path class="emblem-path emblem-path-2" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
+                <path class="emblem-path emblem-path-3" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
+                <path class="emblem-fill emblem-fill-1" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
+                <path class="emblem-fill emblem-fill-2" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
+                <path class="emblem-fill emblem-fill-3" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
             </svg>
         </div>
 
-        <div class="hero-bg"></div>
         <div class="hero-content">
-            <div class="hero-badge">
-                <span class="hero-badge-text">$0 Enrollment This Month</span>
-            </div>
-            <h1 class="hero-title">Where Redding has come to <em>grow</em> for 64 years.</h1>
-            <p class="hero-subtitle">Three generations of families. Morning swimmers. After-school tennis kids. This is more than a gym—it's where you belong.</p>
-            <a href="#pricing" class="hero-cta">
-                Choose Your Membership
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <div class="hero-secondary">
-                Or <a href="#tour">schedule a free tour</a> first
+            <div class="hero-badge">$0 Enrollment This Month</div>
+            <h1 class="hero-title">Where Redding comes to <em>grow.</em></h1>
+            <p class="hero-subtitle">Three generations of families. Morning swimmers. After-school tennis kids. More than a gym—this is where you belong.</p>
+            <div class="hero-ctas">
+                <a href="#pricing" class="hero-cta">
+                    Choose Membership
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <a href="#tour" class="hero-cta hero-cta--secondary">
+                    Schedule a Tour
+                </a>
             </div>
         </div>
+
         <div class="hero-scroll">
-            <span>Scroll</span>
             <div class="hero-scroll-line"></div>
         </div>
     </section>
 
-    <!-- Social Proof Bar -->
-    <section class="proof-bar">
-        <div class="proof-bar-content">
-            <div class="proof-stat">
-                <div class="proof-stat-value">64</div>
-                <div class="proof-stat-label">Years in Redding</div>
+    <!-- Stats Bar -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stats-item">
+                <div class="stats-value">64</div>
+                <div class="stats-label">Years in Redding</div>
             </div>
-            <div class="proof-stat">
-                <div class="proof-stat-value">130+</div>
-                <div class="proof-stat-label">Classes per week</div>
+            <div class="stats-item">
+                <div class="stats-value">70+</div>
+                <div class="stats-label">Classes per week</div>
             </div>
-            <div class="proof-stat">
-                <div class="proof-stat-value">6</div>
-                <div class="proof-stat-label">Acres of facilities</div>
+            <div class="stats-item">
+                <div class="stats-value">10</div>
+                <div class="stats-label">Tennis courts</div>
             </div>
-            <div class="proof-stat">
-                <div class="proof-stat-value">10</div>
-                <div class="proof-stat-label">Tennis courts</div>
+            <div class="stats-item">
+                <div class="stats-value">3</div>
+                <div class="stats-label">Pools year-round</div>
             </div>
-            <div class="proof-quote">
-                <p class="proof-quote-text">"My kids learned to swim here. Now they're teaching their kids. That's Sun Oaks."</p>
-                <p class="proof-quote-author">— Member since 1987</p>
+        </div>
+    </section>
+
+    <!-- Benefits - Bento Grid -->
+    <section class="benefits">
+        <div class="benefits-header reveal">
+            <div class="benefits-label">What Membership Includes</div>
+            <h2 class="benefits-title">Everything under one roof</h2>
+        </div>
+
+        <div class="benefits-grid reveal">
+            <!-- Featured: Group Classes -->
+            <div class="benefit-card benefit-card--featured">
+                <div class="benefit-card-badge">70+ per week</div>
+                <div class="benefit-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3 class="benefit-card-name">Group Classes</h3>
+                <p class="benefit-card-desc">Cardio, strength, cycling, and mind-body classes 7 days a week. Never miss a workout with easy signup using our Sun Oaks app.</p>
+            </div>
+
+            <!-- Personal Training -->
+            <div class="benefit-card">
+                <div class="benefit-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0"/><path d="M6.5 6.5L6.5 15L9.5 18L9.5 21"/><path d="M6.5 12L3.5 15L3.5 18"/></svg>
+                </div>
+                <h3 class="benefit-card-name">Personal Training</h3>
+                <p class="benefit-card-desc">Certified trainers ready to help you reach your goals. Find your perfect workout partner—plus nutrition coaching.</p>
+            </div>
+
+            <!-- Small Group Training -->
+            <div class="benefit-card">
+                <div class="benefit-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <h3 class="benefit-card-name">Small Group Training</h3>
+                <p class="benefit-card-desc">Group fitness meets personal training. Get the energy of a class with one-on-one coaching. Programs run year-round.</p>
+            </div>
+
+            <!-- Swimming - Pool teal -->
+            <div class="benefit-card benefit-card--pool">
+                <div class="benefit-card-badge">Year-Round</div>
+                <div class="benefit-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12c2-2 4-3 6-3s4 1 6 3 4 3 6 3 4-1 6-3"/></svg>
+                </div>
+                <h3 class="benefit-card-name">Swimming</h3>
+                <p class="benefit-card-desc">3 pools with plenty of room. Swim School runs year-round. Heated dome keeps outdoor pool warm in winter. Lane reservations for lap swimmers.</p>
+            </div>
+
+            <!-- Tennis -->
+            <div class="benefit-card">
+                <div class="benefit-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h3 class="benefit-card-name">Tennis & Pickleball</h3>
+                <p class="benefit-card-desc">7 outdoor + 3 indoor courts. Junior and adult programs year-round. Tournaments, mixers, free Learn to Play classes. Pickleball on weekends.</p>
+            </div>
+
+            <!-- Spa -->
+            <div class="benefit-card">
+                <div class="benefit-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 class="benefit-card-name">Spa Services</h3>
+                <p class="benefit-card-desc">Onsite massage therapists, estheticians, and nail techs. Easy online booking to keep you feeling great on your fitness journey.</p>
+            </div>
+
+            <!-- Childcare -->
+            <div class="benefit-card">
+                <div class="benefit-card-badge">Free</div>
+                <div class="benefit-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                </div>
+                <h3 class="benefit-card-name">Childcare & Kids</h3>
+                <p class="benefit-card-desc">Up to 2 hours complimentary childcare daily (6mo–9yrs). Plus Kids Night Out, weekly rec programs, swim lessons, tennis, and summer camp.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Access List -->
+    <section class="access">
+        <div class="access-content">
+            <div class="access-header reveal">
+                <h2 class="access-title">Full Access Includes</h2>
+            </div>
+
+            <div class="access-grid reveal">
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Complete Fitness Center</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Certified Fitness Staff</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> One-on-One Personal Training</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Boxing, TRIBE & Small Group</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Spa, Massage & Esthetics</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Year-Round Heated Pools</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Sun Oaks Swim School</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Complimentary Childcare</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Youth Sports & Camps</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Indoor & Outdoor Basketball</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 3 Indoor + 7 Outdoor Tennis Courts</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 4 Pickleball Courts</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Pro Shop & Stringing</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Tennis Leagues & Tournaments</div>
+                <div class="access-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Club Rentals & Birthday Parties</div>
             </div>
         </div>
     </section>
@@ -952,7 +1103,7 @@
                     </div>
                     <ul class="pricing-card-features">
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Full gym & equipment access</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All 130+ group fitness classes</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All 70+ group fitness classes</li>
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Pool, spa & tennis courts</li>
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Locker room amenities</li>
                     </ul>
@@ -975,7 +1126,7 @@
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Couples tennis & classes</li>
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Shared accountability</li>
                     </ul>
-                    <a href="#signup" class="pricing-card-cta pricing-card-cta--primary">Get Started</a>
+                    <a href="#signup" class="pricing-card-cta pricing-card-cta--secondary">Get Started</a>
                 </div>
 
                 <!-- Family -->
@@ -988,96 +1139,24 @@
                     </div>
                     <ul class="pricing-card-features">
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 2 adults + kids under 18</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Kids Club & youth programs</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Summer swim access</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Free childcare & youth programs</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Year-round swim access</li>
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Family tennis & activities</li>
                     </ul>
                     <a href="#signup" class="pricing-card-cta pricing-card-cta--secondary">Get Started</a>
                 </div>
             </div>
-
-            <!-- Promo Banner -->
-            <div class="promo-banner reveal">
-                <div class="promo-banner-text">
-                    <div class="promo-banner-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    </div>
-                    <div>
-                        <h3>Limited Time: $0 Enrollment</h3>
-                        <p>Save up to $199 when you join this month with an annual commitment.</p>
-                    </div>
-                </div>
-                <a href="#signup" class="promo-banner-cta">Claim Offer →</a>
-            </div>
         </div>
     </section>
 
-    <!-- What's Included -->
-    <section class="included">
-        <div class="included-content">
-            <div class="included-header reveal">
-                <div class="included-label">All Memberships Include</div>
-                <h2 class="included-title">Everything you need under one roof</h2>
+    <!-- Promo Banner -->
+    <section class="promo">
+        <div class="promo-banner reveal">
+            <div class="promo-text">
+                <h3>Limited Time: $0 Enrollment</h3>
+                <p>Save up to $199 when you join this month with an annual commitment.</p>
             </div>
-
-            <div class="included-grid reveal">
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                    </div>
-                    <h4>Pools & Spas</h4>
-                    <p>3 pools including year-round heated lap pool, plus 2 relaxing spas</p>
-                </div>
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                    </div>
-                    <h4>130+ Classes</h4>
-                    <p>Cardio, strength, yoga, cycling, aquatics—something every day</p>
-                </div>
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M3 21h18"/><path d="M12 13v8"/></svg>
-                    </div>
-                    <h4>10 Tennis Courts</h4>
-                    <p>7 outdoor + 3 indoor—the only indoor courts in the North State</p>
-                </div>
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
-                    </div>
-                    <h4>4 Pickleball Courts</h4>
-                    <p>Dedicated courts for the fastest-growing sport in America</p>
-                </div>
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0"/><path d="M6.5 6.5L6.5 15L9.5 18L9.5 21"/><path d="M6.5 12L3.5 15L3.5 18"/><path d="M17.5 6.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0"/><path d="M17.5 6.5L17.5 15L14.5 18L14.5 21"/><path d="M17.5 12L20.5 15L20.5 18"/></svg>
-                    </div>
-                    <h4>Full Gym</h4>
-                    <p>Cardio, free weights, machines, stretching area—all included</p>
-                </div>
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    </div>
-                    <h4>Community</h4>
-                    <p>64 years of families, friendships, and people who show up for each other</p>
-                </div>
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.12 0 4.07.74 5.61 1.97"/></svg>
-                    </div>
-                    <h4>Free Parking</h4>
-                    <p>Easy access with plenty of parking on our 6-acre property</p>
-                </div>
-                <div class="included-item">
-                    <div class="included-item-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    </div>
-                    <h4>Locker Rooms</h4>
-                    <p>Clean, comfortable locker rooms with showers and amenities</p>
-                </div>
-            </div>
+            <a href="#signup" class="promo-cta">Claim Offer →</a>
         </div>
     </section>
 
@@ -1122,7 +1201,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">Yes! Family memberships include 2 adults and all children under 18 living in the same household. Kids have access to pools, Kids Club, youth programs, and more.</div>
+                        <div class="faq-answer-inner">Yes! Family memberships include 2 adults and all children under 18 living in the same household. Kids have access to pools, childcare, youth programs, and more.</div>
                     </div>
                 </div>
                 <div class="faq-item">
@@ -1140,12 +1219,24 @@
 
     <!-- Final CTA -->
     <section class="final-cta" id="signup">
+        <!-- Subtle emblem background -->
+        <div class="final-cta-emblem">
+            <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+                <path class="cta-emblem-fill" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
+                <path class="cta-emblem-fill" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
+                <path class="cta-emblem-fill" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
+                <path class="cta-emblem-path" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
+                <path class="cta-emblem-path" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
+                <path class="cta-emblem-path" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
+            </svg>
+        </div>
+
         <div class="final-cta-content reveal">
             <h2 class="final-cta-title">Ready to find <em>your place?</em></h2>
             <p class="final-cta-text">Join the families who've been growing together at Sun Oaks for three generations. Your community is waiting.</p>
             <a href="#" class="final-cta-button">
                 Start Your Membership
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <p class="final-cta-phone">Questions? Call us: <a href="tel:5302214405">(530) 221-4405</a></p>
         </div>
@@ -1171,14 +1262,10 @@
     </div>
 
     <script>
-        // Header scroll effect
+        // Header scroll
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            header.classList.toggle('scrolled', window.scrollY > 100);
         });
 
         // Mobile CTA visibility
@@ -1187,11 +1274,7 @@
 
         const ctaObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    mobileCta.classList.add('visible');
-                } else {
-                    mobileCta.classList.remove('visible');
-                }
+                mobileCta.classList.toggle('visible', !entry.isIntersecting);
             });
         }, { threshold: 0 });
 
@@ -1202,27 +1285,29 @@
             question.addEventListener('click', () => {
                 const item = question.parentElement;
                 const isOpen = item.classList.contains('open');
-
-                // Close all
                 document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-
-                // Open clicked if it wasn't open
-                if (!isOpen) {
-                    item.classList.add('open');
-                }
+                if (!isOpen) item.classList.add('open');
             });
         });
 
         // Reveal animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('is-visible');
             });
         }, { threshold: 0.1, rootMargin: '-40px' });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // CTA Emblem animation
+        const emblemObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add('is-visible');
+            });
+        }, { threshold: 0.3 });
+
+        const ctaEmblem = document.querySelector('.final-cta-emblem');
+        if (ctaEmblem) emblemObserver.observe(ctaEmblem);
 
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
