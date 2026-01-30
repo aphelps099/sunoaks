@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Foundation — Sun Oaks Brand House</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           SUN OAKS BRAND HOUSE — CHAPTER 01: BRAND FOUNDATION
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+            
+            --sun: #F7B500;
+            --sun-hover: #FFBF00;
+            --pool: #0891A8;
+            --pool-light: #0BA4BD;
+            
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+            
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.4s;
+        }
+        
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--black);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        ::selection {
+            background: var(--sun);
+            color: var(--black);
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(250, 249, 247, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 24px;
+            }
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        
+        .header-back:hover {
+            color: var(--black);
+        }
+        
+        .header-back svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .header-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--grey-200);
+        }
+        
+        .header-chapter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+        
+        .header-chapter span {
+            color: var(--sun);
+        }
+        
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header-nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--pearl);
+            border: none;
+            cursor: pointer;
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .header-nav-btn:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        .header-nav-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .header-nav-btn.is-disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HERO
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .hero {
+            padding: 160px 48px 80px;
+            background: var(--cream);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 24px 60px;
+            }
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: end;
+        }
+        
+        @media (max-width: 900px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        .hero-number {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.2s forwards;
+        }
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.3s forwards;
+        }
+        
+        .hero-intro {
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.4s forwards;
+        }
+        
+        .hero-intro p {
+            font-size: 1.125rem;
+            font-weight: 400;
+            line-height: 1.75;
+            color: var(--grey-500);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           TABLE OF CONTENTS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .toc {
+            padding: 0 48px 80px;
+            background: var(--cream);
+        }
+        
+        @media (max-width: 768px) {
+            .toc {
+                padding: 0 24px 60px;
+            }
+        }
+        
+        .toc-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 48px;
+            border-top: 1px solid var(--silver);
+        }
+        
+        .toc-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 24px;
+        }
+        
+        .toc-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+        }
+        
+        .toc-link {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        
+        .toc-link:hover {
+            color: var(--black);
+        }
+        
+        .toc-link span {
+            color: var(--grey-300);
+            margin-right: 6px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           SECTION BASE
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section {
+            padding: 100px 48px;
+        }
+        
+        @media (max-width: 768px) {
+            .section {
+                padding: 70px 24px;
+            }
+        }
+        
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+        
+        @media (max-width: 900px) {
+            .section-header {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        
+        .section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--pool);
+            padding-top: 8px;
+        }
+        
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           STORY SECTION
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--story {
+            background: var(--white);
+        }
+        
+        .story-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 60px;
+        }
+        
+        @media (max-width: 1000px) {
+            .story-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        .story-sidebar {
+            padding-top: 8px;
+        }
+        
+        @media (max-width: 1000px) {
+            .story-sidebar {
+                display: none;
+            }
+        }
+        
+        .story-main {
+            grid-column: span 2;
+        }
+        
+        @media (max-width: 1000px) {
+            .story-main {
+                grid-column: span 1;
+            }
+        }
+        
+        .story-text {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--grey-600);
+            margin-bottom: 32px;
+        }
+        
+        .story-text:last-child {
+            margin-bottom: 0;
+        }
+        
+        .story-highlight {
+            font-family: var(--font-serif);
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 500;
+            font-style: italic;
+            line-height: 1.4;
+            color: var(--black);
+            padding: 40px 0;
+            margin: 40px 0;
+            border-top: 1px solid var(--silver);
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           TIMELINE
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--timeline {
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        .section--timeline .section-label {
+            color: var(--sun);
+        }
+        
+        .timeline {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+        }
+        
+        @media (max-width: 900px) {
+            .timeline {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        .timeline-sidebar {
+            position: relative;
+        }
+        
+        @media (max-width: 900px) {
+            .timeline-sidebar {
+                display: none;
+            }
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--sun), var(--pool), var(--grey-700));
+        }
+        
+        .timeline-items {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+        }
+        
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+        
+        @media (max-width: 600px) {
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        
+        .timeline-year {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--sun);
+        }
+        
+        .timeline-content h4 {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .timeline-content p {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-300);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           ESSENCE
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--essence {
+            background: var(--pearl);
+        }
+        
+        .essence-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        @media (max-width: 900px) {
+            .essence-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .essence-card {
+            padding: 40px;
+            background: var(--white);
+            border: 1px solid var(--silver);
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .essence-card:hover {
+            border-color: var(--sun);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+        }
+        
+        .essence-card-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 16px;
+        }
+        
+        .essence-card-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        
+        .essence-card-text {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           PROMISE
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--promise {
+            background: var(--sun);
+            color: var(--black);
+        }
+        
+        .section--promise .section-label {
+            color: var(--black);
+            opacity: 0.5;
+        }
+        
+        .promise-content {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        @media (max-width: 900px) {
+            .promise-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+        
+        .promise-statement {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 500;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+        
+        .promise-statement em {
+            font-style: italic;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           PERSONALITY
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--personality {
+            background: var(--white);
+        }
+        
+        .personality-grid {
+            display: grid;
+            grid-template-columns: 200px repeat(4, 1fr);
+            gap: 24px;
+        }
+        
+        @media (max-width: 1000px) {
+            .personality-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .personality-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .personality-sidebar {
+            padding-top: 8px;
+        }
+        
+        @media (max-width: 1000px) {
+            .personality-sidebar {
+                grid-column: span 2;
+                margin-bottom: 16px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .personality-sidebar {
+                grid-column: span 1;
+            }
+        }
+        
+        .personality-card {
+            padding: 32px;
+            background: var(--pearl);
+            border-left: 3px solid var(--pool);
+        }
+        
+        .personality-card-title {
+            font-family: var(--font-sans);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .personality-card-text {
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           VALUES
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--values {
+            background: var(--cream);
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+        }
+        
+        @media (max-width: 900px) {
+            .values-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        .values-sidebar {
+            padding-top: 8px;
+        }
+        
+        @media (max-width: 900px) {
+            .values-sidebar {
+                display: none;
+            }
+        }
+        
+        .values-list {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .value-item {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 24px;
+            padding: 32px 0;
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        .value-item:first-child {
+            padding-top: 0;
+        }
+        
+        .value-item:last-child {
+            border-bottom: none;
+        }
+        
+        .value-num {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--sun);
+        }
+        
+        .value-content h4 {
+            font-family: var(--font-sans);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .value-content p {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           NEXT CHAPTER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .next-chapter {
+            padding: 80px 48px;
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        @media (max-width: 768px) {
+            .next-chapter {
+                padding: 60px 24px;
+            }
+        }
+        
+        .next-chapter-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .next-chapter-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            background: var(--grey-800);
+            border: 1px solid var(--grey-700);
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .next-chapter-link:hover {
+            border-color: var(--sun);
+            transform: translateY(-4px);
+        }
+        
+        @media (max-width: 600px) {
+            .next-chapter-link {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+                padding: 32px;
+            }
+        }
+        
+        .next-chapter-text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .next-chapter-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+        
+        .next-chapter-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .next-chapter-arrow {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+            color: var(--black);
+            transition: transform var(--duration) var(--ease);
+        }
+        
+        .next-chapter-link:hover .next-chapter-arrow {
+            transform: translateX(4px);
+        }
+        
+        .next-chapter-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .footer {
+            padding: 32px 48px;
+            background: var(--black);
+            color: var(--white);
+            border-top: 1px solid var(--grey-700);
+        }
+        
+        @media (max-width: 768px) {
+            .footer {
+                padding: 32px 24px;
+            }
+        }
+        
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .footer-sep {
+            width: 1px;
+            height: 16px;
+            background: var(--grey-600);
+        }
+        
+        .footer-tag {
+            font-size: 0.875rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit a {
+            color: var(--sun);
+        }
+        
+        @media (max-width: 600px) {
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 8H3M7 4l-4 4 4 4"/>
+                </svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>01</span> Brand Foundation</span>
+        </div>
+        <div class="header-nav">
+            <button class="header-nav-btn is-disabled" aria-label="Previous chapter">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 8H3M7 4l-4 4 4 4"/>
+                </svg>
+            </button>
+            <button class="header-nav-btn" aria-label="Next chapter" onclick="location.href='02-visual.html'">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="hero-number">Chapter 01</div>
+                <h1 class="hero-title">Brand Foundation</h1>
+            </div>
+            <div class="hero-intro">
+                <p>The strategic and emotional bedrock of Sun Oaks. This chapter defines who we are, where we came from, what we stand for, and the promise we make to every person who walks through our doors.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Table of Contents -->
+    <div class="toc">
+        <div class="toc-content">
+            <div class="toc-label">In This Chapter</div>
+            <div class="toc-list">
+                <a href="#story" class="toc-link"><span>1.1</span> Our Story</a>
+                <a href="#timeline" class="toc-link"><span>1.2</span> Timeline</a>
+                <a href="#essence" class="toc-link"><span>1.3</span> Brand Essence</a>
+                <a href="#promise" class="toc-link"><span>1.4</span> Brand Promise</a>
+                <a href="#personality" class="toc-link"><span>1.5</span> Personality</a>
+                <a href="#values" class="toc-link"><span>1.6</span> Core Values</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Our Story -->
+    <section class="section section--story" id="story">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-label">1.1</div>
+                <h2 class="section-title">Our Story</h2>
+            </div>
+            
+            <div class="story-grid reveal">
+                <div class="story-sidebar">
+                    <div class="section-label">The Beginning</div>
+                </div>
+                <div class="story-main">
+                    <p class="story-text">
+                        In 1960, Redding was a small Northern California city searching for its identity. The lumber industry was slowing, the population was growing, and families needed places to gather—not just to exercise, but to belong.
+                    </p>
+                    <p class="story-text">
+                        Sun Oaks began as a vision: six acres of oak-studded land that could become the community's backyard. A place where kids could learn to swim on summer mornings, where parents could find an hour of peace in the gym, where neighbors could become friends over a game of tennis.
+                    </p>
+                    
+                    <blockquote class="story-highlight">
+                        "We didn't set out to build a fitness center. We set out to build a place where Redding could find itself."
+                    </blockquote>
+                    
+                    <p class="story-text">
+                        Sixty-four years later, that vision hasn't changed—only deepened. Three generations of families have grown up within these walls. The morning lap swimmers know each other by name. The after-school tennis kids become the adult league players. The community we imagined has become the community we are.
+                    </p>
+                    <p class="story-text">
+                        Today, Sun Oaks serves thousands of members across seven distinct programs: fitness, tennis, pickleball, aquatics, kids, spa, and events. But the numbers have never been the point. The point is what happens between those numbers—the conversations in the locker room, the high-fives after a tough class, the generations that learn to love movement together.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Timeline -->
+    <section class="section section--timeline" id="timeline">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-label">1.2</div>
+                <h2 class="section-title">Our Timeline</h2>
+            </div>
+            
+            <div class="timeline reveal">
+                <div class="timeline-sidebar">
+                    <div class="timeline-line"></div>
+                </div>
+                <div class="timeline-items">
+                    <div class="timeline-item">
+                        <div class="timeline-year">1960</div>
+                        <div class="timeline-content">
+                            <h4>The Beginning</h4>
+                            <p>Sun Oaks opens on six acres of oak-studded land with a single pool, two tennis courts, and a dream of building community.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1975</div>
+                        <div class="timeline-content">
+                            <h4>Fitness Expansion</h4>
+                            <p>The first dedicated fitness center opens, introducing Redding to group exercise classes and modern training equipment.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1988</div>
+                        <div class="timeline-content">
+                            <h4>Tennis Complex</h4>
+                            <p>Expansion to 10 tennis courts makes Sun Oaks the premier tennis destination in Northern California.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2001</div>
+                        <div class="timeline-content">
+                            <h4>Aquatics Center</h4>
+                            <p>Three-pool aquatics complex opens, featuring competition lanes, a family pool, and dedicated learn-to-swim facility.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2015</div>
+                        <div class="timeline-content">
+                            <h4>Full-Service Spa</h4>
+                            <p>Wellness expansion introduces massage, skincare, and recovery services—completing the mind-body offering.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2021</div>
+                        <div class="timeline-content">
+                            <h4>Pickleball Courts</h4>
+                            <p>Four dedicated pickleball courts answer the community's fastest-growing demand, bringing a new generation to Sun Oaks.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2024</div>
+                        <div class="timeline-content">
+                            <h4>Brand Evolution</h4>
+                            <p>Sun Oaks embarks on a comprehensive brand refresh, honoring 64 years of legacy while positioning for the next generation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Brand Essence -->
+    <section class="section section--essence" id="essence">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-label">1.3</div>
+                <h2 class="section-title">Brand Essence</h2>
+            </div>
+            
+            <div class="essence-grid reveal">
+                <div class="essence-card">
+                    <div class="essence-card-label">What We Do</div>
+                    <h3 class="essence-card-title">Full-Service Fitness & Wellness</h3>
+                    <p class="essence-card-text">Seven integrated programs—fitness, tennis, pickleball, aquatics, kids, spa, and events—all under one roof, all designed to work together.</p>
+                </div>
+                <div class="essence-card">
+                    <div class="essence-card-label">How We Do It</div>
+                    <h3 class="essence-card-title">Community-Centered Excellence</h3>
+                    <p class="essence-card-text">Every program, class, and interaction is designed to foster connection. We remember names. We celebrate milestones. We show up for each other.</p>
+                </div>
+                <div class="essence-card">
+                    <div class="essence-card-label">Why It Matters</div>
+                    <h3 class="essence-card-title">Transformation Through Belonging</h3>
+                    <p class="essence-card-text">Fitness is personal, but transformation is communal. When you're surrounded by people who show up, you show up differently.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Brand Promise -->
+    <section class="section section--promise" id="promise">
+        <div class="section-content">
+            <div class="promise-content reveal">
+                <div class="section-label">1.4 Brand Promise</div>
+                <h2 class="promise-statement">At Sun Oaks, you'll find more than fitness. You'll find <em>your people.</em></h2>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Personality -->
+    <section class="section section--personality" id="personality">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-label">1.5</div>
+                <h2 class="section-title">Brand Personality</h2>
+            </div>
+            
+            <div class="personality-grid reveal">
+                <div class="personality-sidebar">
+                    <div class="section-label">Four Traits</div>
+                </div>
+                <div class="personality-card">
+                    <h4 class="personality-card-title">Welcoming</h4>
+                    <p class="personality-card-text">Warm, approachable, inclusive. We make the first move so you don't have to. Everyone belongs here.</p>
+                </div>
+                <div class="personality-card">
+                    <h4 class="personality-card-title">Energizing</h4>
+                    <p class="personality-card-text">Vibrant, active, alive. There's a current running through this place—you feel it the moment you walk in.</p>
+                </div>
+                <div class="personality-card">
+                    <h4 class="personality-card-title">Trusted</h4>
+                    <p class="personality-card-text">Established, reliable, earned. Sixty-four years of showing up. We're here for the long run—just like you.</p>
+                </div>
+                <div class="personality-card">
+                    <h4 class="personality-card-title">Local</h4>
+                    <p class="personality-card-text">Rooted, authentic, Redding. This isn't a franchise. This is your neighbor's place. This is home.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Core Values -->
+    <section class="section section--values" id="values">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-label">1.6</div>
+                <h2 class="section-title">Core Values</h2>
+            </div>
+            
+            <div class="values-grid reveal">
+                <div class="values-sidebar">
+                    <div class="section-label">What We Stand For</div>
+                </div>
+                <div class="values-list">
+                    <div class="value-item">
+                        <div class="value-num">01</div>
+                        <div class="value-content">
+                            <h4>Community First</h4>
+                            <p>We're not a membership—we're a belonging. Every decision we make is filtered through one question: does this strengthen our community?</p>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">02</div>
+                        <div class="value-content">
+                            <h4>All Ages, All Stages</h4>
+                            <p>From toddler splash to senior stretch. From first serve to tournament play. We meet you where you are and grow with you wherever you're going.</p>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">03</div>
+                        <div class="value-content">
+                            <h4>Excellence in Everything</h4>
+                            <p>Clean facilities. Expert instruction. Thoughtful programming. The details matter because they signal respect—for our members and our craft.</p>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">04</div>
+                        <div class="value-content">
+                            <h4>Rooted in Redding</h4>
+                            <p>We're not just located in Redding—we're of Redding. This community raised us, and we're committed to raising it back.</p>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">05</div>
+                        <div class="value-content">
+                            <h4>Legacy Mindset</h4>
+                            <p>We think in generations, not quarters. Every improvement we make is designed to serve the families who'll be here in another 64 years.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Next Chapter -->
+    <div class="next-chapter">
+        <div class="next-chapter-content">
+            <a href="02-visual.html" class="next-chapter-link">
+                <div class="next-chapter-text">
+                    <span class="next-chapter-label">Next Chapter</span>
+                    <span class="next-chapter-title">02 — Visual Identity</span>
+                </div>
+                <div class="next-chapter-arrow">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 8h10M9 4l4 4-4 4"/>
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
+            <div class="footer-credit">
+                Designed by <a href="https://look-serious.com">Look Serious</a> · 2026
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // Smooth scroll for TOC links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

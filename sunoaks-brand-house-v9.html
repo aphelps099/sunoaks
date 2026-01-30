@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun Oaks — Brand House</title>
+    
+    <!-- Fonts: Jost (Futura energy) + Newsreader (sharp editorial serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           SUN OAKS BRAND HOUSE
+           Ogilvy-level craft. Futura + Editorial serif. $90k restraint.
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            /* Precise neutrals */
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+            
+            /* Sun — one perfect yellow */
+            --sun: #F7B500;
+            --sun-hover: #FFBF00;
+            
+            /* Pool — one perfect teal */
+            --pool: #0891A8;
+            --pool-light: #0BA4BD;
+            
+            /* Typography */
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+            
+            /* Spacing - based on 8px */
+            --space-unit: 8px;
+            
+            /* Motion */
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.4s;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           RESET
+           ═══════════════════════════════════════════════════════════════ */
+        
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--black);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        ::selection {
+            background: var(--sun);
+            color: var(--black);
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           TYPOGRAPHY SYSTEM
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .t-display {
+            font-family: var(--font-sans);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        
+        .t-headline {
+            font-family: var(--font-serif);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            line-height: 1.15;
+        }
+        
+        .t-body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        .t-label {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.6875rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .header.is-scrolled {
+            padding: 16px 48px;
+            background: rgba(250, 249, 247, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 24px;
+            }
+            .header.is-scrolled {
+                padding: 16px 24px;
+            }
+        }
+        
+        .header-logo {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .header-link {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        
+        .header-link:hover {
+            color: var(--black);
+        }
+        
+        .header-cta {
+            padding: 12px 24px;
+            background: var(--black);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .header-cta:hover {
+            background: var(--grey-700);
+        }
+        
+        @media (max-width: 768px) {
+            .header-link { display: none; }
+            .header-nav { gap: 16px; }
+            .header-cta { display: none; }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           MOBILE NAVIGATION
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .nav-toggle {
+            display: none;
+            width: 48px;
+            height: 48px;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            z-index: 1001;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: flex;
+            }
+        }
+        
+        .nav-toggle-inner {
+            width: 24px;
+            height: 14px;
+            position: relative;
+        }
+        
+        .nav-toggle-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--black);
+            transition: all 0.3s var(--ease);
+        }
+        
+        .nav-toggle-line:nth-child(1) { top: 0; }
+        .nav-toggle-line:nth-child(2) { top: 50%; transform: translateY(-50%); }
+        .nav-toggle-line:nth-child(3) { bottom: 0; }
+        
+        /* Toggle active state */
+        .nav-toggle.is-active .nav-toggle-line:nth-child(1) {
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+        }
+        
+        .nav-toggle.is-active .nav-toggle-line:nth-child(2) {
+            opacity: 0;
+            transform: translateX(10px);
+        }
+        
+        .nav-toggle.is-active .nav-toggle-line:nth-child(3) {
+            bottom: 50%;
+            transform: translateY(50%) rotate(-45deg);
+        }
+        
+        /* Mobile Menu Overlay */
+        .mobile-nav {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: var(--cream);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s var(--ease);
+        }
+        
+        .mobile-nav.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-nav-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px 32px 48px;
+        }
+        
+        .mobile-nav-links {
+            list-style: none;
+            margin-bottom: 48px;
+        }
+        
+        .mobile-nav-item {
+            overflow: hidden;
+        }
+        
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--silver);
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 6vw, 40px);
+            font-weight: 500;
+            color: var(--black);
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.5s var(--ease-out), opacity 0.5s var(--ease-out), color 0.3s;
+        }
+        
+        .mobile-nav.is-open .mobile-nav-link {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .mobile-nav-item:nth-child(1) .mobile-nav-link { transition-delay: 0.1s; }
+        .mobile-nav-item:nth-child(2) .mobile-nav-link { transition-delay: 0.15s; }
+        .mobile-nav-item:nth-child(3) .mobile-nav-link { transition-delay: 0.2s; }
+        .mobile-nav-item:nth-child(4) .mobile-nav-link { transition-delay: 0.25s; }
+        
+        .mobile-nav-link:hover {
+            color: var(--grey-400);
+        }
+        
+        .mobile-nav-link-num {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--sun);
+        }
+        
+        .mobile-nav-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 32px;
+            background: var(--sun);
+            color: var(--black);
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s var(--ease-out);
+            transition-delay: 0.3s;
+        }
+        
+        .mobile-nav.is-open .mobile-nav-cta {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mobile-nav-cta svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .mobile-nav-footer {
+            padding: 24px 32px;
+            border-top: 1px solid var(--silver);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s var(--ease);
+            transition-delay: 0.35s;
+        }
+        
+        .mobile-nav.is-open .mobile-nav-footer {
+            opacity: 1;
+        }
+        
+        .mobile-nav-footer-text {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--grey-400);
+        }
+        
+        .mobile-nav-footer-social {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .mobile-nav-footer-social a {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+            transition: color 0.3s;
+        }
+        
+        .mobile-nav-footer-social a:hover {
+            color: var(--black);
+        }
+        
+        /* Body scroll lock when menu open */
+        body.nav-open {
+            overflow: hidden;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HERO
+           ═══════════════════════════════════════════════════════════════ -->
+        
+        .hero {
+            min-height: 100vh;
+            min-height: 100svh;
+            display: grid;
+            grid-template-rows: 1fr auto;
+            position: relative;
+            background: var(--cream);
+            overflow: hidden;
+        }
+        
+        /* The Sun — Simple. Iconic. */
+        .hero-sun {
+            position: absolute;
+            top: -15%;
+            right: -10%;
+            width: 65vmax;
+            height: 65vmax;
+        }
+        
+        .hero-sun-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--sun);
+            opacity: 0;
+            transform: scale(0.9);
+            animation: sunEnter 1.5s var(--ease-out) 0.2s forwards;
+        }
+        
+        @keyframes sunEnter {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Rays — sharp, geometric */
+        .hero-rays {
+            position: absolute;
+            top: -15%;
+            right: -10%;
+            width: 65vmax;
+            height: 65vmax;
+            opacity: 0;
+            animation: raysEnter 1.2s var(--ease-out) 0.8s forwards, raysSpin 180s linear 2s infinite;
+        }
+        
+        @keyframes raysEnter {
+            to { opacity: 1; }
+        }
+        
+        @keyframes raysSpin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-rays svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 160px 48px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 120px 24px 0;
+            }
+        }
+        
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s var(--ease-out) 0.6s forwards;
+        }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-eyebrow-line {
+            width: 48px;
+            height: 1px;
+            background: var(--black);
+        }
+        
+        .hero-eyebrow-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+        }
+        
+        /* The Statement */
+        .hero-title {
+            max-width: 900px;
+            margin-bottom: 48px;
+        }
+        
+        .hero-title-line {
+            display: block;
+            overflow: hidden;
+        }
+        
+        .hero-title-text {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: clamp(40px, 7vw, 88px);
+            font-weight: 500;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            color: var(--black);
+            transform: translateY(105%);
+            animation: textReveal 1s var(--ease-out) forwards;
+        }
+        
+        .hero-title-line:nth-child(1) .hero-title-text { animation-delay: 0.9s; }
+        .hero-title-line:nth-child(2) .hero-title-text { animation-delay: 1s; }
+        
+        @keyframes textReveal {
+            to { transform: translateY(0); }
+        }
+        
+        .hero-title-em {
+            font-style: italic;
+        }
+        
+        /* Hero Bottom */
+        .hero-bottom {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 64px;
+            align-items: end;
+            padding: 48px;
+            background: var(--white);
+            border-top: 1px solid var(--silver);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s var(--ease-out) 1.4s forwards;
+        }
+        
+        @media (max-width: 900px) {
+            .hero-bottom {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 40px 24px;
+            }
+        }
+        
+        .hero-intro {
+            max-width: 560px;
+        }
+        
+        .hero-intro p {
+            font-family: var(--font-sans);
+            font-size: 1.0625rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+        
+        .hero-intro strong {
+            color: var(--black);
+            font-weight: 600;
+        }
+        
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+        
+        .hero-stat {
+            text-align: right;
+        }
+        
+        @media (max-width: 900px) {
+            .hero-stat {
+                text-align: left;
+            }
+        }
+        
+        .hero-stat-value {
+            font-family: var(--font-sans);
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1;
+            color: var(--black);
+        }
+        
+        .hero-stat-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-top: 4px;
+        }
+        
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 28px;
+            background: var(--sun);
+            color: var(--black);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .hero-cta:hover {
+            background: var(--sun-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(247, 181, 0, 0.3);
+        }
+        
+        .hero-cta svg {
+            width: 16px;
+            height: 16px;
+            transition: transform var(--duration);
+        }
+        
+        .hero-cta:hover svg {
+            transform: translateX(4px);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           MANIFESTO SECTION
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .manifesto {
+            padding: 160px 48px;
+            background: var(--black);
+            color: var(--white);
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .manifesto {
+                padding: 100px 24px;
+            }
+        }
+        
+        .manifesto-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+        
+        @media (max-width: 900px) {
+            .manifesto-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+        }
+        
+        .manifesto-left {
+            position: relative;
+        }
+        
+        .manifesto-number {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 24px;
+        }
+        
+        .manifesto-title {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+        
+        .manifesto-title em {
+            font-style: italic;
+            color: var(--sun);
+        }
+        
+        .manifesto-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .manifesto-text {
+            font-family: var(--font-sans);
+            font-size: 1.0625rem;
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--grey-300);
+            margin-bottom: 48px;
+        }
+        
+        .manifesto-values {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .manifesto-value {
+            display: flex;
+            gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--grey-700);
+        }
+        
+        .manifesto-value:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .manifesto-value-num {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--pool-light);
+            min-width: 24px;
+        }
+        
+        .manifesto-value-title {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           PHOTO STRIP
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .photo-strip {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            height: 280px;
+        }
+        
+        @media (max-width: 900px) {
+            .photo-strip {
+                grid-template-columns: repeat(3, 1fr);
+                height: 200px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .photo-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .photo-strip-item {
+            position: relative;
+            overflow: hidden;
+            background: var(--grey-700);
+        }
+        
+        .photo-strip-item:nth-child(4),
+        .photo-strip-item:nth-child(5) {
+            display: block;
+        }
+        
+        @media (max-width: 900px) {
+            .photo-strip-item:nth-child(4),
+            .photo-strip-item:nth-child(5) {
+                display: none;
+            }
+        }
+        
+        .photo-strip-inner {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--grey-600), var(--grey-800));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.6s var(--ease);
+        }
+        
+        .photo-strip-item:hover .photo-strip-inner {
+            transform: scale(1.05);
+        }
+        
+        .photo-strip-label {
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           CHAPTERS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .chapters {
+            padding: 120px 48px;
+            background: var(--pearl);
+        }
+        
+        @media (max-width: 768px) {
+            .chapters {
+                padding: 80px 24px;
+            }
+        }
+        
+        .chapters-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .chapters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--grey-200);
+        }
+        
+        .chapters-title {
+            font-family: var(--font-sans);
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+        
+        .chapters-count {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+        
+        /* Chapter Grid */
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        @media (max-width: 900px) {
+            .chapters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .chapter {
+            position: relative;
+            background: var(--white);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+            border: 1px solid transparent;
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .chapter:hover {
+            border-color: var(--sun);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+        }
+        
+        .chapter.is-featured {
+            grid-column: span 2;
+            background: var(--black);
+            color: var(--white);
+            min-height: 240px;
+        }
+        
+        @media (max-width: 900px) {
+            .chapter.is-featured {
+                grid-column: span 1;
+            }
+        }
+        
+        .chapter.is-featured:hover {
+            border-color: var(--sun);
+        }
+        
+        .chapter-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: auto;
+        }
+        
+        .chapter-number {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--sun);
+        }
+        
+        .chapter-arrow {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+            color: var(--black);
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .chapter:hover .chapter-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .chapter-arrow svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .chapter-bottom {
+            margin-top: 24px;
+        }
+        
+        .chapter-title {
+            font-family: var(--font-serif);
+            font-size: 1.375rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .chapter-desc {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--grey-400);
+            max-width: 400px;
+        }
+        
+        .chapter.is-featured .chapter-desc {
+            color: var(--grey-300);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           ARCHITECTURE
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .architecture {
+            padding: 120px 48px;
+            background: var(--white);
+        }
+        
+        @media (max-width: 768px) {
+            .architecture {
+                padding: 80px 24px;
+            }
+        }
+        
+        .architecture-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .architecture-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--pool);
+            margin-bottom: 16px;
+        }
+        
+        .architecture-title {
+            font-family: var(--font-sans);
+            font-size: clamp(24px, 3vw, 36px);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin-bottom: 64px;
+        }
+        
+        /* Master brand */
+        .arch-master {
+            display: inline-block;
+            padding: 32px 56px;
+            background: var(--sun);
+            margin-bottom: 48px;
+        }
+        
+        .arch-master-name {
+            font-family: var(--font-sans);
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+        
+        .arch-master-tag {
+            font-family: var(--font-serif);
+            font-size: 0.9375rem;
+            font-style: italic;
+            color: var(--black);
+            margin-top: 4px;
+        }
+        
+        /* Connector */
+        .arch-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 48px;
+        }
+        
+        .arch-line-v {
+            width: 1px;
+            height: 48px;
+            background: var(--grey-200);
+        }
+        
+        .arch-line-h {
+            width: 80%;
+            max-width: 600px;
+            height: 1px;
+            background: var(--grey-200);
+        }
+        
+        /* Services */
+        .arch-services {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .arch-service {
+            padding: 16px 24px;
+            background: var(--pearl);
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .arch-service:hover {
+            background: var(--black);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        .arch-service-name {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .arch-service-stat {
+            font-size: 0.6875rem;
+            font-weight: 400;
+            color: var(--grey-400);
+            margin-top: 2px;
+            transition: color var(--duration);
+        }
+        
+        .arch-service:hover .arch-service-stat {
+            color: var(--grey-300);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .footer {
+            padding: 32px 48px;
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        @media (max-width: 768px) {
+            .footer {
+                padding: 32px 24px;
+            }
+        }
+        
+        .footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .footer-sep {
+            width: 1px;
+            height: 16px;
+            background: var(--grey-600);
+        }
+        
+        .footer-tag {
+            font-size: 0.875rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit a {
+            color: var(--sun);
+        }
+        
+        @media (max-width: 600px) {
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <a href="#" class="header-logo">Sun Oaks</a>
+        <nav class="header-nav">
+            <a href="#manifesto" class="header-link">Story</a>
+            <a href="#chapters" class="header-link">Chapters</a>
+            <a href="#architecture" class="header-link">Services</a>
+            <a href="#chapters" class="header-cta">Explore</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span class="nav-toggle-inner">
+                    <span class="nav-toggle-line"></span>
+                    <span class="nav-toggle-line"></span>
+                    <span class="nav-toggle-line"></span>
+                </span>
+            </button>
+        </nav>
+    </header>
+    
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-links">
+                <li class="mobile-nav-item">
+                    <a href="#manifesto" class="mobile-nav-link">
+                        Story
+                        <span class="mobile-nav-link-num">01</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#chapters" class="mobile-nav-link">
+                        Chapters
+                        <span class="mobile-nav-link-num">02</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#architecture" class="mobile-nav-link">
+                        Services
+                        <span class="mobile-nav-link-num">03</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" class="mobile-nav-link">
+                        Contact
+                        <span class="mobile-nav-link-num">04</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <a href="#chapters" class="mobile-nav-cta">
+                Explore Brand House
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div class="mobile-nav-footer">
+            <span class="mobile-nav-footer-text">Est. 1960 · Redding, CA</span>
+            <div class="mobile-nav-footer-social">
+                <a href="#">IG</a>
+                <a href="#">FB</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <!-- Sun Circle -->
+        <div class="hero-sun">
+            <div class="hero-sun-circle"></div>
+        </div>
+        
+        <!-- Rays -->
+        <div class="hero-rays">
+            <svg viewBox="0 0 800 800" fill="none">
+                <g stroke="#0D0D0C" stroke-width="1" opacity="0.06">
+                    <line x1="400" y1="400" x2="400" y2="0"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(15 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(30 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(45 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(60 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(75 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(90 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(105 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(120 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(135 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(150 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(165 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(180 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(195 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(210 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(225 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(240 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(255 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(270 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(285 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(300 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(315 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(330 400 400)"/>
+                    <line x1="400" y1="400" x2="400" y2="0" transform="rotate(345 400 400)"/>
+                </g>
+            </svg>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                <span class="hero-eyebrow-line"></span>
+                <span class="hero-eyebrow-text">Est. 1960 · Redding, California</span>
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="hero-title-line">
+                    <span class="hero-title-text">The place where a community</span>
+                </span>
+                <span class="hero-title-line">
+                    <span class="hero-title-text">finds <span class="hero-title-em">itself.</span></span>
+                </span>
+            </h1>
+        </div>
+        
+        <div class="hero-bottom">
+            <div class="hero-intro">
+                <p><strong>Sun Oaks is Redding's living room.</strong> Three generations of families. Morning swimmers and after-school tennis kids. For sixty-four years, this is where the community has come to grow—together.</p>
+            </div>
+            
+            <div class="hero-meta">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">1960</div>
+                    <div class="hero-stat-label">Founded</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">6</div>
+                    <div class="hero-stat-label">Acres</div>
+                </div>
+                <a href="#chapters" class="hero-cta">
+                    Explore
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 8h10M9 4l4 4-4 4"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Manifesto -->
+    <section class="manifesto" id="manifesto">
+        <div class="manifesto-content">
+            <div class="manifesto-left reveal">
+                <div class="manifesto-number">The Story</div>
+                <h2 class="manifesto-title">
+                    Fitness is personal. <em>Transformation</em> is what happens when you're surrounded by people who show up.
+                </h2>
+            </div>
+            
+            <div class="manifesto-right reveal">
+                <p class="manifesto-text">
+                    Every person who walks through our doors carries a goal—lose weight, learn to swim, find balance, make friends. What they discover is that personal change is paved by the people beside them. Coaches who remember your name. Classmates who save your spot.
+                </p>
+                
+                <div class="manifesto-values">
+                    <div class="manifesto-value">
+                        <span class="manifesto-value-num">01</span>
+                        <span class="manifesto-value-title">Community First</span>
+                    </div>
+                    <div class="manifesto-value">
+                        <span class="manifesto-value-num">02</span>
+                        <span class="manifesto-value-title">All Ages, All Stages</span>
+                    </div>
+                    <div class="manifesto-value">
+                        <span class="manifesto-value-num">03</span>
+                        <span class="manifesto-value-title">64 Years of Trust</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Photo Strip -->
+    <div class="photo-strip">
+        <div class="photo-strip-item">
+            <div class="photo-strip-inner"><span class="photo-strip-label">Laps</span></div>
+        </div>
+        <div class="photo-strip-item">
+            <div class="photo-strip-inner"><span class="photo-strip-label">Tennis</span></div>
+        </div>
+        <div class="photo-strip-item">
+            <div class="photo-strip-inner"><span class="photo-strip-label">Kids</span></div>
+        </div>
+        <div class="photo-strip-item">
+            <div class="photo-strip-inner"><span class="photo-strip-label">Fitness</span></div>
+        </div>
+        <div class="photo-strip-item">
+            <div class="photo-strip-inner"><span class="photo-strip-label">Pickleball</span></div>
+        </div>
+    </div>
+    
+    <!-- Chapters -->
+    <section class="chapters" id="chapters">
+        <div class="chapters-content">
+            <div class="chapters-header">
+                <h2 class="chapters-title">Brand Resources</h2>
+                <span class="chapters-count">10 Chapters</span>
+            </div>
+            
+            <div class="chapters-grid">
+                <a href="#" class="chapter is-featured reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">01</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Brand Foundation</h3>
+                        <p class="chapter-desc">Our story, essence, promise, and personality—the soul of Sun Oaks.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">02</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Visual Identity</h3>
+                        <p class="chapter-desc">Logo, color, typography, photography.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">03</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Voice & Messaging</h3>
+                        <p class="chapter-desc">How we speak and what we say.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">04</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Audience Personas</h3>
+                        <p class="chapter-desc">Who we serve and what drives them.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">05</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Service Architecture</h3>
+                        <p class="chapter-desc">Seven service lines, one family.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter is-featured reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">06</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Templates & Assets</h3>
+                        <p class="chapter-desc">Ready-to-deploy designs for print, digital, social, and signage.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">07</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Campaign Playbooks</h3>
+                        <p class="chapter-desc">Seasonal marketing frameworks.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">08</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Competitive Positioning</h3>
+                        <p class="chapter-desc">How we stand apart.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">09</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Digital Standards</h3>
+                        <p class="chapter-desc">Website, mobile, booking flows.</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="chapter reveal">
+                    <div class="chapter-top">
+                        <span class="chapter-number">10</span>
+                        <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    </div>
+                    <div class="chapter-bottom">
+                        <h3 class="chapter-title">Brand Governance</h3>
+                        <p class="chapter-desc">Approvals, vendors, review cadence.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Architecture -->
+    <section class="architecture" id="architecture">
+        <div class="architecture-content">
+            <div class="architecture-label reveal">Service Architecture</div>
+            <h2 class="architecture-title reveal">One Family. Seven Experiences.</h2>
+            
+            <div class="arch-master reveal">
+                <div class="arch-master-name">Sun Oaks</div>
+                <div class="arch-master-tag">Your Fitness Family</div>
+            </div>
+            
+            <div class="arch-connector reveal">
+                <div class="arch-line-v"></div>
+                <div class="arch-line-h"></div>
+            </div>
+            
+            <div class="arch-services reveal">
+                <div class="arch-service">
+                    <div class="arch-service-name">Fitness</div>
+                    <div class="arch-service-stat">120+ Classes</div>
+                </div>
+                <div class="arch-service">
+                    <div class="arch-service-name">Tennis</div>
+                    <div class="arch-service-stat">10 Courts</div>
+                </div>
+                <div class="arch-service">
+                    <div class="arch-service-name">Pickleball</div>
+                    <div class="arch-service-stat">4 Dedicated</div>
+                </div>
+                <div class="arch-service">
+                    <div class="arch-service-name">Aquatics</div>
+                    <div class="arch-service-stat">3 Pools</div>
+                </div>
+                <div class="arch-service">
+                    <div class="arch-service-name">Kids</div>
+                    <div class="arch-service-stat">Members Too</div>
+                </div>
+                <div class="arch-service">
+                    <div class="arch-service-name">Spa</div>
+                    <div class="arch-service-stat">Full Service</div>
+                </div>
+                <div class="arch-service">
+                    <div class="arch-service-name">Events</div>
+                    <div class="arch-service-stat">Venue Rentals</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
+            <div class="footer-credit">
+                Designed by <a href="https://look-serious.com">Look Serious</a> · 2026
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Header scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('is-scrolled', window.scrollY > 60);
+        });
+        
+        // Mobile Navigation
+        const navToggle = document.getElementById('navToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link, .mobile-nav-cta');
+        
+        function toggleNav() {
+            navToggle.classList.toggle('is-active');
+            mobileNav.classList.toggle('is-open');
+            document.body.classList.toggle('nav-open');
+        }
+        
+        navToggle.addEventListener('click', toggleNav);
+        
+        // Close nav when clicking a link
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                toggleNav();
+            });
+        });
+        
+        // Close nav on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+                toggleNav();
+            }
+        });
+        
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('is-visible');
+                    }, i * 50);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

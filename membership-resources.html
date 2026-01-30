@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Resources — Sun Oaks Brand House</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+            
+            --sun: #F7B500;
+            --sun-hover: #FFBF00;
+            --sun-light: #FFF8E5;
+            --pool: #0891A8;
+            --pool-light: #0BA4BD;
+            --pool-bg: #E5F5F7;
+            --success: #2E7D32;
+            --success-bg: #E8F5E9;
+            
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+            
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.4s;
+        }
+        
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--black);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        ::selection {
+            background: var(--sun);
+            color: var(--black);
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(250, 249, 247, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 24px;
+            }
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        
+        .header-back:hover {
+            color: var(--black);
+        }
+        
+        .header-back svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .header-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--grey-200);
+        }
+        
+        .header-chapter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+        
+        .header-chapter span {
+            color: var(--pool);
+        }
+        
+        .header-badge {
+            padding: 6px 12px;
+            background: var(--pool-bg);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--pool);
+        }
+        
+        @media (max-width: 600px) {
+            .header-badge {
+                display: none;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           HERO
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .hero {
+            padding: 160px 48px 80px;
+            background: var(--black);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 24px 60px;
+            }
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.2s forwards;
+        }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-eyebrow-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+            color: var(--black);
+        }
+        
+        .hero-eyebrow-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .hero-eyebrow-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-300);
+        }
+        
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+            max-width: 700px;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.3s forwards;
+        }
+        
+        .hero-desc {
+            font-size: 1.125rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-300);
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.4s forwards;
+        }
+        
+        /* Quick Stats */
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 48px;
+            padding-top: 48px;
+            border-top: 1px solid var(--grey-700);
+            opacity: 0;
+            animation: fadeUp 0.6s var(--ease-out) 0.5s forwards;
+        }
+        
+        @media (max-width: 600px) {
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 32px;
+            }
+        }
+        
+        .hero-stat-value {
+            font-family: var(--font-sans);
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1;
+            color: var(--sun);
+        }
+        
+        .hero-stat-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-top: 8px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           TOC
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .toc {
+            padding: 48px;
+            background: var(--white);
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        @media (max-width: 768px) {
+            .toc {
+                padding: 32px 24px;
+            }
+        }
+        
+        .toc-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 40px;
+        }
+        
+        .toc-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        
+        .toc-link:hover {
+            color: var(--black);
+        }
+        
+        .toc-link-num {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--pool);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           SECTION BASE
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section {
+            padding: 100px 48px;
+        }
+        
+        @media (max-width: 768px) {
+            .section {
+                padding: 70px 24px;
+            }
+        }
+        
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            margin-bottom: 48px;
+        }
+        
+        .section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--pool);
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+        
+        .section-desc {
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-500);
+            max-width: 600px;
+            margin-top: 16px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           MEMBERSHIP TIERS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--tiers {
+            background: var(--cream);
+        }
+        
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        @media (max-width: 900px) {
+            .tiers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .tier-card {
+            background: var(--white);
+            border: 1px solid var(--silver);
+            padding: 40px;
+            position: relative;
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .tier-card:hover {
+            border-color: var(--pool);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+        }
+        
+        .tier-card.is-popular {
+            border-color: var(--sun);
+            background: var(--sun-light);
+        }
+        
+        .tier-card.is-popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 40px;
+            padding: 6px 12px;
+            background: var(--sun);
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+        
+        .tier-name {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 8px;
+        }
+        
+        .tier-title {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .tier-price {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 24px;
+        }
+        
+        .tier-price-value {
+            font-family: var(--font-sans);
+            font-size: 2.5rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+        
+        .tier-price-period {
+            font-size: 0.875rem;
+            color: var(--grey-400);
+        }
+        
+        .tier-desc {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--grey-500);
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        .tier-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .tier-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .tier-feature svg {
+            width: 16px;
+            height: 16px;
+            color: var(--success);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           TOUR SCRIPT
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--tour {
+            background: var(--white);
+        }
+        
+        .tour-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .tour-stop {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 32px;
+            padding: 40px 0;
+            border-bottom: 1px solid var(--silver);
+        }
+        
+        .tour-stop:first-child {
+            padding-top: 0;
+        }
+        
+        .tour-stop:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        @media (max-width: 600px) {
+            .tour-stop {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        
+        .tour-stop-num {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--pearl);
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--pool);
+        }
+        
+        .tour-stop-title {
+            font-family: var(--font-sans);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .tour-stop-location {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 12px;
+        }
+        
+        .tour-stop-script {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--grey-600);
+            padding: 20px 24px;
+            background: var(--pearl);
+            border-left: 3px solid var(--sun);
+            margin-bottom: 16px;
+        }
+        
+        .tour-stop-tips {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .tour-stop-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: var(--grey-500);
+        }
+        
+        .tour-stop-tip svg {
+            width: 14px;
+            height: 14px;
+            color: var(--pool);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           OBJECTION HANDLING
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--objections {
+            background: var(--pearl);
+        }
+        
+        .objections-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .objection-card {
+            background: var(--white);
+            border: 1px solid var(--silver);
+            overflow: hidden;
+        }
+        
+        .objection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            cursor: pointer;
+            transition: background var(--duration);
+        }
+        
+        .objection-header:hover {
+            background: var(--cream);
+        }
+        
+        .objection-question {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .objection-question-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun-light);
+            color: var(--sun);
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .objection-toggle {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform var(--duration);
+        }
+        
+        .objection-toggle svg {
+            width: 16px;
+            height: 16px;
+            color: var(--grey-400);
+        }
+        
+        .objection-card.is-open .objection-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .objection-body {
+            padding: 0 32px 32px;
+            padding-left: 80px;
+            display: none;
+        }
+        
+        .objection-card.is-open .objection-body {
+            display: block;
+        }
+        
+        .objection-response {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-600);
+            margin-bottom: 20px;
+        }
+        
+        .objection-script {
+            font-family: var(--font-serif);
+            font-size: 0.9375rem;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--grey-600);
+            padding: 16px 20px;
+            background: var(--success-bg);
+            border-left: 3px solid var(--success);
+        }
+        
+        .objection-script-label {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-style: normal;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--success);
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           CLOSING FRAMEWORK
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--closing {
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        .section--closing .section-label {
+            color: var(--sun);
+        }
+        
+        .closing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .closing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .closing-card {
+            padding: 40px;
+            background: var(--grey-800);
+            border: 1px solid var(--grey-700);
+        }
+        
+        .closing-card-num {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 16px;
+        }
+        
+        .closing-card-title {
+            font-family: var(--font-serif);
+            font-size: 1.375rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        
+        .closing-card-text {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--grey-300);
+            margin-bottom: 24px;
+        }
+        
+        .closing-card-script {
+            font-family: var(--font-serif);
+            font-size: 0.9375rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--white);
+            padding: 16px 20px;
+            background: var(--grey-700);
+            border-left: 3px solid var(--sun);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           DOWNLOADS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .section--downloads {
+            background: var(--cream);
+        }
+        
+        .downloads-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        @media (max-width: 900px) {
+            .downloads-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .downloads-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .download-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 24px;
+            background: var(--white);
+            border: 1px solid var(--silver);
+            transition: all var(--duration) var(--ease);
+        }
+        
+        .download-card:hover {
+            border-color: var(--pool);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        }
+        
+        .download-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--pearl);
+            flex-shrink: 0;
+        }
+        
+        .download-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--pool);
+        }
+        
+        .download-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .download-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .download-meta {
+            font-size: 0.75rem;
+            color: var(--grey-400);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .footer {
+            padding: 32px 48px;
+            background: var(--black);
+            color: var(--white);
+            border-top: 1px solid var(--grey-700);
+        }
+        
+        @media (max-width: 768px) {
+            .footer {
+                padding: 32px 24px;
+            }
+        }
+        
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .footer-sep {
+            width: 1px;
+            height: 16px;
+            background: var(--grey-600);
+        }
+        
+        .footer-tag {
+            font-size: 0.875rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+        }
+        
+        .footer-credit a {
+            color: var(--sun);
+        }
+        
+        @media (max-width: 600px) {
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════════════════════════ */
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 8H3M7 4l-4 4 4 4"/>
+                </svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>Resources</span> Membership</span>
+        </div>
+        <div class="header-badge">Internal Use Only</div>
+    </header>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                <div class="hero-eyebrow-icon">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 1v14M1 8h14"/>
+                    </svg>
+                </div>
+                <span class="hero-eyebrow-text">Sales Resources</span>
+            </div>
+            
+            <h1 class="hero-title">Membership Resources</h1>
+            
+            <p class="hero-desc">Everything your team needs to communicate value, handle objections, and close with confidence. These tools turn good conversations into great members.</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">3</div>
+                    <div class="hero-stat-label">Membership Tiers</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">8</div>
+                    <div class="hero-stat-label">Tour Stops</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">6</div>
+                    <div class="hero-stat-label">Common Objections</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- TOC -->
+    <div class="toc">
+        <div class="toc-content">
+            <a href="#tiers" class="toc-link"><span class="toc-link-num">01</span> Membership Tiers</a>
+            <a href="#tour" class="toc-link"><span class="toc-link-num">02</span> Tour Script</a>
+            <a href="#objections" class="toc-link"><span class="toc-link-num">03</span> Objection Handling</a>
+            <a href="#closing" class="toc-link"><span class="toc-link-num">04</span> Closing Framework</a>
+            <a href="#downloads" class="toc-link"><span class="toc-link-num">05</span> Downloads</a>
+        </div>
+    </div>
+    
+    <!-- Membership Tiers -->
+    <section class="section section--tiers" id="tiers">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">01 Membership Tiers</div>
+                <h2 class="section-title">Three ways to belong</h2>
+                <p class="section-desc">Every tier includes full facility access. The difference is in family options and premium add-ons.</p>
+            </div>
+            
+            <div class="tiers-grid reveal">
+                <div class="tier-card">
+                    <div class="tier-name">Individual</div>
+                    <h3 class="tier-title">Solo</h3>
+                    <div class="tier-price">
+                        <span class="tier-price-value">$89</span>
+                        <span class="tier-price-period">/month</span>
+                    </div>
+                    <p class="tier-desc">Perfect for individuals focused on their personal fitness journey. Full access, no sharing needed.</p>
+                    <ul class="tier-features">
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Full facility access
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            120+ group fitness classes
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Pool & aquatics access
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Tennis & pickleball courts
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Locker room & amenities
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="tier-card is-popular">
+                    <div class="tier-name">Couple</div>
+                    <h3 class="tier-title">Duo</h3>
+                    <div class="tier-price">
+                        <span class="tier-price-value">$149</span>
+                        <span class="tier-price-period">/month</span>
+                    </div>
+                    <p class="tier-desc">For two adults at the same address. Train together, grow together, save together.</p>
+                    <ul class="tier-features">
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Everything in Solo
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Two adult memberships
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Shared court reservations
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            10% spa discount
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Guest passes (4/month)
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="tier-card">
+                    <div class="tier-name">Family</div>
+                    <h3 class="tier-title">Household</h3>
+                    <div class="tier-price">
+                        <span class="tier-price-value">$199</span>
+                        <span class="tier-price-period">/month</span>
+                    </div>
+                    <p class="tier-desc">The whole family under one membership. Kids programming included at no extra cost.</p>
+                    <ul class="tier-features">
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Everything in Duo
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Unlimited kids (same household)
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Kids Club access
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Youth swim lessons (discounted)
+                        </li>
+                        <li class="tier-feature">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg>
+                            Summer camp priority enrollment
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Tour Script -->
+    <section class="section section--tour" id="tour">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">02 Tour Script</div>
+                <h2 class="section-title">The Sun Oaks experience in 8 stops</h2>
+                <p class="section-desc">A guided conversation framework—not a rigid script. Adapt based on what you learn about each prospect.</p>
+            </div>
+            
+            <div class="tour-grid reveal">
+                <div class="tour-stop">
+                    <div class="tour-stop-num">1</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">Welcome & Discovery</h4>
+                        <div class="tour-stop-location">Front Desk / Lobby</div>
+                        <div class="tour-stop-script">
+                            "Welcome to Sun Oaks! I'm [Name]. Before I show you around, I'd love to learn a little about what brought you in today. What are you hoping to get out of a membership?"
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Listen for: fitness goals, family needs, schedule constraints, past gym experiences
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Take mental notes to reference throughout the tour
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-stop">
+                    <div class="tour-stop-num">2</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">The Heart of Sun Oaks</h4>
+                        <div class="tour-stop-location">Main Fitness Floor</div>
+                        <div class="tour-stop-script">
+                            "This is our main fitness floor—about 15,000 square feet. You'll notice it's busy but never crowded. We've designed the layout so you can always find space to work. See that group over there? Many of them have been training together for years. That's the thing about Sun Oaks—people come for the equipment and stay for the community."
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Point out specific equipment relevant to their stated goals
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Introduce them to a trainer if one is available
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-stop">
+                    <div class="tour-stop-num">3</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">Group Fitness Studios</h4>
+                        <div class="tour-stop-location">Studio A & B</div>
+                        <div class="tour-stop-script">
+                            "We run over 120 classes a week across two studios. Everything from yoga and Pilates to high-intensity training and cycling. Most members tell us the classes are what keep them coming back—the instructors know your name, and the regulars become your workout family."
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Hand them a class schedule if they express interest
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Mention specific classes that match their interests
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-stop">
+                    <div class="tour-stop-num">4</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">Aquatics Center</h4>
+                        <div class="tour-stop-location">Pool Deck</div>
+                        <div class="tour-stop-script">
+                            "Three pools, one mission: water for everyone. Lap swimmers in the morning, families in the afternoon, swim lessons year-round. A lot of our members learned to swim here as kids—and now they're teaching their own children in the same pool."
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                If they have kids, emphasize the learn-to-swim program
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Mention water aerobics for low-impact fitness seekers
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-stop">
+                    <div class="tour-stop-num">5</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">Tennis & Pickleball</h4>
+                        <div class="tour-stop-location">Courts</div>
+                        <div class="tour-stop-script">
+                            "Ten tennis courts and four dedicated pickleball courts. If you play, you'll never struggle to find a game—we have leagues, clinics, and open play every day. If you don't play yet, our pros will have you serving in no time. Pickleball especially has brought in a whole new community."
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Ask about their racquet sport experience
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Mention the social aspect of leagues
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-stop">
+                    <div class="tour-stop-num">6</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">Kids Club</h4>
+                        <div class="tour-stop-location">Children's Area</div>
+                        <div class="tour-stop-script">
+                            "For families, this is the game-changer. Kids Club is included with family memberships—safe, supervised, and fun. You get your workout in while your kids play. During summer, our camps keep them active all day. Many parents tell us this is the reason they can actually maintain a fitness routine."
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Only include this stop if they have children
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Emphasize the "workout without guilt" benefit
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-stop">
+                    <div class="tour-stop-num">7</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">Spa & Recovery</h4>
+                        <div class="tour-stop-location">Spa Wing</div>
+                        <div class="tour-stop-script">
+                            "Recovery is part of fitness. Our spa offers massage, skincare, and recovery services. Members get preferred pricing, and many build a monthly massage into their wellness routine. It's also a popular spot for birthday gifts and self-care days."
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Mention member discounts on services
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Quick stop unless they show strong interest
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-stop">
+                    <div class="tour-stop-num">8</div>
+                    <div class="tour-stop-content">
+                        <h4 class="tour-stop-title">The Close</h4>
+                        <div class="tour-stop-location">Membership Desk</div>
+                        <div class="tour-stop-script">
+                            "So that's Sun Oaks. Based on what you told me about [reference their goals], I think you'd get a lot out of [specific programs]. The [recommended tier] would give you everything you need. What questions can I answer before we get you started?"
+                        </div>
+                        <div class="tour-stop-tips">
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Connect back to their original stated goals
+                            </div>
+                            <div class="tour-stop-tip">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+                                Assume the sale—"get you started" not "if you decide"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Objection Handling -->
+    <section class="section section--objections" id="objections">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">03 Objection Handling</div>
+                <h2 class="section-title">Turning "no" into "tell me more"</h2>
+                <p class="section-desc">Every objection is a request for more information. Here's how to respond with empathy and confidence.</p>
+            </div>
+            
+            <div class="objections-grid reveal">
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">$</span>
+                            "It's too expensive."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">This is rarely about the actual dollar amount—it's about perceived value. Your job is to connect the price to what matters to them specifically.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "I understand—it's an investment. Can I ask what you're comparing it to? ... When you break it down, it's about $3 a day for unlimited access to fitness, pools, courts, classes, and community. Most members tell us they actually save money because they cancel other subscriptions and spend less eating out when they're feeling healthy."
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">⏱</span>
+                            "I need to think about it."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">This usually means there's an unaddressed concern. Gently probe to find out what's really holding them back.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "Of course—this is a decision worth getting right. Just so I can help: is there something specific you're weighing, or something I didn't cover well enough? Sometimes people say they need to think about it when really there's a question I haven't answered yet."
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">👫</span>
+                            "I need to talk to my spouse."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">Respect this completely—but help them have a productive conversation at home by understanding what questions might come up.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "Absolutely—that makes sense for a family decision. What do you think they'll want to know? I can make sure you have everything you need for that conversation. Would it help if I put together a quick summary you can share with them?"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">📍</span>
+                            "I'm not sure I'll use it enough."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">This fear is real—everyone's joined a gym they didn't use. Address it directly by showing how Sun Oaks is different.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "That's a fair concern—nobody wants to pay for something they don't use. Here's what I've noticed: the members who stick around aren't just coming for equipment. They're coming because they've found their people. Once you're in a class with regulars who notice when you're not there, or you've got a Tuesday tennis game you look forward to, it stops feeling like 'going to the gym' and starts feeling like going to see friends."
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">🏋️</span>
+                            "I can work out at home."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">Don't argue against home workouts—acknowledge them and expand the conversation to what they can't get at home.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "Home workouts are great for consistency—I do them too sometimes. But can I ask: what's missing from your home routine? For most people, it's the variety, the accountability, and honestly, the separation from home life. When you walk into Sun Oaks, you're in fitness mode. No laundry staring at you, no kids interrupting. Plus, you can't swim laps or play pickleball in your living room."
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="objection-card">
+                    <div class="objection-header">
+                        <div class="objection-question">
+                            <span class="objection-question-icon">📋</span>
+                            "I don't want a long contract."
+                        </div>
+                        <div class="objection-toggle">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <div class="objection-body">
+                        <p class="objection-response">Contract concerns are usually about feeling trapped. Clarify your terms and emphasize flexibility.</p>
+                        <div class="objection-script">
+                            <span class="objection-script-label">Try This</span>
+                            "I get it—nobody likes feeling locked in. Here's how we work: we have month-to-month options with no long-term commitment required. We do offer a discount for annual commitments if you prefer that, but it's your choice. We'd rather earn your membership every month than hold you to a contract you resent."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Closing Framework -->
+    <section class="section section--closing" id="closing">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">04 Closing Framework</div>
+                <h2 class="section-title">Four paths to yes</h2>
+                <p class="section-desc" style="color: var(--grey-300);">Different prospects need different approaches. Read the room and choose accordingly.</p>
+            </div>
+            
+            <div class="closing-grid reveal">
+                <div class="closing-card">
+                    <div class="closing-card-num">01 The Assumptive Close</div>
+                    <h3 class="closing-card-title">For the ready buyer</h3>
+                    <p class="closing-card-text">When they're clearly excited and engaged throughout the tour, don't overcomplicate it. Move directly to logistics.</p>
+                    <div class="closing-card-script">
+                        "Let's get you set up. I'll need a driver's license and a card for the monthly billing. Which tier makes the most sense for your situation?"
+                    </div>
+                </div>
+                
+                <div class="closing-card">
+                    <div class="closing-card-num">02 The Summary Close</div>
+                    <h3 class="closing-card-title">For the analytical buyer</h3>
+                    <p class="closing-card-text">When they've asked lots of questions and want to feel like they're making an informed decision.</p>
+                    <div class="closing-card-script">
+                        "So you're looking for [goals]. You loved the [specific areas]. The [tier] at $X/month gives you all of that plus [additional benefits]. Does that cover everything you need?"
+                    </div>
+                </div>
+                
+                <div class="closing-card">
+                    <div class="closing-card-num">03 The Urgency Close</div>
+                    <h3 class="closing-card-title">For the procrastinator</h3>
+                    <p class="closing-card-text">When they like everything but seem content to delay. Create a reason to act today—but only if it's genuine.</p>
+                    <div class="closing-card-script">
+                        "I should mention—we're running [current promotion] through [date]. If you start today, you'll [specific benefit]. After that, we go back to standard rates."
+                    </div>
+                </div>
+                
+                <div class="closing-card">
+                    <div class="closing-card-num">04 The Trial Close</div>
+                    <h3 class="closing-card-title">For the skeptic</h3>
+                    <p class="closing-card-text">When they're interested but hesitant. Lower the barrier by offering a way to experience before committing.</p>
+                    <div class="closing-card-script">
+                        "I can tell you're not quite ready to commit—that's okay. How about this: come in for a week on us. Try the classes, use the pools, see how it feels. If it's not for you, no pressure. If it is, we'll apply your trial toward your first month."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Downloads -->
+    <section class="section section--downloads" id="downloads">
+        <div class="section-content">
+            <div class="section-header reveal">
+                <div class="section-label">05 Downloads</div>
+                <h2 class="section-title">Ready-to-use resources</h2>
+                <p class="section-desc">Print these, share these, keep them handy at the membership desk.</p>
+            </div>
+            
+            <div class="downloads-grid reveal">
+                <a href="#" class="download-card">
+                    <div class="download-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="download-info">
+                        <div class="download-title">Pricing One-Sheet</div>
+                        <div class="download-meta">PDF · 1 page</div>
+                    </div>
+                </a>
+                
+                <a href="#" class="download-card">
+                    <div class="download-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="download-info">
+                        <div class="download-title">Tour Checklist</div>
+                        <div class="download-meta">PDF · 2 pages</div>
+                    </div>
+                </a>
+                
+                <a href="#" class="download-card">
+                    <div class="download-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="download-info">
+                        <div class="download-title">Objection Flash Cards</div>
+                        <div class="download-meta">PDF · 6 cards</div>
+                    </div>
+                </a>
+                
+                <a href="#" class="download-card">
+                    <div class="download-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="download-info">
+                        <div class="download-title">Class Schedule</div>
+                        <div class="download-meta">PDF · Weekly view</div>
+                    </div>
+                </a>
+                
+                <a href="#" class="download-card">
+                    <div class="download-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="download-info">
+                        <div class="download-title">Facility Map</div>
+                        <div class="download-meta">PDF · Illustrated</div>
+                    </div>
+                </a>
+                
+                <a href="#" class="download-card">
+                    <div class="download-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="download-info">
+                        <div class="download-title">New Member Welcome Kit</div>
+                        <div class="download-meta">PDF · 8 pages</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
+            <div class="footer-credit">
+                Designed by <a href="https://look-serious.com">Look Serious</a> · 2026
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Objection accordions
+        document.querySelectorAll('.objection-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const card = header.parentElement;
+                const isOpen = card.classList.contains('is-open');
+                
+                // Close all others
+                document.querySelectorAll('.objection-card').forEach(c => {
+                    c.classList.remove('is-open');
+                });
+                
+                // Toggle this one
+                if (!isOpen) {
+                    card.classList.add('is-open');
+                }
+            });
+        });
+        
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // Smooth scroll for TOC
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
