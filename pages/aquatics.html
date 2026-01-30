@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquatics — Sun Oaks Brand House</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+
+            --sun: #F7B500;
+            --sun-light: #FFF8E5;
+            --pool: #0891A8;
+            --pool-light: #E5F5F7;
+            --pool-dark: #066A7A;
+            --pool-deep: #034752;
+
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --duration: 0.4s;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); font-weight: 400; line-height: 1.6; color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
+        ::selection { background: var(--pool); color: var(--white); }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 48px;
+            background: transparent;
+            transition: all var(--duration);
+        }
+        .header.scrolled {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        @media (max-width: 768px) { .header { padding: 16px 24px; } }
+
+        .header-back {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.8125rem; font-weight: 500;
+            color: var(--white);
+            transition: color var(--duration);
+        }
+        .header.scrolled .header-back { color: var(--grey-600); }
+        .header-back:hover { opacity: 0.7; }
+        .header-back svg { width: 16px; height: 16px; }
+
+        .header-cta {
+            padding: 10px 20px;
+            background: var(--pool);
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+            color: var(--white);
+            transition: all var(--duration);
+        }
+        .header-cta:hover { background: var(--pool-dark); }
+        @media (max-width: 600px) { .header-cta { padding: 8px 16px; font-size: 0.6875rem; } }
+
+        /* Hero - Full bleed, immersive */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            overflow: hidden;
+            background: var(--pool-deep);
+        }
+
+        .hero-photo {
+            position: absolute;
+            inset: 0;
+            background: url('images/Home  Redding Gym (10).jpg') center 30% / cover no-repeat;
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(3,71,82,0.3) 0%,
+                rgba(3,71,82,0.1) 40%,
+                rgba(3,71,82,0.7) 80%,
+                rgba(3,71,82,0.95) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 0 48px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        @media (max-width: 768px) { .hero-content { padding: 0 24px 60px; } }
+
+        .hero-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.2s forwards;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 400;
+            line-height: 0.95;
+            color: var(--white);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.3s forwards;
+        }
+        .hero-title em {
+            font-style: italic;
+            color: var(--pool-light);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 48px;
+            margin-top: 48px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.4s forwards;
+        }
+        @media (max-width: 600px) { .hero-meta { gap: 32px; flex-wrap: wrap; } }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .hero-meta-value {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--white);
+        }
+        .hero-meta-label {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Scroll indicator */
+        .hero-scroll {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.6s forwards;
+        }
+        .hero-scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+        }
+
+        /* Intro Section */
+        .intro {
+            padding: 120px 48px;
+            background: var(--white);
+        }
+        @media (max-width: 768px) { .intro { padding: 80px 24px; } }
+
+        .intro-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 64px;
+            align-items: start;
+        }
+        @media (max-width: 768px) {
+            .intro-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+        }
+
+        .intro-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--pool);
+        }
+
+        .intro-text {
+            font-family: var(--font-serif);
+            font-size: clamp(20px, 2.5vw, 28px);
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--grey-700);
+        }
+
+        /* Facilities - Bento Grid */
+        .facilities {
+            padding: 0 48px 120px;
+            background: var(--white);
+        }
+        @media (max-width: 768px) { .facilities { padding: 0 24px 80px; } }
+
+        .facilities-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 16px;
+        }
+        @media (max-width: 900px) {
+            .facilities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .facility-card {
+            position: relative;
+            overflow: hidden;
+            background: var(--pool-deep);
+        }
+
+        .facility-card--hero {
+            grid-row: span 2;
+            min-height: 500px;
+        }
+        @media (max-width: 900px) {
+            .facility-card--hero {
+                grid-row: span 1;
+                min-height: 400px;
+            }
+        }
+
+        .facility-card-image {
+            position: absolute;
+            inset: 0;
+        }
+        .facility-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease);
+        }
+        .facility-card:hover .facility-card-image img {
+            transform: scale(1.05);
+        }
+
+        .facility-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(3,71,82,0.9) 0%, rgba(3,71,82,0.2) 60%, transparent 100%);
+        }
+
+        .facility-card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 32px;
+            color: var(--white);
+        }
+
+        .facility-card-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--sun);
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--black);
+            margin-bottom: 12px;
+        }
+
+        .facility-card-name {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .facility-card--hero .facility-card-name {
+            font-size: clamp(2rem, 3vw, 2.5rem);
+        }
+
+        .facility-card-desc {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.8);
+            max-width: 400px;
+        }
+
+        .facility-card-specs {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .facility-card-spec {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.6);
+        }
+        .facility-card-spec strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* Programs - Horizontal scroll on mobile */
+        .programs {
+            padding: 120px 48px;
+            background: var(--pool-light);
+        }
+        @media (max-width: 768px) { .programs { padding: 80px 24px; } }
+
+        .programs-header {
+            max-width: 1200px;
+            margin: 0 auto 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .programs-title {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 400;
+            color: var(--pool-deep);
+        }
+
+        .programs-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 1000px) { .programs-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .programs-grid { grid-template-columns: 1fr; } }
+
+        .program-card {
+            padding: 32px 28px;
+            background: var(--white);
+            border: 1px solid transparent;
+            transition: all var(--duration);
+        }
+        .program-card:hover {
+            border-color: var(--pool);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(8,145,168,0.15);
+        }
+
+        .program-card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--pool-light);
+            color: var(--pool);
+            margin-bottom: 20px;
+        }
+        .program-card-icon svg { width: 24px; height: 24px; }
+
+        .program-card-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--pool-deep);
+        }
+
+        .program-card-desc {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--grey-500);
+        }
+
+        /* Swim Team - Full bleed image */
+        .swim-team {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+        @media (max-width: 900px) {
+            .swim-team {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+        }
+
+        .swim-team-image {
+            position: relative;
+            overflow: hidden;
+        }
+        @media (max-width: 900px) {
+            .swim-team-image {
+                height: 400px;
+            }
+        }
+        .swim-team-image img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .swim-team-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 64px;
+            background: var(--pool-deep);
+            color: var(--white);
+        }
+        @media (max-width: 768px) { .swim-team-content { padding: 60px 32px; } }
+
+        .swim-team-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--pool-light);
+            margin-bottom: 16px;
+        }
+
+        .swim-team-title {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 44px);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .swim-team-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 32px;
+        }
+
+        .swim-team-features {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 24px;
+        }
+        @media (max-width: 500px) { .swim-team-features { grid-template-columns: 1fr; } }
+
+        .swim-team-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.9);
+        }
+        .swim-team-features svg {
+            width: 16px;
+            height: 16px;
+            color: var(--sun);
+            flex-shrink: 0;
+        }
+
+        /* Hours - Visual cards instead of table */
+        .hours {
+            padding: 120px 48px;
+            background: var(--white);
+        }
+        @media (max-width: 768px) { .hours { padding: 80px 24px; } }
+
+        .hours-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hours-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        .hours-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+        .hours-subtitle {
+            font-size: 1rem;
+            color: var(--grey-500);
+        }
+
+        .hours-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 768px) { .hours-grid { grid-template-columns: 1fr; } }
+
+        .hours-card {
+            padding: 32px;
+            background: var(--cream);
+            text-align: center;
+        }
+        .hours-card--featured {
+            background: var(--pool);
+            color: var(--white);
+        }
+
+        .hours-card-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .hours-card-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--sun);
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--black);
+            margin-bottom: 20px;
+        }
+        .hours-card:not(.hours-card--featured) .hours-card-badge {
+            background: var(--pool-light);
+            color: var(--pool-dark);
+        }
+
+        .hours-card-times {
+            list-style: none;
+        }
+        .hours-card-times li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            font-size: 0.9375rem;
+        }
+        .hours-card--featured .hours-card-times li {
+            border-color: rgba(255,255,255,0.15);
+        }
+        .hours-card-times li:last-child { border-bottom: none; }
+        .hours-card-times strong {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--grey-400);
+            margin-bottom: 2px;
+        }
+        .hours-card--featured .hours-card-times strong {
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* CTA */
+        .cta {
+            padding: 100px 48px;
+            background: linear-gradient(135deg, var(--pool-deep) 0%, var(--pool-dark) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        @media (max-width: 768px) { .cta { padding: 70px 24px; } }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Emblem in CTA */
+        .cta-emblem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @media (max-width: 768px) { .cta-emblem { width: 350px; height: 350px; } }
+
+        .cta-emblem svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .emblem-path {
+            fill: none;
+            stroke: rgba(255,255,255,0.05);
+            stroke-width: 0.5;
+            stroke-dasharray: 3000;
+            stroke-dashoffset: 3000;
+            opacity: 0;
+        }
+
+        .emblem-fill {
+            fill: rgba(255,255,255,0.025);
+            opacity: 0;
+        }
+
+        .cta-emblem.is-visible .emblem-path {
+            opacity: 1;
+            animation: drawEmblem 3.5s ease-out forwards;
+        }
+
+        .cta-emblem.is-visible .emblem-path:nth-child(4) { animation-delay: 0s; }
+        .cta-emblem.is-visible .emblem-path:nth-child(5) { animation-delay: 0.3s; }
+        .cta-emblem.is-visible .emblem-path:nth-child(6) { animation-delay: 0.6s; }
+
+        .cta-emblem.is-visible .emblem-fill {
+            animation: fadeEmblem 2s ease-out 1.2s forwards;
+        }
+
+        @keyframes drawEmblem {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes fadeEmblem {
+            to { opacity: 1; }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+        .cta-title em { font-style: italic; color: var(--pool-light); }
+
+        .cta-text {
+            font-size: 1.125rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 32px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 40px;
+            background: var(--sun);
+            color: var(--black);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all var(--duration);
+        }
+        .cta-button:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+        }
+        .cta-button svg { width: 18px; height: 18px; }
+
+        /* Footer */
+        .footer {
+            padding: 32px 48px;
+            background: var(--black);
+            color: var(--white);
+        }
+        @media (max-width: 768px) { .footer { padding: 32px 24px; } }
+        .footer-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 16px;
+        }
+        .footer-logo {
+            font-size: 0.875rem; font-weight: 600;
+            letter-spacing: 0.08em; text-transform: uppercase;
+        }
+        .footer-credit { font-size: 0.8125rem; color: var(--grey-400); }
+        .footer-credit a { color: var(--sun); }
+        @media (max-width: 600px) { .footer-inner { flex-direction: column; text-align: center; } }
+
+        /* Animations */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+        .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <a href="sunoaks-brand-house-v9.html" class="header-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
+            Brand House
+        </a>
+        <a href="membership-funnel.html" class="header-cta">Join Sun Oaks</a>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-photo"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-label">Aquatics</div>
+            <h1 class="hero-title">Where Redding<br>learns to <em>swim.</em></h1>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <span class="hero-meta-value">3</span>
+                    <span class="hero-meta-label">pools</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-value">365</span>
+                    <span class="hero-meta-label">days/year</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-value">64</span>
+                    <span class="hero-meta-label">years</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <div class="hero-scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Intro -->
+    <section class="intro">
+        <div class="intro-content reveal">
+            <div class="intro-label">Since 1960</div>
+            <p class="intro-text">From first splash to competitive racing, Sun Oaks has been teaching Redding families to love the water for over six decades. Three pools. Two spas. Year-round swimming — rain or shine.</p>
+        </div>
+    </section>
+
+    <!-- Facilities - Bento Grid -->
+    <section class="facilities">
+        <div class="facilities-grid reveal">
+            <div class="facility-card facility-card--hero">
+                <div class="facility-card-image">
+                    <img src="images/Home  Redding Gym (12).jpg" alt="Covered Lap Pool">
+                </div>
+                <div class="facility-card-overlay"></div>
+                <div class="facility-card-content">
+                    <div class="facility-card-badge">Year-Round</div>
+                    <h3 class="facility-card-name">Covered Lap Pool</h3>
+                    <p class="facility-card-desc">Our 8-lane, 25-yard heated pool is open 365 days a year. Rain or shine, your swim never gets cancelled.</p>
+                    <div class="facility-card-specs">
+                        <span class="facility-card-spec"><strong>8</strong> lanes</span>
+                        <span class="facility-card-spec"><strong>25</strong> yards</span>
+                        <span class="facility-card-spec"><strong>82°F</strong> heated</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <div class="facility-card-image">
+                    <img src="images/sun-oaks-outside-pool.jpg" alt="Recreation Pool">
+                </div>
+                <div class="facility-card-overlay"></div>
+                <div class="facility-card-content">
+                    <h3 class="facility-card-name">Recreation Pool</h3>
+                    <p class="facility-card-desc">The heart of Sun Oaks on a hot Redding day.</p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <div class="facility-card-image" style="background: linear-gradient(135deg, var(--pool) 0%, var(--pool-dark) 100%);"></div>
+                <div class="facility-card-content">
+                    <h3 class="facility-card-name">Toddler Pool + Spas</h3>
+                    <p class="facility-card-desc">Shallow play for littles. Two spas for recovery.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programs -->
+    <section class="programs">
+        <div class="programs-header reveal">
+            <h2 class="programs-title">Something for every swimmer</h2>
+        </div>
+
+        <div class="programs-grid reveal">
+            <div class="program-card">
+                <div class="program-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0 1 16 0v2"/></svg>
+                </div>
+                <h3 class="program-card-name">Private Lessons</h3>
+                <p class="program-card-desc">One-on-one instruction. Fastest path to confidence.</p>
+            </div>
+
+            <div class="program-card">
+                <div class="program-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3 class="program-card-name">Group Lessons</h3>
+                <p class="program-card-desc">Learn with peers. Social, fun, and effective.</p>
+            </div>
+
+            <div class="program-card">
+                <div class="program-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <h3 class="program-card-name">Water Aerobics</h3>
+                <p class="program-card-desc">Low-impact cardio. Easy on joints, big on results.</p>
+            </div>
+
+            <div class="program-card">
+                <div class="program-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12c2-2 4-3 6-3s4 1 6 3 4 3 6 3 4-1 6-3"/></svg>
+                </div>
+                <h3 class="program-card-name">Lap Swim</h3>
+                <p class="program-card-desc">Dedicated lanes. The 6am crew awaits.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Swim Team -->
+    <section class="swim-team">
+        <div class="swim-team-image">
+            <img src="images/Home  Redding Gym (12).jpg" alt="Sun Oaks Swim Team">
+        </div>
+        <div class="swim-team-content reveal">
+            <div class="swim-team-label">Youth Program</div>
+            <h2 class="swim-team-title">Sun Oaks Swim Team</h2>
+            <p class="swim-team-text">More than swimming — discipline, teamwork, friendships that last. From novice to regional competitor, every athlete gets individualized coaching.</p>
+            <ul class="swim-team-features">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Year-round training</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> USA Swimming coaches</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Local & regional meets</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Ages 6-18</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Hours -->
+    <section class="hours">
+        <div class="hours-content">
+            <div class="hours-header reveal">
+                <h2 class="hours-title">Pool Hours</h2>
+                <p class="hours-subtitle">Lap pool open year-round. Outdoor pools seasonal (Memorial Day – Labor Day).</p>
+            </div>
+
+            <div class="hours-grid reveal">
+                <div class="hours-card hours-card--featured">
+                    <h3 class="hours-card-name">Lap Pool</h3>
+                    <div class="hours-card-badge">Year-Round</div>
+                    <ul class="hours-card-times">
+                        <li><strong>Mon–Fri</strong> 5am – 9pm</li>
+                        <li><strong>Saturday</strong> 7am – 6pm</li>
+                        <li><strong>Sunday</strong> 7am – 4pm</li>
+                    </ul>
+                </div>
+
+                <div class="hours-card">
+                    <h3 class="hours-card-name">Recreation Pool</h3>
+                    <div class="hours-card-badge">Seasonal</div>
+                    <ul class="hours-card-times">
+                        <li><strong>Mon–Fri</strong> 10am – 7pm</li>
+                        <li><strong>Saturday</strong> 10am – 6pm</li>
+                        <li><strong>Sunday</strong> 10am – 4pm</li>
+                    </ul>
+                </div>
+
+                <div class="hours-card">
+                    <h3 class="hours-card-name">Spas</h3>
+                    <div class="hours-card-badge">Year-Round</div>
+                    <ul class="hours-card-times">
+                        <li><strong>Mon–Fri</strong> 5am – 9pm</li>
+                        <li><strong>Saturday</strong> 7am – 6pm</li>
+                        <li><strong>Sunday</strong> 7am – 4pm</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <!-- Subtle emblem background -->
+        <div class="cta-emblem">
+            <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+                <!-- Fill layers -->
+                <path class="emblem-fill" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
+                <path class="emblem-fill" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
+                <path class="emblem-fill" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
+                <!-- Stroke paths -->
+                <path class="emblem-path" d="M0,239.5V0h240v240H0v-.5ZM217.67,141.01l-7.95-.23c-1.26-.04-1.92-4.59-.84-5.35,11.88-6.19,23.49-20.79,18.38-36.25-48.69,56.74-123.53,70.69-187.8,32.84-8.81-40.57,16.11-83.35,57.81-96.2s85.67,8.01,102.65,48.26l9.79,8.4,15.84-6.74C214.85,30.45,158.01-3.62,105.21,11.06,50.5,26.27,20.56,83.3,38.83,136.5c16.03,46.68,66.62,77.69,116.32,61.72-11.22-29.61,16.83,10,41.32-21.61-2.99-2.78-6.78-3.34-10.69-4.12,3.08-9.84,33.88-.02,31.89-31.48Z"/>
+                <path class="emblem-path" d="M231.83,123.59c-9.3,46.67-46.34,80.31-91.46,85.04-47.05,4.93-91.1-23.32-106.65-66.18-17.06-47.03-.37-93.14,38.95-122.84C20.42,42.12-3.15,102.98,13.45,154.04c16.91,52.01,68.46,85.01,123.11,77.1,51.81-7.49,95.27-52.93,95.26-107.56Z"/>
+                <path class="emblem-path" d="M105.69,95.23c-29.86,8.61-33.36,34.8-63.21,34.92,61.34,38.32,141.89,22.78,184.82-34.73-2.55-2.3-5.16-2.55-7.7-1.05-3.52,2.49-7.98,4.13-12.44,3.13-2.92-.65-6.21-5.41-9.77-6.84-11.52-1.22-14.77,16.72-26.19,18.86-2.71.51-7.03-1.85-6.77-4.26l.98-9.19c.43-4.05-4.81-5.35-7.45-4.73-2.78.66-6.65,1.64-8.66,4.07l-16.15,19.56c-2.59,3.14-8.13,4.46-10.99,3.29-8.78-3.6-.36-16.44-6.21-21.81-2.1-1.93-6.56-2.31-10.26-1.24Z"/>
+            </svg>
+        </div>
+
+        <div class="cta-content reveal">
+            <h2 class="cta-title">Ready to <em>dive in?</em></h2>
+            <p class="cta-text">Pool access included with every membership. Join the families who've been swimming here for generations.</p>
+            <a href="membership-funnel.html" class="cta-button">
+                Become a Member
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">Sun Oaks</div>
+            <div class="footer-credit">Designed by <a href="#">Look Serious</a></div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 100);
+        });
+
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add('is-visible');
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Emblem animation observer
+        const emblemObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add('is-visible');
+            });
+        }, { threshold: 0.3 });
+
+        const emblem = document.querySelector('.cta-emblem');
+        if (emblem) emblemObserver.observe(emblem);
+    </script>
+</body>
+</html>

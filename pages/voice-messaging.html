@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice & Messaging — Sun Oaks Brand House</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+
+            --sun: #F7B500;
+            --sun-light: #FFF8E5;
+            --sun-dark: #C99200;
+            --pool: #0891A8;
+            --pool-light: #E5F5F7;
+            --pool-deep: #034752;
+
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --duration: 0.4s;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); font-weight: 400; line-height: 1.6; color: var(--black); background: var(--cream); -webkit-font-smoothing: antialiased; }
+        ::selection { background: var(--sun); color: var(--black); }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 48px;
+            background: rgba(250, 249, 247, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        @media (max-width: 768px) { .header { padding: 16px 24px; } }
+
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-600);
+            transition: color var(--duration);
+        }
+        .header-back:hover { color: var(--black); }
+        .header-back svg { width: 16px; height: 16px; }
+
+        .header-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 160px 48px 100px;
+            background: var(--black);
+            position: relative;
+            overflow: hidden;
+        }
+        @media (max-width: 768px) { .hero { padding: 140px 24px 80px; } }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(247,181,0,0.15);
+            border: 1px solid rgba(247,181,0,0.3);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 400;
+            line-height: 1.05;
+            color: var(--white);
+            margin-bottom: 24px;
+        }
+        .hero-title em { font-style: italic; color: var(--sun); }
+
+        .hero-intro {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+        }
+
+        /* Brand Voice Section */
+        .voice {
+            padding: 120px 48px;
+            background: var(--white);
+        }
+        @media (max-width: 768px) { .voice { padding: 80px 24px; } }
+
+        .voice-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 64px;
+        }
+        .section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sun-dark);
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+        .section-intro {
+            font-size: 1.125rem;
+            color: var(--grey-500);
+            max-width: 600px;
+        }
+
+        /* Voice Pillars */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 80px;
+        }
+        @media (max-width: 900px) { .pillars { grid-template-columns: 1fr; gap: 24px; } }
+
+        .pillar {
+            padding: 48px 40px;
+            background: var(--cream);
+            position: relative;
+        }
+
+        .pillar-number {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--silver);
+            line-height: 1;
+        }
+
+        .pillar-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--black);
+        }
+
+        .pillar-desc {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--grey-600);
+            margin-bottom: 24px;
+        }
+
+        .pillar-examples {
+            padding-top: 24px;
+            border-top: 1px solid var(--silver);
+        }
+        .pillar-examples-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 12px;
+        }
+        .pillar-examples ul {
+            list-style: none;
+        }
+        .pillar-examples li {
+            font-size: 0.875rem;
+            color: var(--grey-600);
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .pillar-examples li::before {
+            content: '"';
+            position: absolute;
+            left: 0;
+            color: var(--sun);
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+        }
+
+        /* Tone Spectrum */
+        .spectrum {
+            background: var(--black);
+            padding: 48px;
+            margin-bottom: 80px;
+        }
+        @media (max-width: 768px) { .spectrum { padding: 32px 24px; } }
+
+        .spectrum-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .spectrum-bar {
+            display: flex;
+            align-items: stretch;
+            background: var(--grey-800);
+            height: 80px;
+            position: relative;
+        }
+        @media (max-width: 768px) { .spectrum-bar { flex-direction: column; height: auto; } }
+
+        .spectrum-zone {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            border-right: 1px solid var(--grey-700);
+            transition: background var(--duration);
+        }
+        .spectrum-zone:last-child { border-right: none; }
+        @media (max-width: 768px) {
+            .spectrum-zone { border-right: none; border-bottom: 1px solid var(--grey-700); padding: 20px; }
+            .spectrum-zone:last-child { border-bottom: none; }
+        }
+
+        .spectrum-zone--active {
+            background: var(--sun);
+        }
+
+        .spectrum-zone-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 4px;
+        }
+        .spectrum-zone--active .spectrum-zone-label { color: var(--grey-700); }
+
+        .spectrum-zone-name {
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--white);
+        }
+        .spectrum-zone--active .spectrum-zone-name { color: var(--black); }
+
+        .spectrum-marker {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--sun);
+            font-weight: 600;
+        }
+
+        /* Do's and Don'ts */
+        .dos-donts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        @media (max-width: 768px) { .dos-donts { grid-template-columns: 1fr; } }
+
+        .dos, .donts {
+            padding: 40px;
+        }
+
+        .dos {
+            background: var(--pool-light);
+            border-left: 4px solid var(--pool);
+        }
+
+        .donts {
+            background: var(--pearl);
+            border-left: 4px solid var(--grey-300);
+        }
+
+        .dos-title, .donts-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dos-title svg { color: var(--pool); }
+        .donts-title svg { color: var(--grey-400); }
+        .dos-title svg, .donts-title svg { width: 24px; height: 24px; }
+
+        .dos ul, .donts ul {
+            list-style: none;
+        }
+        .dos li, .donts li {
+            font-size: 0.9375rem;
+            color: var(--grey-600);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .dos li:last-child, .donts li:last-child { border-bottom: none; }
+
+        /* Key Messages */
+        .messages {
+            padding: 120px 48px;
+            background: var(--cream);
+        }
+        @media (max-width: 768px) { .messages { padding: 80px 24px; } }
+
+        .messages-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .message-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        @media (max-width: 768px) { .message-cards { grid-template-columns: 1fr; } }
+
+        .message-card {
+            background: var(--white);
+            padding: 40px;
+            border: 1px solid var(--silver);
+        }
+
+        .message-card-context {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--pool);
+            margin-bottom: 16px;
+        }
+
+        .message-card-headline {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            line-height: 1.3;
+            margin-bottom: 16px;
+            color: var(--black);
+        }
+        .message-card-headline em { font-style: italic; color: var(--sun-dark); }
+
+        .message-card-body {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--grey-600);
+        }
+
+        /* Taglines */
+        .taglines {
+            padding: 100px 48px;
+            background: var(--black);
+        }
+        @media (max-width: 768px) { .taglines { padding: 70px 24px; } }
+
+        .taglines-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .taglines-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+            margin-bottom: 16px;
+        }
+
+        .taglines-title {
+            font-family: var(--font-serif);
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 48px;
+        }
+
+        .tagline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .tagline-item {
+            padding: 24px 48px;
+            background: var(--grey-800);
+            transition: all var(--duration);
+        }
+        .tagline-item:hover {
+            background: var(--grey-700);
+        }
+        .tagline-item--primary {
+            background: var(--sun);
+            padding: 32px 64px;
+        }
+        .tagline-item--primary:hover {
+            background: #FFD54F;
+        }
+
+        .tagline-text {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--white);
+        }
+        .tagline-item--primary .tagline-text {
+            color: var(--black);
+            font-size: 2rem;
+        }
+
+        .tagline-use {
+            font-size: 0.75rem;
+            color: var(--grey-400);
+            margin-top: 8px;
+        }
+        .tagline-item--primary .tagline-use {
+            color: var(--grey-700);
+        }
+
+        /* Headlines Bank */
+        .headlines {
+            padding: 120px 48px;
+            background: var(--white);
+        }
+        @media (max-width: 768px) { .headlines { padding: 80px 24px; } }
+
+        .headlines-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .headlines-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 768px) { .headlines-grid { grid-template-columns: 1fr; } }
+
+        .headline-card {
+            padding: 32px;
+            background: var(--cream);
+            transition: all var(--duration);
+        }
+        .headline-card:hover {
+            background: var(--sun-light);
+        }
+
+        .headline-card-category {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 12px;
+        }
+
+        .headline-card-text {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 400;
+            line-height: 1.35;
+            color: var(--black);
+        }
+        .headline-card-text em { font-style: italic; color: var(--sun-dark); }
+
+        /* CTA */
+        .cta {
+            padding: 100px 48px;
+            background: var(--sun);
+            text-align: center;
+        }
+        @media (max-width: 768px) { .cta { padding: 70px 24px; } }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 400;
+            color: var(--black);
+            margin-bottom: 16px;
+        }
+
+        .cta-text {
+            font-size: 1rem;
+            color: var(--grey-700);
+            margin-bottom: 32px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            background: var(--black);
+            color: var(--white);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all var(--duration);
+        }
+        .cta-button:hover {
+            background: var(--grey-800);
+            transform: translateY(-2px);
+        }
+        .cta-button svg { width: 18px; height: 18px; }
+
+        /* Footer */
+        .footer {
+            padding: 32px 48px;
+            background: var(--black);
+        }
+        @media (max-width: 768px) { .footer { padding: 32px 24px; } }
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-logo {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+        .footer-credit {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+        }
+        .footer-credit a { color: var(--sun); }
+
+        /* Animations */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+        .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="sunoaks-brand-house-v9.html" class="header-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
+            Brand House
+        </a>
+        <div class="header-title">Voice & Messaging</div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-label">Brand Voice</div>
+            <h1 class="hero-title">How Sun Oaks <em>speaks.</em></h1>
+            <p class="hero-intro">We're not a corporate gym chain. We're your neighbor. Our voice reflects 64 years of welcoming Redding families—warm, confident, and always real.</p>
+        </div>
+    </section>
+
+    <!-- Brand Voice Pillars -->
+    <section class="voice">
+        <div class="voice-content">
+            <div class="section-header reveal">
+                <div class="section-label">Voice Pillars</div>
+                <h2 class="section-title">Three qualities define our voice</h2>
+                <p class="section-intro">Every piece of communication should feel like it came from the same person—someone who genuinely cares about your wellbeing.</p>
+            </div>
+
+            <div class="pillars reveal">
+                <div class="pillar">
+                    <div class="pillar-number">01</div>
+                    <h3 class="pillar-name">Warm</h3>
+                    <p class="pillar-desc">We speak like a trusted friend, not a faceless brand. Personal, inviting, and genuinely happy to see you. This isn't customer service—it's community.</p>
+                    <div class="pillar-examples">
+                        <div class="pillar-examples-label">Sounds like</div>
+                        <ul>
+                            <li>We saved you a lane.</li>
+                            <li>See you at 6am tomorrow?</li>
+                            <li>Your kids are growing up here.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pillar">
+                    <div class="pillar-number">02</div>
+                    <h3 class="pillar-name">Confident</h3>
+                    <p class="pillar-desc">64 years of history gives us quiet confidence. We don't need to oversell—we let our facilities, programs, and community speak for themselves.</p>
+                    <div class="pillar-examples">
+                        <div class="pillar-examples-label">Sounds like</div>
+                        <ul>
+                            <li>The only indoor courts in the North State.</li>
+                            <li>Where Redding learns to swim.</li>
+                            <li>Three generations. Same club.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pillar">
+                    <div class="pillar-number">03</div>
+                    <h3 class="pillar-name">Real</h3>
+                    <p class="pillar-desc">No gym-speak. No corporate jargon. No "crushing it" or "gains." We talk like normal people who happen to care about fitness and community.</p>
+                    <div class="pillar-examples">
+                        <div class="pillar-examples-label">Sounds like</div>
+                        <ul>
+                            <li>It's hot. The pool is open.</li>
+                            <li>Rain or shine, your swim never gets cancelled.</li>
+                            <li>The 6am crew awaits.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tone Spectrum -->
+            <div class="spectrum reveal">
+                <div class="spectrum-title">Where We Land on the Tone Spectrum</div>
+                <div class="spectrum-bar">
+                    <div class="spectrum-zone">
+                        <div class="spectrum-zone-label">Too casual</div>
+                        <div class="spectrum-zone-name">Hey bro!</div>
+                    </div>
+                    <div class="spectrum-zone">
+                        <div class="spectrum-zone-label">Casual</div>
+                        <div class="spectrum-zone-name">Hey there</div>
+                    </div>
+                    <div class="spectrum-zone spectrum-zone--active">
+                        <div class="spectrum-zone-label">Sun Oaks</div>
+                        <div class="spectrum-zone-name">Friendly & clear</div>
+                    </div>
+                    <div class="spectrum-zone">
+                        <div class="spectrum-zone-label">Formal</div>
+                        <div class="spectrum-zone-name">Dear Member</div>
+                    </div>
+                    <div class="spectrum-zone">
+                        <div class="spectrum-zone-label">Too corporate</div>
+                        <div class="spectrum-zone-name">Per our policy...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Do's and Don'ts -->
+            <div class="dos-donts reveal">
+                <div class="dos">
+                    <h3 class="dos-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                        Do say
+                    </h3>
+                    <ul>
+                        <li>"Your workout is waiting" — inviting, personal</li>
+                        <li>"Join us" — inclusive, community-focused</li>
+                        <li>"See you soon" — warm, assumes relationship</li>
+                        <li>"Since 1960" — confident, heritage-driven</li>
+                        <li>"Families like yours" — relatable, specific</li>
+                        <li>"Your place" — ownership, belonging</li>
+                    </ul>
+                </div>
+
+                <div class="donts">
+                    <h3 class="donts-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Don't say
+                    </h3>
+                    <ul>
+                        <li>"Crush your goals" — too aggressive, gym-bro</li>
+                        <li>"Act now!" — salesy, pressure tactics</li>
+                        <li>"Dear valued member" — corporate, impersonal</li>
+                        <li>"State-of-the-art facility" — generic, oversold</li>
+                        <li>"Results guaranteed" — unrealistic, gimmicky</li>
+                        <li>"Exclusive offer" — sounds like spam</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Messages -->
+    <section class="messages">
+        <div class="messages-content">
+            <div class="section-header reveal">
+                <div class="section-label">Key Messages</div>
+                <h2 class="section-title">Stories we tell</h2>
+                <p class="section-intro">These core messages can be adapted across channels—from website copy to social posts to sales conversations.</p>
+            </div>
+
+            <div class="message-cards reveal">
+                <div class="message-card">
+                    <div class="message-card-context">Heritage</div>
+                    <h3 class="message-card-headline">Three generations of Redding families have grown up <em>here.</em></h3>
+                    <p class="message-card-body">Since 1960, Sun Oaks has been the place where kids learn to swim, teens find their serve, and adults find their people. We're not just a gym—we're part of the community's story.</p>
+                </div>
+
+                <div class="message-card">
+                    <div class="message-card-context">Belonging</div>
+                    <h3 class="message-card-headline">More than a gym. This is <em>your place.</em></h3>
+                    <p class="message-card-body">The 6am swimmers know each other's names. The tennis regulars grab coffee after matches. The moms in water aerobics have been friends for decades. You're not joining a membership—you're joining a community.</p>
+                </div>
+
+                <div class="message-card">
+                    <div class="message-card-context">Facilities</div>
+                    <h3 class="message-card-headline">Everything you need, under <em>one roof.</em></h3>
+                    <p class="message-card-body">Three pools. Ten tennis courts (the only indoor courts in the North State). 70+ group classes per week. A full gym. Childcare. Spa services. Six acres of space for every way you want to move.</p>
+                </div>
+
+                <div class="message-card">
+                    <div class="message-card-context">Value</div>
+                    <h3 class="message-card-headline">One membership. <em>Unlimited</em> possibilities.</h3>
+                    <p class="message-card-body">No add-on fees for classes. No extra charge for pools or courts. No hidden costs. Your membership includes everything—because that's how it should be.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Taglines -->
+    <section class="taglines">
+        <div class="taglines-content reveal">
+            <div class="taglines-label">Taglines</div>
+            <h2 class="taglines-title">Lines that capture who we are</h2>
+
+            <div class="tagline-list">
+                <div class="tagline-item tagline-item--primary">
+                    <div class="tagline-text">Where Redding comes to grow.</div>
+                    <div class="tagline-use">Primary tagline — use everywhere</div>
+                </div>
+
+                <div class="tagline-item">
+                    <div class="tagline-text">For sixty-four years, Sun Oaks has been the place.</div>
+                    <div class="tagline-use">Heritage messaging</div>
+                </div>
+
+                <div class="tagline-item">
+                    <div class="tagline-text">Your workout is waiting.</div>
+                    <div class="tagline-use">Promotional / invitational</div>
+                </div>
+
+                <div class="tagline-item">
+                    <div class="tagline-text">More than a gym. Your place.</div>
+                    <div class="tagline-use">Community / belonging</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Headlines Bank -->
+    <section class="headlines">
+        <div class="headlines-content">
+            <div class="section-header reveal">
+                <div class="section-label">Headlines Bank</div>
+                <h2 class="section-title">Ready-to-use headlines</h2>
+                <p class="section-intro">Grab these for ads, emails, social posts, or website sections. Mix and match as needed.</p>
+            </div>
+
+            <div class="headlines-grid reveal">
+                <div class="headline-card">
+                    <div class="headline-card-category">Membership</div>
+                    <div class="headline-card-text">Ready to find <em>your place?</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Membership</div>
+                    <div class="headline-card-text">Join the families who've been growing here for <em>generations.</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Aquatics</div>
+                    <div class="headline-card-text">Where Redding learns to <em>swim.</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Aquatics</div>
+                    <div class="headline-card-text">Rain or shine. Your swim <em>never</em> gets cancelled.</div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Tennis</div>
+                    <div class="headline-card-text">The only indoor courts in the <em>North State.</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Tennis</div>
+                    <div class="headline-card-text">Find your <em>serve.</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Fitness</div>
+                    <div class="headline-card-text">70+ classes. Zero excuses.</div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Fitness</div>
+                    <div class="headline-card-text">The 6am crew <em>awaits.</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Kids</div>
+                    <div class="headline-card-text">Where kids become <em>athletes.</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Kids</div>
+                    <div class="headline-card-text">Free childcare. Finally, <em>your</em> time.</div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Seasonal</div>
+                    <div class="headline-card-text">It's hot. The pool is <em>open.</em></div>
+                </div>
+
+                <div class="headline-card">
+                    <div class="headline-card-category">Promotional</div>
+                    <div class="headline-card-text">$0 enrollment. <em>This month only.</em></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="cta-content reveal">
+            <h2 class="cta-title">Questions about voice?</h2>
+            <p class="cta-text">When in doubt, read it out loud. If it sounds like something a friend would say, you're on the right track.</p>
+            <a href="sunoaks-brand-house-v9.html" class="cta-button">
+                Back to Brand House
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">Sun Oaks</div>
+            <div class="footer-credit">Designed by <a href="#">Look Serious</a></div>
+        </div>
+    </footer>
+
+    <script>
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add('is-visible');
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
