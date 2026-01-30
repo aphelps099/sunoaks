@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Architecture · Sun Oaks Brand House</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sun: #F7B500;
+      --sun-light: #FFF4D4;
+      --pool: #0891A8;
+      --pool-deep: #034752;
+      --black: #0D0D0C;
+      --cream: #FAF9F7;
+      --gray: #6B6B6B;
+      --sans: 'Jost', 'Futura', sans-serif;
+      --serif: 'Newsreader', Georgia, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--cream);
+      color: var(--black);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cream);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--black);
+    }
+    .header-logo svg { width: 36px; height: 36px; }
+    .header-logo span {
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--pool);
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+
+    /* Architecture Diagram */
+    .arch-diagram {
+      max-width: 900px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+    }
+    .arch-master {
+      background: linear-gradient(135deg, var(--sun), #E5A500);
+      color: var(--black);
+      padding: 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(247, 181, 0, 0.2);
+    }
+    .arch-master-name {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .arch-master-tag {
+      font-size: 0.875rem;
+      opacity: 0.9;
+      letter-spacing: 0.05em;
+    }
+
+    .arch-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .arch-line-v {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--sun), var(--pool));
+    }
+    .arch-line-h {
+      width: 80%;
+      max-width: 700px;
+      height: 2px;
+      background: linear-gradient(to right, var(--pool), var(--sun), var(--pool));
+    }
+
+    .arch-services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .arch-service-mini {
+      background: #fff;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      text-align: center;
+      border: 1px solid rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+    .arch-service-mini:hover {
+      border-color: var(--sun);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .arch-service-mini-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      font-size: 0.9375rem;
+    }
+    .arch-service-mini-stat {
+      font-size: 0.75rem;
+      color: var(--pool);
+      font-weight: 500;
+    }
+
+    /* Service Details */
+    .services {
+      padding: 4rem 2rem 6rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .services-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .services-header h2 {
+      font-family: var(--serif);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .services-header p {
+      font-size: 1.125rem;
+      color: var(--gray);
+    }
+
+    .service-card {
+      background: #fff;
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 0;
+    }
+    .service-card-visual {
+      background: var(--pool-deep);
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card-visual::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    }
+    .service-number {
+      font-size: 4rem;
+      font-weight: 700;
+      opacity: 0.3;
+      line-height: 1;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .service-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .service-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .service-stat {
+      font-size: 0.875rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .service-card-content {
+      padding: 3rem 2.5rem;
+    }
+    .service-card-content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--pool-deep);
+    }
+    .service-card-content p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    .service-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .service-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .service-feature-icon {
+      color: var(--sun);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+    .service-feature-text {
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    /* Color variations */
+    .service-card:nth-child(1) .service-card-visual { background: linear-gradient(135deg, #E63946, #D62839); }
+    .service-card:nth-child(2) .service-card-visual { background: linear-gradient(135deg, #2A9D8F, #238276); }
+    .service-card:nth-child(3) .service-card-visual { background: linear-gradient(135deg, #E76F51, #E55A38); }
+    .service-card:nth-child(4) .service-card-visual { background: linear-gradient(135deg, var(--pool), var(--pool-deep)); }
+    .service-card:nth-child(5) .service-card-visual { background: linear-gradient(135deg, #F4A261, #F39237); }
+    .service-card:nth-child(6) .service-card-visual { background: linear-gradient(135deg, #8E7CC3, #7B68B0); }
+    .service-card:nth-child(7) .service-card-visual { background: linear-gradient(135deg, var(--sun), #E5A500); }
+
+    /* Principles */
+    .principles {
+      background: #fff;
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+    }
+    .principles-content {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .principles-content h2 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .principle {
+      text-align: center;
+    }
+    .principle-number {
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--sun-light);
+      color: var(--black);
+      font-weight: 700;
+      font-size: 1.25rem;
+      line-height: 48px;
+      margin-bottom: 1rem;
+    }
+    .principle h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .principle p {
+      font-size: 0.9375rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .service-card {
+        grid-template-columns: 1fr;
+      }
+      .service-card-visual {
+        padding: 2rem;
+      }
+      .arch-services-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+    }
+    @media (max-width: 600px) {
+      .header { padding: 1rem; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      .service-card-content { padding: 2rem 1.5rem; }
+      .arch-services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Animations */
+    .service-card {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .service-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <a href="../index.html" class="header-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      <span>Back to Brand House</span>
+    </a>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-badge">Brand Architecture</span>
+    <h1>One Family. Seven Experiences.</h1>
+    <p>Sun Oaks is more than a gym—it's a comprehensive wellness ecosystem. Seven service lines, each with its own identity, united under one master brand.</p>
+
+    <!-- Architecture Diagram -->
+    <div class="arch-diagram">
+      <div class="arch-master">
+        <div class="arch-master-name">Sun Oaks</div>
+        <div class="arch-master-tag">Your Fitness Family</div>
+      </div>
+
+      <div class="arch-connector">
+        <div class="arch-line-v"></div>
+        <div class="arch-line-h"></div>
+      </div>
+
+      <div class="arch-services-grid">
+        <div class="arch-service-mini">
+          <div class="arch-service-mini-name">Fitness</div>
+          <div class="arch-service-mini-stat">120+ Classes</div>
+        </div>
+        <div class="arch-service-mini">
+          <div class="arch-service-mini-name">Tennis</div>
+          <div class="arch-service-mini-stat">10 Courts</div>
+        </div>
+        <div class="arch-service-mini">
+          <div class="arch-service-mini-name">Pickleball</div>
+          <div class="arch-service-mini-stat">4 Dedicated</div>
+        </div>
+        <div class="arch-service-mini">
+          <div class="arch-service-mini-name">Aquatics</div>
+          <div class="arch-service-mini-stat">3 Pools</div>
+        </div>
+        <div class="arch-service-mini">
+          <div class="arch-service-mini-name">Kids</div>
+          <div class="arch-service-mini-stat">Members Too</div>
+        </div>
+        <div class="arch-service-mini">
+          <div class="arch-service-mini-name">Spa</div>
+          <div class="arch-service-mini-stat">Full Service</div>
+        </div>
+        <div class="arch-service-mini">
+          <div class="arch-service-mini-name">Events</div>
+          <div class="arch-service-mini-stat">Venue Rentals</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Details -->
+  <section class="services">
+    <div class="services-header">
+      <h2>The Seven Service Lines</h2>
+      <p>Each service delivers a unique experience while reinforcing the Sun Oaks family feel.</p>
+    </div>
+
+    <!-- Fitness -->
+    <article class="service-card">
+      <div class="service-card-visual">
+        <div class="service-number">01</div>
+        <div class="service-icon">💪</div>
+        <div class="service-name">Fitness</div>
+        <div class="service-stat">120+ Classes Weekly</div>
+      </div>
+      <div class="service-card-content">
+        <h3>Group Fitness & Strength Training</h3>
+        <p>From high-energy cycling and HIIT to restorative yoga and barre, our fitness program offers something for every body. State-of-the-art equipment, expert instructors, and a supportive community make every workout count.</p>
+        <div class="service-features">
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">120+ weekly group classes</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Full cardio & strength equipment</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Certified personal trainers</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Specialty studios (cycling, yoga, barre)</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Tennis -->
+    <article class="service-card">
+      <div class="service-card-visual">
+        <div class="service-number">02</div>
+        <div class="service-icon">🎾</div>
+        <div class="service-name">Tennis</div>
+        <div class="service-stat">10 Championship Courts</div>
+      </div>
+      <div class="service-card-content">
+        <h3>Tennis Programs & Instruction</h3>
+        <p>Whether you're picking up a racket for the first time or refining your serve, our tennis program welcomes all skill levels. USPTA-certified pros, year-round clinics, and a vibrant league culture.</p>
+        <div class="service-features">
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">10 premium outdoor courts</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">USPTA-certified instruction</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Adult & junior leagues</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Weekly clinics & tournaments</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pickleball -->
+    <article class="service-card">
+      <div class="service-card-visual">
+        <div class="service-number">03</div>
+        <div class="service-icon">🏓</div>
+        <div class="service-name">Pickleball</div>
+        <div class="service-stat">4 Dedicated Courts</div>
+      </div>
+      <div class="service-card-content">
+        <h3>Pickleball Courts & Community</h3>
+        <p>The fastest-growing sport in America has a home at Sun Oaks. Four dedicated courts, drop-in play, leagues, and a welcoming community make it easy to join the fun.</p>
+        <div class="service-features">
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">4 dedicated pickleball courts</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Daily drop-in play</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Beginner-friendly instruction</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Social leagues & mixers</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Aquatics -->
+    <article class="service-card">
+      <div class="service-card-visual">
+        <div class="service-number">04</div>
+        <div class="service-icon">🏊</div>
+        <div class="service-name">Aquatics</div>
+        <div class="service-stat">3 Pools + 2 Spas</div>
+      </div>
+      <div class="service-card-content">
+        <h3>Pools, Swim Lessons & Water Fitness</h3>
+        <p>Three pools—including a heated lap pool, family recreation pool, and competition pool—plus two relaxing spas. Swim lessons for all ages, water aerobics, and year-round aquatic programming.</p>
+        <div class="service-features">
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Year-round heated lap pool</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Family recreation pool</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Swim lessons (infant–adult)</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Water fitness classes</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Kids -->
+    <article class="service-card">
+      <div class="service-card-visual">
+        <div class="service-number">05</div>
+        <div class="service-icon">👨‍👩‍👧‍👦</div>
+        <div class="service-name">Kids Programs</div>
+        <div class="service-stat">Ages 3–17</div>
+      </div>
+      <div class="service-card-content">
+        <h3>Kids Fitness, Camps & Childcare</h3>
+        <p>Kids are members too. From supervised childcare and summer camps to youth sports leagues and swim lessons, we create a safe, fun environment where young members can grow, play, and thrive.</p>
+        <div class="service-features">
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Kids Club childcare (ages 3 mo–12 yr)</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Summer & holiday camps</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Youth sports leagues</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Teen fitness programs</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Spa -->
+    <article class="service-card">
+      <div class="service-card-visual">
+        <div class="service-number">06</div>
+        <div class="service-icon">🧖</div>
+        <div class="service-name">Spa & Wellness</div>
+        <div class="service-stat">Full Service</div>
+      </div>
+      <div class="service-card-content">
+        <h3>Massage, Recovery & Relaxation</h3>
+        <p>Recovery is part of the journey. Our full-service spa offers massage therapy, sauna, steam rooms, and relaxation lounges—everything you need to recharge and restore.</p>
+        <div class="service-features">
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Licensed massage therapists</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Sauna & steam rooms</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Two outdoor spas</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Relaxation lounge</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Events -->
+    <article class="service-card">
+      <div class="service-card-visual">
+        <div class="service-number">07</div>
+        <div class="service-icon">🎉</div>
+        <div class="service-name">Events</div>
+        <div class="service-stat">Private & Community</div>
+      </div>
+      <div class="service-card-content">
+        <h3>Venue Rentals & Community Gatherings</h3>
+        <p>Sun Oaks isn't just a place to work out—it's a gathering place. Host your birthday party, corporate event, or family celebration in our versatile event spaces. We also host member mixers, themed workouts, and seasonal celebrations.</p>
+        <div class="service-features">
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Private party rentals</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Corporate event hosting</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Member social events</div>
+          </div>
+          <div class="service-feature">
+            <div class="service-feature-icon">✓</div>
+            <div class="service-feature-text">Seasonal celebrations</div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Principles -->
+  <section class="principles">
+    <div class="principles-content">
+      <h2>Brand Architecture Principles</h2>
+      <div class="principles-grid">
+        <div class="principle">
+          <div class="principle-number">1</div>
+          <h3>Unified Master Brand</h3>
+          <p>All services ladder up to Sun Oaks. The master brand is always visible, reinforcing "Your Fitness Family."</p>
+        </div>
+        <div class="principle">
+          <div class="principle-number">2</div>
+          <p>Each service has a distinct personality but shares the same visual language—fonts, colors, tone.</p>
+        </div>
+        <div class="principle">
+          <div class="principle-number">3</div>
+          <h3>Cross-Promotion</h3>
+          <p>Services are stronger together. Tennis members discover aquatics. Fitness members try pickleball. It's all one family.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Reveal on scroll
+    const cards = document.querySelectorAll('.service-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    cards.forEach(c => observer.observe(c));
+  </script>
+
+</body>
+</html>
