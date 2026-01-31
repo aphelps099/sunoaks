@@ -1,0 +1,759 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing Partnership Proposal — Sun Oaks × Look Serious</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            body { font-size: 11pt; }
+            .hero { min-height: auto; padding: 60px 48px; }
+            section { padding: 48px !important; }
+        }
+
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+
+            --sun: #F7B500;
+            --sun-light: #FFF8E5;
+            --sun-dark: #D9A000;
+            --pool: #0891A8;
+            --pool-light: #E5F5F7;
+            --pool-deep: #034752;
+
+            --font-sans: 'Jost', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection { background: var(--sun); color: var(--black); }
+
+        /* Cover */
+        .cover {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--black);
+            color: var(--white);
+            position: relative;
+        }
+        @media (max-width: 900px) {
+            .cover { grid-template-columns: 1fr; min-height: auto; }
+        }
+
+        .cover-content {
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        @media (max-width: 768px) { .cover-content { padding: 60px 32px; } }
+
+        .cover-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--sun);
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--black);
+            margin-bottom: 32px;
+            align-self: flex-start;
+        }
+
+        .cover-title {
+            font-family: var(--font-serif);
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+        .cover-title em {
+            font-style: italic;
+            color: var(--sun);
+        }
+
+        .cover-subtitle {
+            font-size: 1.125rem;
+            color: var(--grey-400);
+            margin-bottom: 48px;
+            max-width: 400px;
+        }
+
+        .cover-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: var(--grey-500);
+        }
+        .cover-meta strong {
+            color: var(--white);
+        }
+
+        .cover-visual {
+            background: var(--sun);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cover-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--sun) 0%, var(--sun-dark) 100%);
+        }
+
+        .cover-logo {
+            position: relative;
+            width: 60%;
+            max-width: 300px;
+            opacity: 0.15;
+        }
+        .cover-logo svg {
+            width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 900px) {
+            .cover-visual { min-height: 300px; }
+        }
+
+        /* Section styles */
+        section {
+            padding: 80px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) { section { padding: 60px 32px; } }
+
+        .section-number {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            font-weight: 400;
+            color: var(--grey-200);
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-intro {
+            font-size: 1.125rem;
+            color: var(--grey-600);
+            margin-bottom: 48px;
+            max-width: 600px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--silver);
+            margin: 0;
+        }
+
+        /* Service cards */
+        .services-grid {
+            display: grid;
+            gap: 1px;
+            background: var(--silver);
+            margin-bottom: 48px;
+        }
+
+        .service-card {
+            background: var(--cream);
+            padding: 32px;
+        }
+
+        .service-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .service-card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .service-card-price {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            color: var(--pool);
+        }
+
+        .service-card-list {
+            list-style: none;
+        }
+        .service-card-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.9375rem;
+            color: var(--grey-600);
+            margin-bottom: 8px;
+        }
+        .service-card-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: var(--sun);
+        }
+
+        /* Pricing summary */
+        .pricing-summary {
+            background: var(--black);
+            color: var(--white);
+            padding: 48px;
+            margin: 48px 0;
+        }
+
+        .pricing-summary-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            margin-bottom: 32px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        @media (max-width: 768px) {
+            .pricing-grid { grid-template-columns: 1fr; gap: 24px; }
+        }
+
+        .pricing-item {
+            border-left: 2px solid var(--sun);
+            padding-left: 20px;
+        }
+
+        .pricing-item-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+            margin-bottom: 8px;
+        }
+
+        .pricing-item-value {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            margin-bottom: 4px;
+        }
+
+        .pricing-item-note {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+        }
+
+        /* Timeline */
+        .timeline {
+            margin: 48px 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 32px;
+            padding: 32px 0;
+            border-bottom: 1px solid var(--silver);
+        }
+        .timeline-item:last-child { border-bottom: none; }
+
+        .timeline-month {
+            font-family: var(--font-serif);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--pool);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            font-size: 0.9375rem;
+            color: var(--grey-600);
+        }
+
+        /* Why section */
+        .why-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin: 48px 0;
+        }
+        @media (max-width: 768px) {
+            .why-grid { grid-template-columns: 1fr; gap: 32px; }
+        }
+
+        .why-item-number {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: var(--grey-200);
+            margin-bottom: 12px;
+        }
+
+        .why-item-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .why-item-desc {
+            font-size: 0.9375rem;
+            color: var(--grey-600);
+        }
+
+        /* Contact */
+        .contact-section {
+            background: var(--pool-deep);
+            color: var(--white);
+            padding: 80px;
+            text-align: center;
+        }
+        @media (max-width: 768px) { .contact-section { padding: 60px 32px; } }
+
+        .contact-title {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+        .contact-title em {
+            font-style: italic;
+            color: var(--sun);
+        }
+
+        .contact-subtitle {
+            font-size: 1.125rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 48px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-name {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+        }
+
+        .contact-role {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 16px;
+        }
+
+        .contact-details {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+        }
+        .contact-details a {
+            color: var(--white);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 32px 80px;
+            background: var(--black);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .footer { padding: 24px 32px; flex-direction: column; gap: 16px; text-align: center; }
+        }
+
+        .footer-logo {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .footer-date {
+            font-size: 0.8125rem;
+            color: var(--grey-500);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: var(--sun-light);
+            border-left: 3px solid var(--sun);
+            padding: 24px 32px;
+            margin: 32px 0;
+        }
+
+        .highlight-box p {
+            font-size: 0.9375rem;
+            color: var(--grey-700);
+            margin: 0;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin: 48px 0;
+            padding: 32px 0;
+            border-top: 1px solid var(--silver);
+            border-bottom: 1px solid var(--silver);
+        }
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: 1fr; gap: 24px; }
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--pool);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cover -->
+    <header class="cover">
+        <div class="cover-content">
+            <div class="cover-badge">Partnership Proposal</div>
+            <h1 class="cover-title">Marketing Partnership<br>for <em>Sun Oaks</em></h1>
+            <p class="cover-subtitle">A monthly marketing partnership that treats your growth like a campaign, not a checklist.</p>
+            <div class="cover-meta">
+                <span><strong>Prepared for:</strong> Sun Oaks Athletic Club</span>
+                <span><strong>Prepared by:</strong> Look Serious</span>
+                <span><strong>Date:</strong> January 2026</span>
+            </div>
+        </div>
+        <div class="cover-visual">
+            <div class="cover-logo">
+                <svg viewBox="0 0 223.63 224.67" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="#000">
+                        <path d="M209.47,133.36l-7.95-.23c-1.26-.04-1.92-4.59-.84-5.35,11.88-6.19,23.49-20.79,18.38-36.25-48.69,56.74-123.53,70.69-187.8,32.84-8.81-40.57,16.11-83.35,57.81-96.2s85.67,8.01,102.65,48.26l9.79,8.4,15.84-6.74C206.65,22.81,149.81-11.26,97.01,3.42,42.3,18.63,12.37,75.66,30.63,128.86c16.03,46.68,66.62,77.69,116.32,61.72-11.22-29.61,16.83,10,41.32-21.61-2.99-2.78-6.78-3.34-10.69-4.12,3.08-9.84,33.88-.02,31.89-31.48ZM223.63,115.94c-9.3,46.67-46.34,80.31-91.46,85.04-47.05,4.93-91.1-23.32-106.65-66.18-17.06-47.03-.37-93.14,38.95-122.84C12.22,34.47-11.35,95.34,5.25,146.4c16.91,52.01,68.46,85.01,123.11,77.1,51.81-7.49,95.27-52.93,95.26-107.56ZM97.49,87.58c-29.86,8.61-33.36,34.8-63.21,34.92,61.34,38.32,141.89,22.78,184.82-34.73-2.55-2.3-5.16-2.55-7.7-1.05-3.52,2.49-7.98,4.13-12.44,3.13-2.92-.65-6.21-5.41-9.77-6.84-11.52-1.22-14.77,16.72-26.19,18.86-2.71.51-7.03-1.85-6.77-4.26l.98-9.19c.43-4.05-4.81-5.35-7.45-4.73-2.78.66-6.65,1.64-8.66,4.07l-16.15,19.56c-2.59,3.14-8.13,4.46-10.99,3.29-8.78-3.6-.36-16.44-6.21-21.81-2.1-1.93-6.56-2.31-10.26-1.24Z"/>
+                        <path d="M209.47,133.36c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C12.37,75.66,42.3,18.63,97.01,3.42c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26S22.44,83.79,31.25,124.36c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
+                        <path d="M223.63,115.94c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-11.35,95.34,12.22,34.47,64.47,11.96,25.14,41.66,8.46,87.78,25.52,134.8c15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
+                        <path d="M97.49,87.58c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- The Opportunity -->
+    <section>
+        <div class="section-number">01</div>
+        <h2 class="section-title">The Opportunity</h2>
+        <p class="section-intro">Sun Oaks has been Redding's home for fitness for 64 years. You've built something rare—a true multi-generational community hub. But your digital presence should work as hard as your team does.</p>
+
+        <p style="color: var(--grey-600); margin-bottom: 24px;"><strong style="color: var(--black);">The challenge:</strong> Most fitness clubs treat marketing as a one-time project. But member acquisition, retention, and revenue growth require consistent, strategic execution.</p>
+
+        <p style="color: var(--grey-600);"><strong style="color: var(--black);">The solution:</strong> A monthly marketing partnership that treats your growth like a campaign, not a checklist.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Monthly Services -->
+    <section>
+        <div class="section-number">02</div>
+        <h2 class="section-title">Monthly Marketing Services</h2>
+        <p class="section-intro">Everything you need to grow—strategy, content, ads, and execution—in one partnership.</p>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-card-header">
+                    <h3 class="service-card-title">Strategic Marketing Leadership</h3>
+                    <span class="service-card-price">$2,500/mo</span>
+                </div>
+                <ul class="service-card-list">
+                    <li>Monthly campaign planning tied to your revenue goals (PT sales, membership growth, swim school enrollment)</li>
+                    <li>Performance tracking across all channels—we measure what matters (leads, conversions, LTV)</li>
+                    <li>Competitive positioning to keep Sun Oaks top-of-mind in Redding</li>
+                    <li>Monthly strategy sessions with your leadership team</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-card-header">
+                    <h3 class="service-card-title">Website Management & Optimization</h3>
+                    <span class="service-card-price">Included</span>
+                </div>
+                <ul class="service-card-list">
+                    <li>Ongoing updates to keep content fresh and relevant</li>
+                    <li>Landing page creation for campaigns (summer camp, PT promotions, swim team registration)</li>
+                    <li>Performance monitoring and optimization for conversions</li>
+                    <li>Technical maintenance so your site stays fast and secure</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-card-header">
+                    <h3 class="service-card-title">Content Creation</h3>
+                    <span class="service-card-price">$1,800/mo</span>
+                </div>
+                <ul class="service-card-list">
+                    <li>4 blog posts/month optimized for local SEO (swimming lessons Redding, personal training Redding, etc.)</li>
+                    <li>Social media content calendar (12-16 posts/month across platforms)</li>
+                    <li>Email campaigns (2-4/month) for member engagement and promotions</li>
+                    <li>Photography coordination for authentic, on-brand imagery</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-card-header">
+                    <h3 class="service-card-title">Paid Advertising Management</h3>
+                    <span class="service-card-price">$800/mo + ad spend</span>
+                </div>
+                <ul class="service-card-list">
+                    <li>Google Ads targeting high-intent local searches</li>
+                    <li>Meta Ads (Facebook/Instagram) for awareness and conversion campaigns</li>
+                    <li>Retargeting campaigns to convert website visitors</li>
+                    <li>Monthly optimization based on performance data</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>Recommended ad spend:</strong> $1,500–3,000/month depending on goals. This is separate from the management fee and goes directly to the ad platforms.</p>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Website -->
+    <section>
+        <div class="section-number">03</div>
+        <h2 class="section-title">Website Design & Development</h2>
+        <p class="section-intro">A modern, conversion-focused website that reflects Sun Oaks' premium positioning.</p>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-value">70%+</div>
+                <div class="stat-label">Mobile Traffic</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">8-10</div>
+                <div class="stat-label">Weeks to Launch</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">$15K</div>
+                <div class="stat-label">Investment</div>
+            </div>
+        </div>
+
+        <h3 style="font-weight: 600; margin-bottom: 16px;">What We'll Build:</h3>
+        <ul class="service-card-list" style="margin-bottom: 32px;">
+            <li>Modern, conversion-focused design that reflects Sun Oaks' premium positioning</li>
+            <li>Mobile-first responsive experience (70%+ of your traffic is mobile)</li>
+            <li>Fast, optimized performance for better SEO and user experience</li>
+            <li>Easy content management so your team can make updates without developers</li>
+            <li>Integration with your systems (CRM, class scheduling, membership management)</li>
+            <li>SEO foundation to own local search for fitness in Redding</li>
+        </ul>
+
+        <h3 style="font-weight: 600; margin-bottom: 16px;">Key Pages:</h3>
+        <ul class="service-card-list">
+            <li>Homepage designed to convert visitors → tours → memberships</li>
+            <li>Service pages (Personal Training, Swim School, Tennis, Group Classes)</li>
+            <li>Membership sales funnel with pricing, FAQs, and CTAs</li>
+            <li>About/Community page showcasing your 64-year legacy</li>
+            <li>Blog for ongoing content marketing</li>
+        </ul>
+
+        <div class="highlight-box">
+            <p><strong>Payment option:</strong> The $15,000 website investment can be split into 3 monthly payments of $5,000.</p>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Pricing Summary -->
+    <section style="padding: 0;">
+        <div class="pricing-summary">
+            <h2 class="pricing-summary-title">Pricing Summary</h2>
+            <div class="pricing-grid">
+                <div class="pricing-item">
+                    <div class="pricing-item-label">Monthly Retainer</div>
+                    <div class="pricing-item-value">$4,500</div>
+                    <div class="pricing-item-note">Strategy, website management, content, email</div>
+                </div>
+                <div class="pricing-item">
+                    <div class="pricing-item-label">Paid Ads Management</div>
+                    <div class="pricing-item-value">$800</div>
+                    <div class="pricing-item-note">+ ad spend (recommended $1,500-3,000)</div>
+                </div>
+                <div class="pricing-item">
+                    <div class="pricing-item-label">Website (One-Time)</div>
+                    <div class="pricing-item-value">$15,000</div>
+                    <div class="pricing-item-note">Or 3 payments of $5,000</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why This Works -->
+    <section>
+        <div class="section-number">04</div>
+        <h2 class="section-title">Why This Works for Sun Oaks</h2>
+
+        <div class="why-grid">
+            <div class="why-item">
+                <div class="why-item-number">01</div>
+                <h3 class="why-item-title">We Already Know Your Business</h3>
+                <p class="why-item-desc">We've built your Brand House. We understand your service architecture, your revenue model, and what makes Sun Oaks different. No ramp-up time—we hit the ground running.</p>
+            </div>
+            <div class="why-item">
+                <div class="why-item-number">02</div>
+                <h3 class="why-item-title">We Think Like Operators</h3>
+                <p class="why-item-desc">We know PT is your highest-margin service (68% gross margin). We understand that PT clients stay 2.3x longer than membership-only members. We prioritize campaigns that drive revenue, not just traffic.</p>
+            </div>
+            <div class="why-item">
+                <div class="why-item-number">03</div>
+                <h3 class="why-item-title">Redding-First Strategy</h3>
+                <p class="why-item-desc">You're not competing with Equinox. You're the premium option in Redding—the place where families grow together. Our messaging reflects that positioning.</p>
+            </div>
+            <div class="why-item">
+                <div class="why-item-number">04</div>
+                <h3 class="why-item-title">Consistent Execution</h3>
+                <p class="why-item-desc">Marketing isn't a project—it's a discipline. Monthly services mean your Google Ads are always optimized, your content calendar never goes dark, and your website evolves with your business.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 90 Day Plan -->
+    <section>
+        <div class="section-number">05</div>
+        <h2 class="section-title">What Success Looks Like</h2>
+        <p class="section-intro">A 90-day roadmap from foundation to scale.</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-month">Month 1</div>
+                <div>
+                    <h3 class="timeline-title">Foundation</h3>
+                    <p class="timeline-desc">New website launched (if included). First campaign deployed (likely PT promotion or family membership offer). Content calendar and ad campaigns live.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-month">Month 2</div>
+                <div>
+                    <h3 class="timeline-title">Optimization</h3>
+                    <p class="timeline-desc">Analyze performance data. Optimize ad spend and landing pages. Launch email nurture sequences.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-month">Month 3</div>
+                <div>
+                    <h3 class="timeline-title">Scale</h3>
+                    <p class="timeline-desc">Double down on what's working. Test new channels or offers. Report on ROI and plan Q2 strategy.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-value">20-30%</div>
+                <div class="stat-label">Increase in Qualified Leads</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">15%+</div>
+                <div class="stat-label">Lift in PT Package Sales</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">10%+</div>
+                <div class="stat-label">Website Conversion Improvement</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <div class="contact-section">
+        <h2 class="contact-title">Ready to <em>grow?</em></h2>
+        <p class="contact-subtitle">Let's schedule a 30-minute strategy call to discuss your top growth priorities for 2026.</p>
+        <div class="contact-info">
+            <div class="contact-name">Aaron Phelps</div>
+            <div class="contact-role">Look Serious · Founder</div>
+            <div class="contact-details">
+                <a href="mailto:aaron@look-serious.com">aaron@look-serious.com</a><br>
+                (530) 221-4405
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">Look Serious</div>
+        <div class="footer-date">January 2026</div>
+    </footer>
+
+</body>
+</html>
