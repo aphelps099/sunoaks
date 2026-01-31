@@ -1441,6 +1441,175 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PREVIEW MODAL
+           ═══════════════════════════════════════════════════════════════ */
+
+        .preview-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s var(--ease), visibility 0.3s;
+        }
+
+        .preview-modal-overlay.is-active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .preview-modal {
+            background: var(--cream);
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.3s var(--ease);
+        }
+
+        .preview-modal-overlay.is-active .preview-modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .preview-modal-header {
+            background: var(--black);
+            color: var(--cream);
+            padding: 32px 40px;
+            text-align: center;
+        }
+
+        .preview-modal-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--sun);
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--black);
+            margin-bottom: 16px;
+        }
+
+        .preview-modal-title {
+            font-family: var(--serif);
+            font-size: 1.75rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .preview-modal-body {
+            padding: 40px;
+        }
+
+        .preview-modal-message {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--gray);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .preview-modal-contact {
+            background: #fff;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .preview-modal-contact-name {
+            font-family: var(--serif);
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .preview-modal-contact-role {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--pool);
+            margin-bottom: 24px;
+        }
+
+        .preview-modal-contact-company {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .preview-modal-contact-company a {
+            color: var(--pool);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .preview-modal-contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .preview-modal-contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .preview-modal-contact-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--gray);
+            opacity: 0.5;
+        }
+
+        .preview-modal-contact-item a {
+            color: var(--black);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .preview-modal-contact-item a:hover {
+            color: var(--pool);
+        }
+
+        .preview-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--cream);
+            transition: opacity 0.2s;
+            z-index: 1;
+        }
+
+        .preview-modal-close:hover {
+            opacity: 0.7;
+        }
+
+        .preview-modal-close svg {
+            width: 24px;
+            height: 24px;
+        }
     </style>
 </head>
 <body>
@@ -1716,7 +1885,7 @@
                     </div>
                 </a>
                 
-                <a href="#" class="chapter is-featured reveal">
+                <a href="#" class="chapter is-featured reveal" onclick="openPreviewModal('Templates & Assets'); return false;">
                     <div class="chapter-top">
                         <span class="chapter-number">06</span>
                         <span class="chapter-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
@@ -1924,7 +2093,48 @@
             </div>
         </div>
     </footer>
-    
+
+    <!-- Preview Modal -->
+    <div class="preview-modal-overlay" id="previewModal">
+        <div class="preview-modal">
+            <button class="preview-modal-close" onclick="closePreviewModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="preview-modal-header">
+                <div class="preview-modal-badge">Preview Only</div>
+                <h3 class="preview-modal-title" id="previewModalTitle">Templates & Assets</h3>
+            </div>
+            <div class="preview-modal-body">
+                <p class="preview-modal-message">This resource is part of the Sun Oaks Brand House preview. Contact the Brand House Architect to access the full toolkit.</p>
+                <div class="preview-modal-contact">
+                    <div class="preview-modal-contact-name">Aaron Phelps</div>
+                    <div class="preview-modal-contact-role">Brand House Architect</div>
+                    <div class="preview-modal-contact-company">
+                        <strong>Look Serious</strong> | Founder<br>
+                        <a href="https://look-serious.com" target="_blank">look-serious.com</a>
+                    </div>
+                    <div class="preview-modal-contact-details">
+                        <div class="preview-modal-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <a href="tel:530-768-7680">530-768-7680</a>
+                        </div>
+                        <div class="preview-modal-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <a href="mailto:aaron@look-serious.com">aaron@look-serious.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Header scroll
         const header = document.getElementById('header');
@@ -2013,6 +2223,35 @@
             link.addEventListener('click', () => {
                 closeExploreMenu();
             });
+        });
+
+        // Preview Modal
+        const previewModal = document.getElementById('previewModal');
+        const previewModalTitle = document.getElementById('previewModalTitle');
+
+        function openPreviewModal(title) {
+            previewModalTitle.textContent = title;
+            previewModal.classList.add('is-active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreviewModal() {
+            previewModal.classList.remove('is-active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        previewModal.addEventListener('click', function(e) {
+            if (e.target === previewModal) {
+                closePreviewModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && previewModal.classList.contains('is-active')) {
+                closePreviewModal();
+            }
         });
     </script>
 </body>
