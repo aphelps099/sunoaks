@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 
+    <!-- Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
     <style>
         :root {
             --white: #FFFFFF;
@@ -44,6 +47,12 @@
         body { font-family: var(--font-sans); font-weight: 400; line-height: 1.6; color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
         ::selection { background: var(--pool); color: var(--white); }
         a { color: inherit; text-decoration: none; }
+
+        /* Material Symbols */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
+            font-size: 28px;
+        }
 
         /* Header */
         .header {
@@ -121,7 +130,7 @@
         .hero-photo {
             position: absolute;
             inset: 0;
-            background: url('images/Home  Redding Gym (10).jpg') center 30% / cover no-repeat;
+            background: url('../images/photos/sun-oaks-outside-pool.jpg') center center / cover no-repeat;
             z-index: 0;
         }
 
@@ -426,7 +435,6 @@
             color: var(--pool);
             margin-bottom: 20px;
         }
-        .program-card-icon svg { width: 24px; height: 24px; }
 
         .program-card-name {
             font-size: 1.125rem;
@@ -520,9 +528,8 @@
             font-size: 0.875rem;
             color: rgba(255,255,255,0.9);
         }
-        .swim-team-features svg {
-            width: 16px;
-            height: 16px;
+        .swim-team-features .material-symbols-outlined {
+            font-size: 20px;
             color: var(--sun);
             flex-shrink: 0;
         }
@@ -811,7 +818,7 @@
         <div class="facilities-grid reveal">
             <div class="facility-card facility-card--hero">
                 <div class="facility-card-image">
-                    <img src="images/Home  Redding Gym (12).jpg" alt="Covered Lap Pool">
+                    <img src="../images/photos/Home  Redding Gym (10).jpg" alt="Covered Lap Pool">
                 </div>
                 <div class="facility-card-overlay"></div>
                 <div class="facility-card-content">
@@ -828,7 +835,7 @@
 
             <div class="facility-card">
                 <div class="facility-card-image">
-                    <img src="images/sun-oaks-outside-pool.jpg" alt="Recreation Pool">
+                    <img src="../images/photos/sun-oaks-outside-pool.jpg" alt="Recreation Pool">
                 </div>
                 <div class="facility-card-overlay"></div>
                 <div class="facility-card-content">
@@ -856,7 +863,7 @@
         <div class="programs-grid reveal">
             <div class="program-card">
                 <div class="program-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0 1 16 0v2"/></svg>
+                    <span class="material-symbols-outlined">person</span>
                 </div>
                 <h3 class="program-card-name">Private Lessons</h3>
                 <p class="program-card-desc">One-on-one instruction. Fastest path to confidence.</p>
@@ -864,7 +871,7 @@
 
             <div class="program-card">
                 <div class="program-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span class="material-symbols-outlined">groups</span>
                 </div>
                 <h3 class="program-card-name">Group Lessons</h3>
                 <p class="program-card-desc">Learn with peers. Social, fun, and effective.</p>
@@ -872,7 +879,7 @@
 
             <div class="program-card">
                 <div class="program-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    <span class="material-symbols-outlined">water</span>
                 </div>
                 <h3 class="program-card-name">Water Aerobics</h3>
                 <p class="program-card-desc">Low-impact cardio. Easy on joints, big on results.</p>
@@ -880,7 +887,7 @@
 
             <div class="program-card">
                 <div class="program-card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12c2-2 4-3 6-3s4 1 6 3 4 3 6 3 4-1 6-3"/></svg>
+                    <span class="material-symbols-outlined">pool</span>
                 </div>
                 <h3 class="program-card-name">Lap Swim</h3>
                 <p class="program-card-desc">Dedicated lanes. The 6am crew awaits.</p>
@@ -891,17 +898,17 @@
     <!-- Swim Team -->
     <section class="swim-team">
         <div class="swim-team-image">
-            <img src="images/Home  Redding Gym (12).jpg" alt="Sun Oaks Swim Team">
+            <img src="../images/photos/Home  Redding Gym (20).jpg" alt="Sun Oaks Swim Team">
         </div>
         <div class="swim-team-content reveal">
             <div class="swim-team-label">Youth Program</div>
             <h2 class="swim-team-title">Sun Oaks Swim Team</h2>
             <p class="swim-team-text">More than swimming — discipline, teamwork, friendships that last. From novice to regional competitor, every athlete gets individualized coaching.</p>
             <ul class="swim-team-features">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Year-round training</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> USA Swimming coaches</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Local & regional meets</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Ages 6-18</li>
+                <li><span class="material-symbols-outlined">check_circle</span> Year-round training</li>
+                <li><span class="material-symbols-outlined">check_circle</span> USA Swimming coaches</li>
+                <li><span class="material-symbols-outlined">check_circle</span> Local & regional meets</li>
+                <li><span class="material-symbols-outlined">check_circle</span> Ages 6-18</li>
             </ul>
         </div>
     </section>
