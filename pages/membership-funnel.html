@@ -66,42 +66,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 48px;
-            background: transparent;
-            transition: all var(--duration);
-        }
-        .header.scrolled {
-            background: rgba(255,255,255,0.95);
+            padding: 24px 48px;
+            background: rgba(250,249,247,0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--silver);
         }
-        @media (max-width: 768px) { .header { padding: 16px 24px; } }
+        @media (max-width: 768px) { .header { padding: 20px 24px; } }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
         .header-back {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 0.8125rem;
             font-weight: 500;
-            color: var(--white);
+            color: var(--grey-500);
             transition: color var(--duration);
         }
-        .header.scrolled .header-back { color: var(--grey-600); }
-        .header-back:hover { opacity: 0.7; }
+        .header-back:hover { color: var(--black); }
         .header-back svg { width: 16px; height: 16px; }
-
-        .header-phone {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--white);
-            transition: color var(--duration);
-        }
-        .header.scrolled .header-phone { color: var(--grey-600); }
-        .header-phone svg { width: 16px; height: 16px; }
-        @media (max-width: 600px) { .header-phone span { display: none; } }
+        .header-sep { width: 1px; height: 20px; background: var(--grey-200); }
+        .header-chapter { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey-400); }
+        .header-chapter span { color: var(--sun-dark); }
+        .header-badge { padding: 6px 12px; background: var(--sun-light); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); }
+        @media (max-width: 600px) { .header-badge { display: none; } }
 
         /* Hero - Full viewport */
         .hero {
@@ -389,12 +381,69 @@
             inset: 0;
             background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
             z-index: 0;
+            transition: opacity var(--duration);
         }
         .benefit-card--featured > * {
             position: relative;
             z-index: 1;
         }
-        .benefit-card--featured:hover::before { background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%); }
+        /* Hover overlay with orange background and SVG */
+        .benefit-card--featured::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--sun);
+            opacity: 0;
+            z-index: 0;
+            transition: opacity var(--duration);
+        }
+        .benefit-card--featured:hover::before { opacity: 0; }
+        .benefit-card--featured:hover::after { opacity: 0.95; }
+        .benefit-card--featured:hover { color: var(--black); }
+        .benefit-card--featured:hover .benefit-card-icon { background: var(--black); color: var(--sun); }
+        .benefit-card--featured:hover .benefit-card-desc { color: var(--grey-700); }
+        .benefit-card--featured:hover .benefit-card-badge { background: var(--black); color: var(--sun); }
+        /* View indicator */
+        .benefit-card--featured .benefit-card-view {
+            position: absolute;
+            top: 50%;
+            right: 40px;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--black);
+            opacity: 0;
+            transition: opacity var(--duration);
+            z-index: 2;
+        }
+        .benefit-card--featured .benefit-card-view svg {
+            width: 20px;
+            height: 20px;
+        }
+        .benefit-card--featured:hover .benefit-card-view { opacity: 1; }
+        /* Sun emblem SVG on hover */
+        .benefit-card--featured .benefit-card-emblem {
+            position: absolute;
+            right: -10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60%;
+            height: 80%;
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity var(--duration);
+        }
+        .benefit-card--featured .benefit-card-emblem svg {
+            width: 100%;
+            height: 100%;
+        }
+        .benefit-card--featured:hover .benefit-card-emblem { opacity: 0.15; }
         @media (max-width: 900px) {
             .benefit-card--featured { grid-column: span 2; grid-row: span 1; min-height: 350px; }
         }
@@ -1060,15 +1109,16 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header" id="header">
-        <a href="/sunoaks/" class="header-back">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
-            Brand House
-        </a>
-        <a href="tel:5302214405" class="header-phone">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span>(530) 221-4405</span>
-        </a>
+    <header class="header">
+        <div class="header-left">
+            <a href="/sunoaks/" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>Membership</span> Funnel Page</span>
+        </div>
+        <div class="header-badge">Join Sun Oaks</div>
     </header>
 
     <!-- Hero -->
@@ -1146,6 +1196,19 @@
                 </div>
                 <h3 class="benefit-card-name">Group Classes</h3>
                 <p class="benefit-card-desc">Cardio, strength, cycling, and mind-body classes 7 days a week. Never miss a workout with easy signup using our Sun Oaks app.</p>
+                <!-- View indicator on hover -->
+                <div class="benefit-card-view">
+                    View
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+                <!-- Sun emblem on hover -->
+                <div class="benefit-card-emblem">
+                    <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor" d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
+                        <path fill="currentColor" d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
+                        <path fill="currentColor" d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- Personal Training -->
@@ -1435,12 +1498,6 @@
     </div>
 
     <script>
-        // Header scroll
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 100);
-        });
-
         // Mobile CTA visibility
         const mobileCta = document.getElementById('mobileCta');
         const hero = document.querySelector('.hero');
