@@ -943,12 +943,16 @@
             gap: 20px;
         }
         .footer-logo {
-            font-size: 0.875rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--white);
+            display: flex;
+            align-items: center;
         }
+
+        .footer-logo img {
+            height: 24px;
+            width: auto;
+            filter: brightness(1.2);
+        }
+
         .footer-sep { width: 1px; height: 16px; background: var(--grey-600); }
         .footer-tag { font-size: 0.875rem; color: var(--grey-400); }
         .footer-credit { font-size: 0.8125rem; color: var(--grey-400); }
@@ -1073,7 +1077,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <a href="sunoaks-brand-house-v9.html" class="header-back">
+            <a href="/sunoaks/" class="header-back">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
                 Back
             </a>
@@ -1492,7 +1496,9 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-logo">
+                    <img src="../images/logos/SunOaks_Logo_Horizontal_RGB.png" alt="Sun Oaks" />
+                </span>
                 <span class="footer-sep"></span>
                 <span class="footer-tag">Brand House</span>
             </div>
@@ -1516,7 +1522,7 @@
                     <div class="preview-modal-contact-label">Brand House Architect</div>
                     <div class="preview-modal-contact-name">Aaron Phelps</div>
                     <div class="preview-modal-contact-role">Look Serious</div>
-                    <a href="mailto:phelps@norcalsbdc.org" class="preview-modal-contact-email">phelps@norcalsbdc.org</a>
+                    <a href="mailto:aaron@look-serious.com" class="preview-modal-contact-email">aaron@look-serious.com</a>
                 </div>
             </div>
         </div>
