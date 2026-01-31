@@ -68,17 +68,26 @@
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--silver);
         }
+        @media (max-width: 768px) { .header { padding: 20px 24px; } }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
         .header-back {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             font-size: 0.8125rem;
             font-weight: 500;
             color: var(--grey-500);
-            transition: color 0.3s;
+            transition: color var(--duration);
         }
         .header-back:hover { color: var(--black); }
-        .header-back svg { width: 20px; height: 20px; }
+        .header-back svg { width: 16px; height: 16px; }
+        .header-sep { width: 1px; height: 20px; background: var(--grey-200); }
+        .header-chapter { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey-400); }
+        .header-chapter span { color: var(--pool); }
         .header-badge {
             padding: 6px 12px;
             background: var(--sun-light);
@@ -88,10 +97,7 @@
             text-transform: uppercase;
             color: var(--black);
         }
-        @media (max-width: 768px) {
-            .header { padding: 20px 24px; }
-            .header-badge { display: none; }
-        }
+        @media (max-width: 600px) { .header-badge { display: none; } }
 
         /* ═══════════════════════════════════════════════════════════════
            HERO — Editorial split
@@ -872,13 +878,15 @@
 
     <!-- Header -->
     <header class="header">
-        <a href="/sunoaks/" class="header-back">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            <span>Back to Brand House</span>
-        </a>
-        <div class="header-badge">Brand Architecture</div>
+        <div class="header-left">
+            <a href="/sunoaks/" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>Brand</span> Architecture</span>
+        </div>
+        <div class="header-badge">Service Lines</div>
     </header>
 
     <!-- Hero -->
