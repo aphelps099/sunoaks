@@ -1,0 +1,1579 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Standards — Sun Oaks Brand House</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+
+            --sun: #F7B500;
+            --sun-light: #FFF8E5;
+            --sun-dark: #C99200;
+            --pool: #0891A8;
+            --pool-light: #E5F5F7;
+            --pool-deep: #034752;
+            --energy: #E85D04;
+            --energy-light: #FFF0E5;
+
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --duration: 0.4s;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); font-weight: 400; line-height: 1.6; color: var(--black); background: var(--cream); -webkit-font-smoothing: antialiased; }
+        ::selection { background: var(--sun); color: var(--black); }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(250,249,247,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        @media (max-width: 768px) { .header { padding: 20px 24px; } }
+        .header-left { display: flex; align-items: center; gap: 24px; }
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        .header-back:hover { color: var(--black); }
+        .header-back svg { width: 16px; height: 16px; }
+        .header-sep { width: 1px; height: 20px; background: var(--grey-200); }
+        .header-chapter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+        .header-chapter span { color: var(--energy); }
+        .header-badge {
+            padding: 6px 12px;
+            background: var(--energy-light);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--energy);
+        }
+        @media (max-width: 600px) { .header-badge { display: none; } }
+
+        /* ===== COLLINS EDITORIAL HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--black);
+            padding-top: 73px;
+        }
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; min-height: auto; }
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 64px;
+            background: var(--black);
+        }
+        @media (max-width: 768px) { .hero-left { padding: 60px 32px; } }
+
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .hero-eyebrow-line { width: 48px; height: 2px; background: var(--sun); }
+        .hero-eyebrow-text {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--sun);
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(36px, 4.5vw, 56px);
+            font-weight: 400;
+            line-height: 1.1;
+            color: var(--white);
+            margin-bottom: 32px;
+        }
+        .hero-title em { font-style: italic; color: var(--sun); }
+
+        .hero-desc {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--grey-400);
+            max-width: 480px;
+        }
+
+        .hero-right {
+            position: relative;
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 1px;
+            background: var(--grey-800);
+        }
+        @media (max-width: 900px) {
+            .hero-right { min-height: 400px; }
+        }
+
+        .hero-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+        }
+        .hero-number span {
+            font-family: var(--font-serif);
+            font-size: clamp(120px, 18vw, 200px);
+            font-weight: 400;
+            line-height: 0.85;
+            color: var(--black);
+        }
+
+        .hero-stat-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 48px;
+            background: var(--grey-800);
+        }
+        .hero-stat-value {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-weight: 400;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .hero-stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 16px;
+        }
+        .hero-stat-context {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--grey-500);
+        }
+
+        /* ===== THE BIG IDEA ===== */
+        .big-idea {
+            padding: 100px 48px;
+            background: var(--sun);
+            text-align: center;
+        }
+        @media (max-width: 768px) { .big-idea { padding: 64px 24px; } }
+
+        .big-idea-content { max-width: 800px; margin: 0 auto; }
+        .big-idea-text {
+            font-family: var(--font-serif);
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--black);
+        }
+        .big-idea-text em { font-style: italic; }
+
+        /* ===== SECTION BASE - EDITORIAL ===== */
+        .section { padding: 0; position: relative; }
+
+        .section-header {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 900px) {
+            .section-header { grid-template-columns: 1fr; }
+        }
+
+        .section-number-block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 64px;
+            background: var(--cream);
+        }
+        .section-number {
+            font-family: var(--font-serif);
+            font-size: 8rem;
+            font-weight: 400;
+            line-height: 0.85;
+            color: var(--silver);
+        }
+
+        .section-header-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 64px;
+            background: var(--cream);
+        }
+        @media (max-width: 768px) {
+            .section-header-text { padding: 48px 32px; }
+        }
+
+        .section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--energy);
+            margin-bottom: 16px;
+        }
+        .section--dark .section-label { color: var(--sun); }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 400;
+            line-height: 1.1;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--grey-500);
+            max-width: 560px;
+            margin-top: 20px;
+        }
+
+        .section-content {
+            padding: 80px 48px;
+        }
+        @media (max-width: 768px) {
+            .section-content { padding: 48px 24px; }
+        }
+        .section-content-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section variants */
+        .section--cream { background: var(--cream); }
+        .section--white { background: var(--white); }
+        .section--dark { background: var(--black); color: var(--white); }
+        .section--dark .section-number-block { background: var(--grey-800); }
+        .section--dark .section-number { color: var(--grey-700); }
+        .section--dark .section-header-text { background: var(--grey-800); }
+        .section--dark .section-header { background: var(--grey-700); }
+        .section--dark .section-title { color: var(--white); }
+        .section--dark .section-subtitle { color: var(--grey-400); }
+
+        /* ===== PHOTOGRAPHY: COMPARISON GRID ===== */
+        .photo-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--silver);
+            margin-bottom: 1px;
+        }
+        @media (max-width: 900px) {
+            .photo-comparison { grid-template-columns: 1fr; }
+        }
+
+        .photo-example {
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .photo-example-header {
+            padding: 20px 32px;
+            background: var(--pearl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .photo-example-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+        }
+        .photo-example-badge {
+            padding: 6px 12px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .photo-example--avoid .photo-example-badge {
+            background: var(--grey-200);
+            color: var(--grey-600);
+        }
+        .photo-example--standard .photo-example-badge {
+            background: var(--sun-light);
+            color: var(--sun-dark);
+        }
+        .photo-example--standard .photo-example-header {
+            background: var(--sun-light);
+        }
+        .photo-example--standard .photo-example-label {
+            color: var(--sun-dark);
+        }
+
+        .photo-example-visual {
+            position: relative;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+        }
+        .photo-example-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .photo-example--avoid .photo-example-visual {
+            filter: grayscale(60%) brightness(0.9);
+        }
+        .photo-example--avoid .photo-example-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.03) 10px,
+                rgba(0,0,0,0.03) 20px
+            );
+        }
+
+        .photo-example-text {
+            padding: 32px;
+            flex: 1;
+        }
+        .photo-example-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .photo-example-text p {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+
+        /* Photo Guidelines Grid */
+        .photo-guidelines {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 900px) { .photo-guidelines { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .photo-guidelines { grid-template-columns: 1fr; } }
+
+        .photo-guideline {
+            padding: 40px 32px;
+            background: var(--white);
+        }
+        .photo-guideline-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun-light);
+            color: var(--sun-dark);
+            margin-bottom: 24px;
+        }
+        .photo-guideline-icon svg { width: 24px; height: 24px; }
+        .photo-guideline h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .photo-guideline p {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--grey-500);
+        }
+
+        /* ===== IMAGE SHOWCASE STRIP ===== */
+        .image-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--black);
+        }
+        @media (max-width: 900px) { .image-strip { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .image-strip { grid-template-columns: 1fr; } }
+
+        .image-strip-item {
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            position: relative;
+        }
+        .image-strip-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease);
+        }
+        .image-strip-item:hover img {
+            transform: scale(1.05);
+        }
+        .image-strip-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--grey-700);
+            margin-bottom: 1px;
+        }
+        @media (max-width: 768px) { .cta-comparison { grid-template-columns: 1fr; } }
+
+        .cta-example {
+            padding: 48px;
+            background: var(--grey-800);
+        }
+        .cta-example-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+        .cta-example--current .cta-example-label { color: var(--grey-500); }
+        .cta-example--standard .cta-example-label { color: var(--sun); }
+
+        .cta-example-visual {
+            background: var(--grey-700);
+            padding: 40px;
+            margin-bottom: 32px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Current site CTA mockup */
+        .cta-current-mockup { text-align: center; }
+        .cta-current-mockup .fake-nav {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .cta-current-mockup .fake-link {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.08);
+            color: var(--grey-400);
+            font-size: 0.6875rem;
+        }
+        .cta-current-mockup .fake-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .cta-current-mockup .fake-btn {
+            padding: 12px 24px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .cta-current-mockup .fake-btn--1 { background: #4a7c59; color: white; }
+        .cta-current-mockup .fake-btn--2 { background: #2563eb; color: white; }
+        .cta-current-mockup .fake-btn--3 { background: transparent; border: 1px solid var(--grey-500); color: var(--grey-400); }
+
+        /* Standard CTA mockup */
+        .cta-standard-mockup {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .cta-standard-mockup .primary-cta {
+            padding: 20px 56px;
+            background: var(--sun);
+            color: var(--black);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all var(--duration);
+            cursor: pointer;
+        }
+        .cta-standard-mockup .primary-cta:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+        }
+        .cta-standard-mockup .secondary-link {
+            margin-top: 20px;
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+            border-bottom: 1px solid var(--grey-600);
+            padding-bottom: 2px;
+            cursor: pointer;
+        }
+
+        .cta-example-notes {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--grey-400);
+        }
+        .cta-example-notes strong { color: var(--white); font-weight: 500; }
+        .cta-example--standard .cta-example-notes strong { color: var(--sun); }
+
+        /* CTA Principles */
+        .cta-principles {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--grey-700);
+        }
+        @media (max-width: 900px) { .cta-principles { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .cta-principles { grid-template-columns: 1fr; } }
+
+        .cta-principle {
+            padding: 40px 32px;
+            background: var(--grey-800);
+            border-top: 3px solid var(--sun);
+        }
+        .cta-principle h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 12px;
+        }
+        .cta-principle p {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--grey-400);
+        }
+
+        /* ===== LAYOUT SECTION ===== */
+        .layout-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--silver);
+            margin-bottom: 1px;
+        }
+        @media (max-width: 768px) { .layout-comparison { grid-template-columns: 1fr; } }
+
+        .layout-example {
+            background: var(--white);
+        }
+        .layout-example-header {
+            padding: 20px 32px;
+            background: var(--pearl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .layout-example-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+        }
+        .layout-example-badge {
+            padding: 6px 12px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .layout-example--current .layout-example-badge { background: var(--grey-200); color: var(--grey-600); }
+        .layout-example--standard .layout-example-badge { background: var(--sun-light); color: var(--sun-dark); }
+        .layout-example--standard .layout-example-header { background: var(--sun-light); }
+        .layout-example--standard .layout-example-label { color: var(--sun-dark); }
+
+        .layout-example-visual {
+            padding: 32px;
+            min-height: 340px;
+        }
+
+        /* Current layout mockup */
+        .layout-current-mockup { font-size: 0.6875rem; color: var(--grey-500); }
+        .layout-current-mockup .mock-hero {
+            height: 80px;
+            background: linear-gradient(135deg, var(--grey-200) 0%, var(--silver) 100%);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 8px;
+        }
+        .layout-current-mockup .mock-text-block {
+            height: 8px;
+            background: var(--grey-200);
+            margin-bottom: 6px;
+        }
+        .layout-current-mockup .mock-text-block:nth-child(2) { width: 90%; }
+        .layout-current-mockup .mock-text-block:nth-child(3) { width: 85%; }
+        .layout-current-mockup .mock-sidebar {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .layout-current-mockup .mock-content,
+        .layout-current-mockup .mock-sidebar-widget {
+            background: var(--pearl);
+            padding: 12px;
+        }
+        .layout-current-mockup .mock-btn-small {
+            display: inline-block;
+            padding: 4px 8px;
+            background: var(--grey-300);
+            font-size: 0.5rem;
+            margin: 2px;
+        }
+
+        /* Standard layout mockup */
+        .layout-standard-mockup { font-size: 0.6875rem; color: var(--grey-500); }
+        .layout-standard-mockup .mock-hero {
+            height: 160px;
+            background: linear-gradient(135deg, var(--sun-light) 0%, #ffe5a3 100%);
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .layout-standard-mockup .mock-headline {
+            font-family: var(--font-serif);
+            font-size: 1.125rem;
+            color: var(--grey-700);
+        }
+        .layout-standard-mockup .mock-cta {
+            padding: 10px 28px;
+            background: var(--sun);
+            color: var(--black);
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .layout-standard-mockup .mock-section { margin-bottom: 24px; }
+        .layout-standard-mockup .mock-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--grey-600);
+            margin-bottom: 12px;
+        }
+        .layout-standard-mockup .mock-text-line {
+            height: 6px;
+            background: var(--grey-200);
+            margin-bottom: 8px;
+        }
+        .layout-standard-mockup .mock-text-line:last-child { width: 60%; }
+
+        /* Layout Principles */
+        .layout-principles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 768px) { .layout-principles { grid-template-columns: 1fr; } }
+
+        .layout-principle {
+            padding: 48px 40px;
+            background: var(--sun-light);
+        }
+        .layout-principle-number {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--sun-dark);
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        .layout-principle h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .layout-principle p {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--grey-600);
+        }
+
+        /* ===== COPY SECTION ===== */
+        .copy-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--silver);
+            margin-bottom: 1px;
+        }
+        @media (max-width: 768px) { .copy-comparison { grid-template-columns: 1fr; } }
+
+        .copy-example {
+            padding: 56px 48px;
+            background: var(--white);
+        }
+        @media (max-width: 768px) { .copy-example { padding: 40px 32px; } }
+
+        .copy-example-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 32px;
+        }
+        .copy-example--standard .copy-example-label { color: var(--energy); }
+
+        .copy-example-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--grey-500);
+        }
+        .copy-example--current .copy-example-text {
+            color: var(--grey-400);
+        }
+        .copy-example--standard .copy-example-text {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            color: var(--grey-700);
+            line-height: 1.7;
+        }
+
+        /* Copy Principles */
+        .copy-principles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 768px) { .copy-principles { grid-template-columns: 1fr; } }
+
+        .copy-principle {
+            padding: 48px 40px;
+            background: var(--pearl);
+        }
+        .copy-principle-number {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--energy);
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        .copy-principle h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .copy-principle p {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--grey-500);
+        }
+
+        /* ===== OPPORTUNITY SECTION ===== */
+        .opportunity {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--grey-800);
+            min-height: 80vh;
+        }
+        @media (max-width: 900px) {
+            .opportunity { grid-template-columns: 1fr; min-height: auto; }
+        }
+
+        .opportunity-image {
+            position: relative;
+            overflow: hidden;
+        }
+        .opportunity-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @media (max-width: 900px) {
+            .opportunity-image { min-height: 400px; }
+        }
+
+        .opportunity-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 64px;
+            background: var(--black);
+        }
+        @media (max-width: 768px) {
+            .opportunity-content { padding: 64px 32px; }
+        }
+
+        .opportunity-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 32px;
+        }
+        .opportunity-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 400;
+            line-height: 1.25;
+            color: var(--white);
+            margin-bottom: 32px;
+        }
+        .opportunity-title em { font-style: italic; color: var(--sun); }
+
+        .opportunity-text {
+            font-size: 1.0625rem;
+            line-height: 1.8;
+            color: var(--grey-400);
+            margin-bottom: 48px;
+        }
+
+        .opportunity-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding-top: 48px;
+            border-top: 1px solid var(--grey-700);
+        }
+        @media (max-width: 600px) {
+            .opportunity-stats { grid-template-columns: 1fr; gap: 24px; }
+        }
+
+        .opportunity-stat-value {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--sun);
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+        .opportunity-stat-label {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 40px 48px;
+            background: var(--black);
+            border-top: 1px solid var(--grey-700);
+        }
+        @media (max-width: 768px) { .footer { padding: 32px 24px; } }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .footer-logo {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+        .footer-sep { width: 1px; height: 16px; background: var(--grey-600); }
+        .footer-tag { font-size: 0.875rem; color: var(--grey-400); }
+        .footer-credit { font-size: 0.8125rem; color: var(--grey-400); }
+        .footer-credit a { color: var(--sun); }
+        @media (max-width: 600px) {
+            .footer-inner { flex-direction: column; text-align: center; }
+        }
+
+        /* ===== PREVIEW MODAL ===== */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(13, 13, 12, 0.9);
+            backdrop-filter: blur(8px);
+        }
+        .preview-modal.is-active { display: flex; }
+
+        .preview-modal-content {
+            background: var(--white);
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+        }
+
+        .preview-modal-header {
+            padding: 24px 32px;
+            background: var(--energy);
+            color: var(--white);
+        }
+        .preview-modal-badge {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .preview-modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .preview-modal-body { padding: 32px; }
+        .preview-modal-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--grey-600);
+            margin-bottom: 32px;
+        }
+
+        .preview-modal-contact { }
+        .preview-modal-contact-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 12px;
+        }
+        .preview-modal-contact-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .preview-modal-contact-role {
+            font-size: 0.875rem;
+            color: var(--grey-500);
+            margin-bottom: 8px;
+        }
+        .preview-modal-contact-email {
+            font-size: 0.875rem;
+            color: var(--energy);
+        }
+
+        .preview-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            cursor: pointer;
+            color: var(--white);
+            transition: background var(--duration);
+        }
+        .preview-modal-close:hover { background: rgba(255,255,255,0.3); }
+        .preview-modal-close svg { width: 20px; height: 20px; }
+
+        /* Clickable items that trigger modal */
+        .triggers-modal {
+            cursor: pointer;
+            transition: transform var(--duration), box-shadow var(--duration);
+        }
+        .triggers-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="sunoaks-brand-house-v9.html" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>09</span> Digital Standards</span>
+        </div>
+        <div class="header-badge">Strategic Priority</div>
+    </header>
+
+    <!-- HERO: Collins Editorial Split -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-eyebrow">
+                <span class="hero-eyebrow-line"></span>
+                <span class="hero-eyebrow-text">Chapter Nine</span>
+            </div>
+            <h1 class="hero-title">A website should make people <em>want</em> to join.</h1>
+            <p class="hero-desc">The difference between a website that informs and a website that converts is simple: one makes you feel something. The other just lists features.</p>
+        </div>
+        <div class="hero-right">
+            <div class="hero-number">
+                <span>4</span>
+            </div>
+            <div class="hero-stat-block">
+                <div class="hero-stat-value">3 sec</div>
+                <div class="hero-stat-label">First Impression</div>
+                <div class="hero-stat-context">Users decide to stay or leave in the first three seconds. Photography and clarity matter more than content.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Big Idea -->
+    <section class="big-idea">
+        <div class="big-idea-content">
+            <p class="big-idea-text">
+                Inspire <em>first.</em> Inform second.<br>
+                Photos should make you want to be there.<br>
+                Copy should get out of the way.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== PHOTOGRAPHY STANDARDS ===== -->
+    <section class="section section--cream" id="photography">
+        <div class="section-header">
+            <div class="section-number-block">
+                <span class="section-number">01</span>
+            </div>
+            <div class="section-header-text">
+                <div class="section-label">Photography</div>
+                <h2 class="section-title">Photos that move people</h2>
+                <p class="section-subtitle">Great photography doesn't just show facilities—it captures energy, community, and the feeling of being there. Every image should make someone think: "I want to be part of that."</p>
+            </div>
+        </div>
+
+        <!-- Comparison 1: Stock vs Real -->
+        <div class="photo-comparison reveal">
+            <div class="photo-example photo-example--avoid triggers-modal">
+                <div class="photo-example-header">
+                    <span class="photo-example-label">Avoid</span>
+                    <span class="photo-example-badge">Generic</span>
+                </div>
+                <div class="photo-example-visual">
+                    <img src="images/Home  Redding Gym (17).jpg" alt="Tennis courts - empty facility shot">
+                </div>
+                <div class="photo-example-text">
+                    <h3>Empty facility shots</h3>
+                    <p>A photo of empty courts at 2pm with flat lighting. Equipment lined up like a catalog. No people, no energy, no life. This shows what you have—not why anyone should care.</p>
+                </div>
+            </div>
+            <div class="photo-example photo-example--standard triggers-modal">
+                <div class="photo-example-header">
+                    <span class="photo-example-label">Brand Standard</span>
+                    <span class="photo-example-badge">Authentic</span>
+                </div>
+                <div class="photo-example-visual">
+                    <img src="images/Home  Redding Gym (16).jpg" alt="Pickleball action shot at golden hour">
+                </div>
+                <div class="photo-example-text">
+                    <h3>Real members, golden hour</h3>
+                    <p>Action mid-play. Golden hour light streaming through trees. Real members in motion. This is what 64 years of community actually looks like.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison 2: Posed vs Authentic -->
+        <div class="photo-comparison reveal">
+            <div class="photo-example photo-example--avoid triggers-modal">
+                <div class="photo-example-header">
+                    <span class="photo-example-label">Avoid</span>
+                    <span class="photo-example-badge">Staged</span>
+                </div>
+                <div class="photo-example-visual">
+                    <img src="images/Home  Redding Gym (19).jpg" alt="Indoor courts - static view">
+                </div>
+                <div class="photo-example-text">
+                    <h3>Static, staged shots</h3>
+                    <p>Perfect symmetry. Nobody moving. Feels like a brochure from 1998. Photos like this create distance—they say nothing about your community.</p>
+                </div>
+            </div>
+            <div class="photo-example photo-example--standard triggers-modal">
+                <div class="photo-example-header">
+                    <span class="photo-example-label">Brand Standard</span>
+                    <span class="photo-example-badge">Energy</span>
+                </div>
+                <div class="photo-example-visual">
+                    <img src="images/Home  Redding Gym (21).jpg" alt="Tennis serve action shot">
+                </div>
+                <div class="photo-example-text">
+                    <h3>Motion and energy</h3>
+                    <p>A serve at full extension. Concentration. Athletic grace. This is the feeling we're selling—not a list of amenities.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Strip: Real Examples -->
+        <div class="image-strip reveal">
+            <div class="image-strip-item">
+                <img src="images/Home  Redding Gym (10).jpg" alt="Child swimming underwater">
+                <span class="image-strip-caption">Real Moments</span>
+            </div>
+            <div class="image-strip-item">
+                <img src="images/Home  Redding Gym (12).jpg" alt="Swim team in pool">
+                <span class="image-strip-caption">Community</span>
+            </div>
+            <div class="image-strip-item">
+                <img src="images/Home  Redding Gym (20).jpg" alt="Tennis serve">
+                <span class="image-strip-caption">Motion</span>
+            </div>
+            <div class="image-strip-item">
+                <img src="images/sun-oaks-outside-pool.jpg" alt="Outdoor pool">
+                <span class="image-strip-caption">Facility</span>
+            </div>
+        </div>
+
+        <!-- Photo Guidelines -->
+        <div class="photo-guidelines reveal">
+            <div class="photo-guideline">
+                <div class="photo-guideline-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <h4>Golden Hour</h4>
+                <p>Shoot within 2 hours of sunrise or sunset. The warm Redding light creates depth and emotion that midday can't match.</p>
+            </div>
+            <div class="photo-guideline">
+                <div class="photo-guideline-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h4>Real Community</h4>
+                <p>Feature actual members with signed releases. Three generations. All body types. Your real community, not a casting call.</p>
+            </div>
+            <div class="photo-guideline">
+                <div class="photo-guideline-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h4>Capture Motion</h4>
+                <p>A splash in the pool. A tennis serve. Mid-spin in cycling class. Motion creates energy. Static poses feel like stock.</p>
+            </div>
+            <div class="photo-guideline">
+                <div class="photo-guideline-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+                </div>
+                <h4>Connection</h4>
+                <p>Eye contact. High fives. Conversation between sets. The social fabric that makes Sun Oaks different from a box gym.</p>
+            </div>
+            <div class="photo-guideline">
+                <div class="photo-guideline-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                </div>
+                <h4>Composition</h4>
+                <p>Leave room for text overlay on hero shots. Rule of thirds. Avoid centering—create visual interest with asymmetry.</p>
+            </div>
+            <div class="photo-guideline">
+                <div class="photo-guideline-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <h4>Technical</h4>
+                <p>Minimum 2000px wide for web. Edit for warmth, not HDR. Consistent color grading across all images.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA STANDARDS ===== -->
+    <section class="section section--dark" id="cta">
+        <div class="section-header">
+            <div class="section-number-block">
+                <span class="section-number">02</span>
+            </div>
+            <div class="section-header-text">
+                <div class="section-label">Calls to Action</div>
+                <h2 class="section-title">One action per screen</h2>
+                <p class="section-subtitle">Every additional button reduces the chance someone clicks any of them. Great websites guide visitors toward one clear action—not a buffet of options.</p>
+            </div>
+        </div>
+
+        <div class="cta-comparison reveal">
+            <div class="cta-example cta-example--current triggers-modal">
+                <div class="cta-example-label">Current Approach</div>
+                <div class="cta-example-visual">
+                    <div class="cta-current-mockup">
+                        <div class="fake-nav">
+                            <span class="fake-link">About</span>
+                            <span class="fake-link">Tennis</span>
+                            <span class="fake-link">Fitness</span>
+                            <span class="fake-link">Aquatics</span>
+                            <span class="fake-link">Contact</span>
+                        </div>
+                        <div class="fake-buttons">
+                            <span class="fake-btn fake-btn--1">Become a Member</span>
+                            <span class="fake-btn fake-btn--2">Schedule Tour</span>
+                            <span class="fake-btn fake-btn--3">Learn More</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cta-example-notes">
+                    <strong>Multiple competing CTAs.</strong> "Become a Member" competes with "Schedule Tour" competes with "Learn More." Each dilutes the others. The visitor doesn't know what you want them to do.
+                </div>
+            </div>
+            <div class="cta-example cta-example--standard triggers-modal">
+                <div class="cta-example-label">Brand Standard</div>
+                <div class="cta-example-visual">
+                    <div class="cta-standard-mockup">
+                        <span class="primary-cta">Start Your Free Trial →</span>
+                        <span class="secondary-link">Or schedule a tour</span>
+                    </div>
+                </div>
+                <div class="cta-example-notes">
+                    <strong>One primary action.</strong> Clear hierarchy. The secondary option is understated but available. The visitor knows exactly what to do next.
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-principles reveal">
+            <div class="cta-principle">
+                <h4>Primary vs. Secondary</h4>
+                <p>One bold button per viewport. Secondary actions should be text links, not competing buttons.</p>
+            </div>
+            <div class="cta-principle">
+                <h4>Action Language</h4>
+                <p>"Start Your Free Trial" beats "Learn More." Verbs that describe the outcome, not the process.</p>
+            </div>
+            <div class="cta-principle">
+                <h4>Sun Gold CTAs</h4>
+                <p>Primary buttons use Sun Yellow (#F7B500) with black text. Nothing else should be this color.</p>
+            </div>
+            <div class="cta-principle">
+                <h4>Reduce Friction</h4>
+                <p>Every form field reduces completion. Ask only what you need. Make it easy.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== LAYOUT STANDARDS ===== -->
+    <section class="section section--white" id="layout">
+        <div class="section-header">
+            <div class="section-number-block">
+                <span class="section-number">03</span>
+            </div>
+            <div class="section-header-text">
+                <div class="section-label">Layout</div>
+                <h2 class="section-title">Layouts that breathe</h2>
+                <p class="section-subtitle">White space isn't empty space—it's breathing room. Cluttered layouts overwhelm. Clean layouts guide the eye and build trust.</p>
+            </div>
+        </div>
+
+        <div class="layout-comparison reveal">
+            <div class="layout-example layout-example--current triggers-modal">
+                <div class="layout-example-header">
+                    <span class="layout-example-label">Current Approach</span>
+                    <span class="layout-example-badge">Dense</span>
+                </div>
+                <div class="layout-example-visual">
+                    <div class="layout-current-mockup">
+                        <div class="mock-hero">
+                            <span class="mock-btn-small">Tennis</span>
+                            <span class="mock-btn-small">Aquatics</span>
+                            <span class="mock-btn-small">Fitness</span>
+                            <span class="mock-btn-small">Kids</span>
+                            <span class="mock-btn-small">Spa</span>
+                            <span class="mock-btn-small">Join Now</span>
+                        </div>
+                        <div class="mock-text-block"></div>
+                        <div class="mock-text-block"></div>
+                        <div class="mock-text-block"></div>
+                        <div class="mock-sidebar">
+                            <div class="mock-content">
+                                <div class="mock-text-block"></div>
+                                <div class="mock-text-block"></div>
+                                <div class="mock-text-block"></div>
+                            </div>
+                            <div class="mock-sidebar-widget">
+                                <div class="mock-text-block"></div>
+                                <div class="mock-text-block"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layout-example layout-example--standard triggers-modal">
+                <div class="layout-example-header">
+                    <span class="layout-example-label">Brand Standard</span>
+                    <span class="layout-example-badge">Focused</span>
+                </div>
+                <div class="layout-example-visual">
+                    <div class="layout-standard-mockup">
+                        <div class="mock-hero">
+                            <span class="mock-headline">Where Redding Grows Together</span>
+                            <span class="mock-cta">Start Your Free Trial</span>
+                        </div>
+                        <div class="mock-section">
+                            <div class="mock-section-title">Our Community</div>
+                            <div class="mock-text-line"></div>
+                            <div class="mock-text-line"></div>
+                            <div class="mock-text-line"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layout-principles reveal">
+            <div class="layout-principle">
+                <div class="layout-principle-number">01</div>
+                <h4>Hero First</h4>
+                <p>The hero should be 80-100% of the viewport. One powerful image. One clear headline. One call to action. Nothing else.</p>
+            </div>
+            <div class="layout-principle">
+                <div class="layout-principle-number">02</div>
+                <h4>Progressive Disclosure</h4>
+                <p>Don't dump everything on the homepage. Lead with emotion, reveal details as they scroll. Let curiosity pull them deeper.</p>
+            </div>
+            <div class="layout-principle">
+                <div class="layout-principle-number">03</div>
+                <h4>Mobile-First</h4>
+                <p>60%+ of visitors are on phones. Design for the small screen first. What works there will work everywhere.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COPY STANDARDS ===== -->
+    <section class="section section--pearl" id="copy">
+        <div class="section-header">
+            <div class="section-number-block">
+                <span class="section-number">04</span>
+            </div>
+            <div class="section-header-text">
+                <div class="section-label">Copy</div>
+                <h2 class="section-title">Less copy, more impact</h2>
+                <p class="section-subtitle">Nobody reads websites—they scan them. Dense paragraphs get skipped. Short, punchy copy gets read. Every word should earn its place.</p>
+            </div>
+        </div>
+
+        <div class="copy-comparison reveal">
+            <div class="copy-example copy-example--current triggers-modal">
+                <div class="copy-example-label">Current Approach</div>
+                <div class="copy-example-text">
+                    Sun Oaks Tennis & Fitness has been Redding, California's finest full-service health club for more than 60 years. Located on over six beautiful acres in east Redding, we offer 7 outdoor and 3 indoor tennis courts—the only indoor courts in the North State—plus 4 dedicated pickleball courts. Our facility features three pools and two spas for your enjoyment. Our covered 8-lane, 25-yard pool is open and heated year round. We also offer 120+ group fitness classes weekly...
+                </div>
+            </div>
+            <div class="copy-example copy-example--standard triggers-modal">
+                <div class="copy-example-label">Brand Standard</div>
+                <div class="copy-example-text">
+                    For sixty-four years, Sun Oaks has been the place.<br><br>
+                    Three generations of families. Morning swimmers and after-school tennis kids.<br><br>
+                    This is where Redding grows—together.
+                </div>
+            </div>
+        </div>
+
+        <div class="copy-principles reveal">
+            <div class="copy-principle">
+                <div class="copy-principle-number">01</div>
+                <h4>Lead with Why</h4>
+                <p>Don't open with features. Open with meaning. Why should someone care? What feeling are you selling?</p>
+            </div>
+            <div class="copy-principle">
+                <div class="copy-principle-number">02</div>
+                <h4>Cut by Half</h4>
+                <p>Write your copy. Then delete half. Then half again. What remains is usually stronger.</p>
+            </div>
+            <div class="copy-principle">
+                <div class="copy-principle-number">03</div>
+                <h4>Scannable Structure</h4>
+                <p>Headlines that tell the story. Short paragraphs. Bullet points for features. People scan before they read.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== THE OPPORTUNITY ===== -->
+    <section class="opportunity">
+        <div class="opportunity-image">
+            <img src="images/Home  Redding Gym (16).jpg" alt="Pickleball at golden hour">
+        </div>
+        <div class="opportunity-content reveal">
+            <div class="opportunity-label">The Opportunity</div>
+            <h2 class="opportunity-title">A website that <em>matches</em> who Sun Oaks actually is.</h2>
+            <p class="opportunity-text">Sun Oaks has 64 years of legacy. Three generations of families. The only indoor courts in the North State. A community that actually shows up for each other. The digital presence should reflect that.</p>
+            <div class="opportunity-stats">
+                <div class="opportunity-stat">
+                    <div class="opportunity-stat-value">64</div>
+                    <div class="opportunity-stat-label">Years of Legacy</div>
+                </div>
+                <div class="opportunity-stat">
+                    <div class="opportunity-stat-value">6</div>
+                    <div class="opportunity-stat-label">Acres</div>
+                </div>
+                <div class="opportunity-stat">
+                    <div class="opportunity-stat-value">1</div>
+                    <div class="opportunity-stat-label">Community</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
+            <div class="footer-credit">Designed by <a href="https://look-serious.com">Look Serious</a> · 2026</div>
+        </div>
+    </footer>
+
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-modal-content">
+            <button class="preview-modal-close" id="closeModal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="preview-modal-header">
+                <div class="preview-modal-badge">Preview Only</div>
+                <div class="preview-modal-title">Full Access Required</div>
+            </div>
+            <div class="preview-modal-body">
+                <p class="preview-modal-text">This section contains strategic guidelines and resources that require Brand House access. Contact the Brand House architect for full access to digital standards, templates, and implementation guides.</p>
+                <div class="preview-modal-contact">
+                    <div class="preview-modal-contact-label">Brand House Architect</div>
+                    <div class="preview-modal-contact-name">Aaron Phelps</div>
+                    <div class="preview-modal-contact-role">Look Serious</div>
+                    <a href="mailto:phelps@norcalsbdc.org" class="preview-modal-contact-email">phelps@norcalsbdc.org</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Preview Modal
+        const modal = document.getElementById('previewModal');
+        const closeBtn = document.getElementById('closeModal');
+        const triggers = document.querySelectorAll('.triggers-modal');
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                modal.classList.add('is-active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('is-active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('is-active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+                modal.classList.remove('is-active');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.getBoundingClientRect().top + window.pageYOffset - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
