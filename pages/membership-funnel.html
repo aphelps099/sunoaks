@@ -379,7 +379,7 @@
             flex-direction: column;
             justify-content: flex-end;
             position: relative;
-            background-image: url('../images/photos/Home%20%20Redding%20Gym%20(18).jpg');
+            background-image: url('../images/photos/Home%20%20Redding%20Gym%20(5).jpg');
             background-size: cover;
             background-position: center;
         }
@@ -408,6 +408,33 @@
         }
         .benefit-card--pool:hover { background: var(--pool-dark); }
 
+        .benefit-card--childcare {
+            background: var(--black);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            background-image: url('../images/photos/Home%20%20Redding%20Gym%20(28).jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 300px;
+        }
+        .benefit-card--childcare::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 0;
+        }
+        .benefit-card--childcare > * {
+            position: relative;
+            z-index: 1;
+        }
+        .benefit-card--childcare:hover::before {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%);
+        }
+
         .benefit-card-icon {
             width: 48px;
             height: 48px;
@@ -419,7 +446,8 @@
             margin-bottom: 20px;
         }
         .benefit-card--featured .benefit-card-icon,
-        .benefit-card--pool .benefit-card-icon {
+        .benefit-card--pool .benefit-card-icon,
+        .benefit-card--childcare .benefit-card-icon {
             background: var(--sun);
             color: var(--black);
         }
@@ -442,7 +470,8 @@
             color: var(--grey-500);
         }
         .benefit-card--featured .benefit-card-desc,
-        .benefit-card--pool .benefit-card-desc {
+        .benefit-card--pool .benefit-card-desc,
+        .benefit-card--childcare .benefit-card-desc {
             color: rgba(255,255,255,0.7);
         }
 
@@ -1166,7 +1195,7 @@
             </div>
 
             <!-- Childcare -->
-            <div class="benefit-card">
+            <div class="benefit-card benefit-card--childcare">
                 <div class="benefit-card-badge">Free</div>
                 <div class="benefit-card-icon">
                     <span class="material-symbols-outlined">child_care</span>
