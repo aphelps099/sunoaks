@@ -486,7 +486,7 @@
             width: 55%;
             height: 100%;
             pointer-events: none;
-            z-index: 3;
+            z-index: 1;
         }
 
         .hero-photo {
@@ -505,11 +505,9 @@
         }
 
         .hero-photo:hover {
-            transform: scale(1.05);
             box-shadow:
                 0 8px 32px rgba(13, 13, 12, 0.12),
                 0 16px 48px rgba(13, 13, 12, 0.06);
-            animation-play-state: paused;
         }
 
         .hero-photo img {
@@ -536,19 +534,13 @@
             }
         }
 
-        /* Gentle float animation */
-        @keyframes photoFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
         /* Photo 1 — Large, anchor (child swimming) */
         .hero-photo-1 {
             width: clamp(160px, 18vw, 260px);
             height: clamp(160px, 18vw, 260px);
             right: 32%;
             top: 38%;
-            animation: photoEnter 1s var(--ease-out) 1.2s forwards, photoFloat 8s ease-in-out 2.2s infinite;
+            animation-delay: 1.2s;
         }
 
         /* Photo 2 — Medium (battle ropes) */
@@ -557,7 +549,7 @@
             height: clamp(120px, 14vw, 200px);
             right: 6%;
             top: 46%;
-            animation: photoEnter 1s var(--ease-out) 1.4s forwards, photoFloat 10s ease-in-out 2.4s infinite;
+            animation-delay: 1.4s;
         }
 
         /* Photo 3 — Small accent (swim team) */
@@ -566,7 +558,7 @@
             height: clamp(90px, 10vw, 140px);
             right: 18%;
             top: 28%;
-            animation: photoEnter 1s var(--ease-out) 1.6s forwards, photoFloat 12s ease-in-out 2.6s infinite;
+            animation-delay: 1.6s;
         }
 
         /* Mobile: Simplify photo cluster */
@@ -717,6 +709,8 @@
             opacity: 0;
             transform: translateY(20px);
             animation: fadeUp 0.8s var(--ease-out) 1.4s forwards;
+            position: relative;
+            z-index: 4;
         }
         
         @media (max-width: 900px) {
@@ -2683,6 +2677,26 @@
         window.addEventListener('scroll', () => {
             header.classList.toggle('is-scrolled', window.scrollY > 60);
         });
+
+        // Hero photos parallax
+        const heroPhotos = document.querySelectorAll('.hero-photo');
+        const parallaxSpeeds = [0.15, 0.25, 0.1]; // Different speeds for each photo
+
+        function updateParallax() {
+            const scrollY = window.scrollY;
+            const heroHeight = window.innerHeight;
+
+            // Only apply parallax when hero is visible
+            if (scrollY < heroHeight * 1.5) {
+                heroPhotos.forEach((photo, index) => {
+                    const speed = parallaxSpeeds[index] || 0.15;
+                    const yOffset = scrollY * speed;
+                    photo.style.transform = `translateY(${-yOffset}px)`;
+                });
+            }
+        }
+
+        window.addEventListener('scroll', updateParallax, { passive: true });
         
         // Mobile Navigation
         const navToggle = document.getElementById('navToggle');
