@@ -36,6 +36,7 @@
 
             --ease: cubic-bezier(0.25, 1, 0.5, 1);
             --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.4s;
         }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -721,6 +722,91 @@
             color: var(--white);
         }
         .preview-modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           NEXT CHAPTER
+           ═══════════════════════════════════════════════════════════════ */
+
+        .next-chapter {
+            padding: 80px 48px;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .next-chapter {
+                padding: 60px 24px;
+            }
+        }
+
+        .next-chapter-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .next-chapter-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            background: var(--grey-800);
+            border: 1px solid var(--grey-700);
+            transition: all var(--duration) var(--ease);
+        }
+
+        .next-chapter-link:hover {
+            border-color: var(--sun);
+            transform: translateY(-4px);
+        }
+
+        @media (max-width: 600px) {
+            .next-chapter-link {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+                padding: 32px;
+            }
+        }
+
+        .next-chapter-text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .next-chapter-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+
+        .next-chapter-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .next-chapter-arrow {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+            color: var(--black);
+            transition: transform var(--duration) var(--ease);
+        }
+
+        .next-chapter-link:hover .next-chapter-arrow {
+            transform: translateX(4px);
+        }
+
+        .next-chapter-arrow svg {
             width: 20px;
             height: 20px;
         }
