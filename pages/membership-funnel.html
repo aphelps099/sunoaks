@@ -840,6 +840,83 @@
         }
         .final-cta-phone a { color: var(--white); font-weight: 500; }
 
+        /* Next Chapter */
+        .next-chapter {
+            padding: 80px 48px;
+            background: var(--black);
+            color: var(--white);
+        }
+        @media (max-width: 768px) { .next-chapter { padding: 60px 24px; } }
+
+        .next-chapter-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .next-chapter-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            background: var(--grey-800);
+            border: 1px solid var(--grey-700);
+            transition: all var(--duration) var(--ease);
+        }
+
+        .next-chapter-link:hover {
+            border-color: var(--sun);
+            transform: translateY(-4px);
+        }
+
+        @media (max-width: 600px) {
+            .next-chapter-link {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+                padding: 32px;
+            }
+        }
+
+        .next-chapter-text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .next-chapter-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+
+        .next-chapter-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .next-chapter-arrow {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+            color: var(--black);
+            transition: transform var(--duration) var(--ease);
+        }
+
+        .next-chapter-link:hover .next-chapter-arrow {
+            transform: translateX(4px);
+        }
+
+        .next-chapter-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
         /* Footer */
         .footer {
             padding: 32px 48px;
@@ -857,14 +934,34 @@
             gap: 16px;
         }
         .footer-logo {
-            font-size: 0.875rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--white);
+            display: flex;
+            align-items: center;
         }
-        .footer-info { font-size: 0.8125rem; color: var(--grey-500); }
-        .footer-info a { color: var(--grey-400); }
+
+        .footer-logo img {
+            height: 24px;
+            width: auto;
+            filter: brightness(1.2);
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .footer-sep {
+            width: 1px;
+            height: 16px;
+            background: var(--grey-600);
+        }
+
+        .footer-tag {
+            font-size: 0.875rem;
+            color: var(--grey-400);
+        }
+        .footer-credit { font-size: 0.8125rem; color: var(--grey-400); }
+        .footer-credit a { color: var(--grey-400); }
 
         /* Mobile Sticky CTA */
         .mobile-cta {
@@ -911,7 +1008,7 @@
 <body>
     <!-- Header -->
     <header class="header" id="header">
-        <a href="../index.html" class="header-back">
+        <a href="/sunoaks/" class="header-back">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
             Brand House
         </a>
@@ -1242,11 +1339,34 @@
         </div>
     </section>
 
+    <!-- Next Chapter -->
+    <div class="next-chapter">
+        <div class="next-chapter-content">
+            <a href="service-architecture.html" class="next-chapter-link">
+                <div class="next-chapter-text">
+                    <span class="next-chapter-label">Next Chapter</span>
+                    <span class="next-chapter-title">05 — Service Architecture</span>
+                </div>
+                <div class="next-chapter-arrow">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 8h10M9 4l4 4-4 4"/>
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-inner">
-            <div class="footer-logo">Sun Oaks</div>
-            <div class="footer-info">3452 Argyle Rd, Redding, CA 96002 · <a href="tel:5302214405">(530) 221-4405</a></div>
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <img src="../images/logos/SunOaks_Logo_Horizontal_RGB.png" alt="Sun Oaks" />
+                </span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
+            <div class="footer-credit">Designed by <a href="https://look-serious.com">Look Serious</a> · 2026</div>
         </div>
     </footer>
 
