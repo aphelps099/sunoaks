@@ -2694,12 +2694,15 @@
                 heroPhotos.forEach((photo, index) => {
                     const speed = parallaxSpeeds[index] || 0.15;
                     const yOffset = scrollY * speed;
-                    photo.style.transform = `translateY(${-yOffset}px)`;
+                    // Preserve scale(1) from animation while applying parallax
+                    photo.style.transform = `scale(1) translateY(${-yOffset}px)`;
                 });
             }
         }
 
         window.addEventListener('scroll', updateParallax, { passive: true });
+        // Initialize parallax on load
+        updateParallax();
         
         // Mobile Navigation
         const navToggle = document.getElementById('navToggle');
