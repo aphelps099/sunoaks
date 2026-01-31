@@ -177,14 +177,63 @@
             }
         }
         
-        .hero-accent {
+        .hero-image {
             position: absolute;
             top: 0;
             right: 0;
-            width: 50%;
+            width: 55%;
             height: 100%;
-            background: linear-gradient(135deg, transparent 0%, rgba(232, 93, 4, 0.1) 100%);
-            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+            clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
+            overflow: hidden;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: grayscale(100%) contrast(1.1);
+            opacity: 0.7;
+        }
+
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(13, 13, 12, 0.9) 0%,
+                rgba(232, 93, 4, 0.3) 50%,
+                rgba(232, 93, 4, 0.15) 100%
+            );
+            mix-blend-mode: multiply;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to right,
+                var(--black) 0%,
+                transparent 40%
+            );
+            z-index: 1;
+        }
+
+        @media (max-width: 900px) {
+            .hero-image {
+                width: 100%;
+                clip-path: none;
+                opacity: 0.4;
+            }
+            .hero-image::before {
+                background: linear-gradient(
+                    to top,
+                    var(--black) 0%,
+                    transparent 60%
+                );
+            }
         }
         
         .hero-content {
@@ -811,18 +860,24 @@
         }
         
         .trainer-card-avatar {
-            width: 64px;
-            height: 64px;
-            background: var(--grey-700);
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
             margin-bottom: 20px;
-            font-family: var(--font-serif);
-            font-size: 1.25rem;
-            font-weight: 500;
-            color: var(--grey-400);
+            border: 2px solid var(--grey-600);
+        }
+
+        .trainer-card-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: filter 0.3s ease;
+        }
+
+        .trainer-card:hover .trainer-card-avatar img {
+            filter: grayscale(0%);
         }
         
         .trainer-card-name {
@@ -1162,14 +1217,6 @@
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-        }
-
-        .footer-logo img {
-            height: 24px;
-            width: auto;
-            filter: brightness(1.2);
         }
         
         .footer-sep {
@@ -1219,7 +1266,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <a href="../index.html" class="header-back">
+            <a href="index.html" class="header-back">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M13 8H3M7 4l-4 4 4 4"/>
                 </svg>
@@ -1233,7 +1280,9 @@
     
     <!-- Hero -->
     <section class="hero">
-        <div class="hero-accent"></div>
+        <div class="hero-image">
+            <img src="images/trainers/training-day-sunoaks.jpg" alt="Sun Oaks trainers" />
+        </div>
         <div class="hero-content">
             <div class="hero-eyebrow">
                 <div class="hero-eyebrow-icon">
@@ -1580,38 +1629,74 @@
             
             <div class="trainers-grid reveal">
                 <div class="trainer-card">
-                    <div class="trainer-card-avatar">MR</div>
-                    <h4 class="trainer-card-name">Mike Rodriguez</h4>
-                    <div class="trainer-card-specialty">Strength & Conditioning</div>
+                    <div class="trainer-card-avatar"><img src="images/trainers/MattP.png" alt="Matthew Perdue" /></div>
+                    <h4 class="trainer-card-name">Matthew Perdue</h4>
+                    <div class="trainer-card-specialty">Head Athletic Trainer · Strength & Conditioning</div>
                     <div class="trainer-card-ideal">Ideal For</div>
-                    <p class="trainer-card-clients">Men 30-55, athletic background, goal-oriented, responds to direct coaching style. Wants to get stronger or train for a specific event.</p>
+                    <p class="trainer-card-clients">Athletes and former athletes, members training for events, anyone wanting serious strength gains. Responds well to goal-oriented clients who want structure and progression.</p>
                     <div class="trainer-card-cue">
                         <div class="trainer-card-cue-label">Listen For</div>
-                        <p class="trainer-card-cue-text">"I used to play sports..." or "I want to deadlift my bodyweight" or "I'm training for a Spartan race"</p>
+                        <p class="trainer-card-cue-text">"I used to play sports..." or "I want to get stronger" or "I'm training for a competition"</p>
                     </div>
                 </div>
-                
+
                 <div class="trainer-card">
-                    <div class="trainer-card-avatar">SL</div>
-                    <h4 class="trainer-card-name">Sarah Lin</h4>
-                    <div class="trainer-card-specialty">Weight Loss & Lifestyle</div>
+                    <div class="trainer-card-avatar"><img src="images/trainers/Training  Redding Gym.png" alt="Taylor Strickland" /></div>
+                    <h4 class="trainer-card-name">Taylor Strickland</h4>
+                    <div class="trainer-card-specialty">Women's Wellness · Pre/Postnatal</div>
                     <div class="trainer-card-ideal">Ideal For</div>
-                    <p class="trainer-card-clients">Women 35-60, new to fitness or returning after a break. Needs encouragement and patience. Often dealing with confidence issues.</p>
+                    <p class="trainer-card-clients">Women at any stage—especially moms, pregnant women, or those returning postpartum. Also great for women seeking confidence and sustainable habits.</p>
                     <div class="trainer-card-cue">
                         <div class="trainer-card-cue-label">Listen For</div>
-                        <p class="trainer-card-cue-text">"I don't really know what I'm doing" or "I feel intimidated" or "I've tried everything"</p>
+                        <p class="trainer-card-cue-text">"I just had a baby" or "I want to feel strong again" or "I need something that fits my life as a mom"</p>
                     </div>
                 </div>
-                
+
                 <div class="trainer-card">
-                    <div class="trainer-card-avatar">JT</div>
-                    <h4 class="trainer-card-name">James Turner</h4>
-                    <div class="trainer-card-specialty">Senior Fitness & Mobility</div>
+                    <div class="trainer-card-avatar"><img src="images/trainers/Diego.png" alt="Diego Castanada" /></div>
+                    <h4 class="trainer-card-name">Diego Castanada</h4>
+                    <div class="trainer-card-specialty">Functional Fitness · Sports Performance</div>
                     <div class="trainer-card-ideal">Ideal For</div>
-                    <p class="trainer-card-clients">Members 55+, may have physical limitations, joint issues, or medical considerations. Wants to stay active and independent.</p>
+                    <p class="trainer-card-clients">Members who want to move better and perform better—athletes, weekend warriors, anyone focused on functional strength and athletic performance.</p>
                     <div class="trainer-card-cue">
                         <div class="trainer-card-cue-label">Listen For</div>
-                        <p class="trainer-card-cue-text">"My doctor said I should exercise" or "I have a bad knee" or "I just want to be able to play with my grandkids"</p>
+                        <p class="trainer-card-cue-text">"I want to be more athletic" or "I play recreational sports" or "I want to feel capable"</p>
+                    </div>
+                </div>
+
+                <div class="trainer-card">
+                    <div class="trainer-card-avatar"><img src="images/trainers/Sarah.jpg" alt="Sarah Meyer" /></div>
+                    <h4 class="trainer-card-name">Sarah Meyer</h4>
+                    <div class="trainer-card-specialty">Group & Personal Training · Community Builder</div>
+                    <div class="trainer-card-ideal">Ideal For</div>
+                    <p class="trainer-card-clients">Members who thrive with connection and accountability. Great for those who also enjoy group classes and want a trainer who knows the Sun Oaks community inside and out.</p>
+                    <div class="trainer-card-cue">
+                        <div class="trainer-card-cue-label">Listen For</div>
+                        <p class="trainer-card-cue-text">"I love the classes here" or "I need someone to keep me accountable" or "I've been a member forever"</p>
+                    </div>
+                </div>
+
+                <div class="trainer-card">
+                    <div class="trainer-card-avatar"><img src="images/trainers/MattM.jpg" alt="Matt Montes" /></div>
+                    <h4 class="trainer-card-name">Matt Montes</h4>
+                    <div class="trainer-card-specialty">Rehab & Core Foundation · Licensed PTA</div>
+                    <div class="trainer-card-ideal">Ideal For</div>
+                    <p class="trainer-card-clients">Members returning from injury, those with chronic pain, or anyone needing to rebuild their foundation. His PTA background means he understands limitations and modifications.</p>
+                    <div class="trainer-card-cue">
+                        <div class="trainer-card-cue-label">Listen For</div>
+                        <p class="trainer-card-cue-text">"I'm coming back from surgery" or "I have a bad back" or "I need to take it slow"</p>
+                    </div>
+                </div>
+
+                <div class="trainer-card">
+                    <div class="trainer-card-avatar"><img src="images/trainers/Michelle.png" alt="Michelle Whitehorn" /></div>
+                    <h4 class="trainer-card-name">Michelle Whitehorn</h4>
+                    <div class="trainer-card-specialty">Yoga & Mindful Movement · Mobility</div>
+                    <div class="trainer-card-ideal">Ideal For</div>
+                    <p class="trainer-card-clients">Members seeking mind-body connection, stress relief, and improved mobility. Perfect for those who want strength training combined with yoga and mindfulness practices.</p>
+                    <div class="trainer-card-cue">
+                        <div class="trainer-card-cue-label">Listen For</div>
+                        <p class="trainer-card-cue-text">"I'm so stressed" or "I want to be more flexible" or "I love yoga but want to add strength"</p>
                     </div>
                 </div>
             </div>
@@ -1816,9 +1901,7 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <span class="footer-logo">
-                    <img src="../images/logos/SunOaks_Logo_Horizontal_RGB.png" alt="Sun Oaks" />
-                </span>
+                <span class="footer-logo">Sun Oaks</span>
                 <span class="footer-sep"></span>
                 <span class="footer-tag">Brand House</span>
             </div>

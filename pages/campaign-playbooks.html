@@ -1,548 +1,964 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Campaign Playbooks · Sun Oaks Brand House</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Playbooks — Sun Oaks Brand House</title>
 
-    :root {
-      --sun: #F7B500;
-      --sun-light: #FFF4D4;
-      --pool: #0891A8;
-      --pool-deep: #034752;
-      --black: #0D0D0C;
-      --cream: #FAF9F7;
-      --gray: #6B6B6B;
-      --sans: 'Jost', 'Futura', sans-serif;
-      --serif: 'Newsreader', Georgia, serif;
-    }
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--sans);
-      background: var(--cream);
-      color: var(--black);
-      line-height: 1.6;
-    }
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
 
-    /* Header */
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--cream);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-    }
-    .header-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      color: var(--black);
-    }
-    .header-logo svg { width: 36px; height: 36px; }
-    .header-logo span {
-      font-weight: 600;
-      font-size: 0.875rem;
-      letter-spacing: 0.02em;
-    }
-    .header-nav { display: flex; gap: 2rem; }
-    .header-nav a {
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--gray);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .header-nav a:hover { color: var(--black); }
+            --sun: #F7B500;
+            --sun-light: #FFF8E5;
+            --sun-dark: #C99200;
+            --pool: #0891A8;
+            --pool-light: #E5F5F7;
+            --pool-deep: #034752;
+            --energy: #E85D04;
+            --energy-light: #FFF0E5;
 
-    /* Hero */
-    .hero {
-      padding: 8rem 2rem 4rem;
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .hero-badge {
-      display: inline-block;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--pool);
-      margin-bottom: 1rem;
-    }
-    .hero h1 {
-      font-family: var(--serif);
-      font-size: clamp(2.5rem, 6vw, 3.5rem);
-      font-weight: 400;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-    }
-    .hero p {
-      font-size: 1.125rem;
-      color: var(--gray);
-      max-width: 500px;
-      margin: 0 auto;
-    }
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
 
-    /* Playbooks Grid */
-    .playbooks {
-      padding: 2rem 2rem 6rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .playbook {
-      position: relative;
-      background: #fff;
-      border-radius: 1rem;
-      overflow: hidden;
-      margin-bottom: 3rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    .playbook-header {
-      padding: 2rem 2.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-    }
-    .playbook-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .playbook-icon svg { width: 28px; height: 28px; }
-    .playbook-icon.sun { background: var(--sun-light); color: var(--sun); }
-    .playbook-icon.pool { background: rgba(8,145,168,0.1); color: var(--pool); }
-    .playbook-icon.deep { background: var(--pool-deep); color: #fff; }
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --duration: 0.4s;
+        }
 
-    /* Large BG Emblem */
-    .playbook-bg {
-      position: absolute;
-      top: -20%;
-      right: -15%;
-      width: 70%;
-      max-width: 500px;
-      opacity: 0.04;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .playbook:nth-child(1) .playbook-bg { fill: var(--sun); opacity: 0.12; }
-    .playbook:nth-child(2) .playbook-bg { fill: var(--pool); opacity: 0.08; }
-    .playbook:nth-child(3) .playbook-bg { fill: var(--pool-deep); opacity: 0.06; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); font-weight: 400; line-height: 1.6; color: var(--black); background: var(--cream); -webkit-font-smoothing: antialiased; }
+        ::selection { background: var(--sun); color: var(--black); }
+        a { color: inherit; text-decoration: none; }
 
-    .playbook-title h2 {
-      font-size: 1.375rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-    .playbook-title p {
-      font-size: 0.875rem;
-      color: var(--gray);
-    }
-    .playbook-tag {
-      margin-left: auto;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.5rem 1rem;
-      border-radius: 2rem;
-      background: var(--cream);
-      color: var(--gray);
-    }
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(250,249,247,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
+        @media (max-width: 768px) { .header { padding: 20px 24px; } }
 
-    .playbook-body {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: rgba(0,0,0,0.06);
-    }
-    .playbook-section {
-      background: #fff;
-      padding: 1.75rem;
-    }
-    .playbook-section h3 {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--pool);
-      margin-bottom: 1rem;
-    }
-    .playbook-section ul {
-      list-style: none;
-    }
-    .playbook-section li {
-      font-size: 0.875rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-    }
-    .playbook-section li:last-child { border-bottom: none; }
+        .header-left { display: flex; align-items: center; gap: 24px; }
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
+        .header-back:hover { color: var(--black); }
+        .header-back svg { width: 16px; height: 16px; }
+        .header-sep { width: 1px; height: 20px; background: var(--grey-200); }
+        .header-chapter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+        .header-chapter span { color: var(--pool); }
+        .header-badge {
+            padding: 6px 12px;
+            background: var(--pool-light);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--pool);
+        }
+        @media (max-width: 600px) { .header-badge { display: none; } }
 
-    .channel-tag {
-      display: inline-block;
-      font-size: 0.6875rem;
-      font-weight: 500;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      margin-right: 0.25rem;
-      margin-bottom: 0.25rem;
-    }
-    .channel-tag.email { background: #FEE2E2; color: #B91C1C; }
-    .channel-tag.social { background: #DBEAFE; color: #1D4ED8; }
-    .channel-tag.inclub { background: #D1FAE5; color: #047857; }
-    .channel-tag.web { background: #F3E8FF; color: #7C3AED; }
+        /* ===== HERO: COLLINS SPLIT ===== */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--black);
+            padding-top: 73px;
+        }
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; min-height: auto; }
+        }
 
-    /* Timeline */
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .timeline-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      font-size: 0.875rem;
-    }
-    .timeline-week {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      color: var(--pool);
-      min-width: 48px;
-      padding-top: 0.125rem;
-    }
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 64px;
+            background: var(--black);
+        }
+        @media (max-width: 768px) { .hero-left { padding: 60px 32px; } }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .playbook-body {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    @media (max-width: 600px) {
-      .header { padding: 1rem; }
-      .header-nav { display: none; }
-      .hero { padding: 7rem 1.5rem 3rem; }
-      .playbooks { padding: 1.5rem; }
-      .playbook-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-        padding: 1.5rem;
-      }
-      .playbook-tag { margin-left: 0; }
-      .playbook-body {
-        grid-template-columns: 1fr;
-      }
-      .playbook-section { padding: 1.25rem; }
-    }
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .hero-eyebrow-line { width: 48px; height: 2px; background: var(--sun); }
+        .hero-eyebrow-text {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--sun);
+        }
 
-    /* Animations */
-    .playbook {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .playbook.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(40px, 5vw, 64px);
+            font-weight: 400;
+            line-height: 1.05;
+            color: var(--white);
+            margin-bottom: 32px;
+        }
+        .hero-title em { font-style: italic; color: var(--sun); }
+
+        .hero-desc {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--grey-400);
+            max-width: 480px;
+        }
+
+        .hero-right {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 1px;
+            background: var(--grey-800);
+        }
+        @media (max-width: 900px) {
+            .hero-right { min-height: 400px; }
+        }
+
+        .hero-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+        }
+        .hero-number span {
+            font-family: var(--font-serif);
+            font-size: clamp(140px, 20vw, 220px);
+            font-weight: 400;
+            line-height: 0.85;
+            color: var(--black);
+        }
+
+        .hero-stat-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 48px;
+            background: var(--grey-800);
+        }
+        .hero-stat-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+            margin-bottom: 12px;
+        }
+        .hero-stat-text {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--white);
+        }
+        .hero-stat-text em { font-style: italic; color: var(--sun); }
+
+        /* ===== BIG IDEA STRIP ===== */
+        .big-idea {
+            padding: 80px 48px;
+            background: var(--pool-deep);
+            text-align: center;
+        }
+        @media (max-width: 768px) { .big-idea { padding: 56px 24px; } }
+
+        .big-idea-text {
+            font-family: var(--font-serif);
+            font-size: clamp(22px, 3vw, 32px);
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--white);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .big-idea-text em { font-style: italic; color: var(--sun); }
+
+        /* ===== PLAYBOOK SECTIONS ===== */
+        .playbook {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 1000px) {
+            .playbook { grid-template-columns: 1fr; }
+        }
+
+        .playbook-sidebar {
+            display: flex;
+            flex-direction: column;
+            background: var(--cream);
+        }
+
+        .playbook-number-block {
+            padding: 64px 48px;
+            background: var(--sun);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .playbook--pool .playbook-number-block { background: var(--pool); }
+        .playbook--deep .playbook-number-block { background: var(--pool-deep); }
+
+        .playbook-number {
+            font-family: var(--font-serif);
+            font-size: 7rem;
+            font-weight: 400;
+            line-height: 0.85;
+            color: var(--black);
+        }
+        .playbook--pool .playbook-number,
+        .playbook--deep .playbook-number { color: var(--white); }
+
+        .playbook-meta {
+            padding: 48px;
+            background: var(--cream);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 768px) { .playbook-meta { padding: 32px; } }
+
+        .playbook-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--sun-light);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--sun-dark);
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .playbook--pool .playbook-badge {
+            background: var(--pool-light);
+            color: var(--pool);
+        }
+        .playbook--deep .playbook-badge {
+            background: var(--pool-deep);
+            color: var(--white);
+        }
+
+        .playbook-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3vw, 36px);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .playbook-subtitle {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--grey-500);
+        }
+
+        .playbook-main {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 900px) {
+            .playbook-main { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .playbook-main { grid-template-columns: 1fr; }
+        }
+
+        .playbook-section {
+            padding: 40px 32px;
+            background: var(--white);
+        }
+
+        .playbook-section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--sun-dark);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--sun);
+        }
+        .playbook--pool .playbook-section-label {
+            color: var(--pool);
+            border-color: var(--pool);
+        }
+        .playbook--deep .playbook-section-label {
+            color: var(--pool-deep);
+            border-color: var(--pool-deep);
+        }
+
+        .playbook-list {
+            list-style: none;
+        }
+        .playbook-list li {
+            font-size: 0.9375rem;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--silver);
+            color: var(--grey-600);
+        }
+        .playbook-list li:last-child { border-bottom: none; }
+
+        /* Channel Tags */
+        .channel-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .channel-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .channel-tag.email { background: #FEE2E2; color: #B91C1C; }
+        .channel-tag.social { background: #DBEAFE; color: #1D4ED8; }
+        .channel-tag.inclub { background: #D1FAE5; color: #047857; }
+        .channel-tag.web { background: #F3E8FF; color: #7C3AED; }
+
+        /* Timeline */
+        .timeline { display: flex; flex-direction: column; gap: 12px; }
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            font-size: 0.875rem;
+            color: var(--grey-600);
+        }
+        .timeline-week {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--sun-dark);
+            min-width: 40px;
+            padding-top: 2px;
+        }
+        .playbook--pool .timeline-week { color: var(--pool); }
+        .playbook--deep .timeline-week { color: var(--pool-deep); }
+
+        /* ===== PLAYBOOK DIVIDER ===== */
+        .playbook-divider {
+            height: 1px;
+            background: var(--silver);
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--black);
+            min-height: 60vh;
+        }
+        @media (max-width: 900px) {
+            .cta-section { grid-template-columns: 1fr; min-height: auto; }
+        }
+
+        .cta-visual {
+            background: var(--sun);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 64px;
+        }
+        .cta-visual-text {
+            font-family: var(--font-serif);
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 400;
+            line-height: 1;
+            color: var(--black);
+            text-align: center;
+        }
+
+        .cta-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 64px;
+            background: var(--black);
+        }
+        @media (max-width: 768px) { .cta-content { padding: 48px 32px; } }
+
+        .cta-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sun);
+            margin-bottom: 24px;
+        }
+        .cta-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 40px);
+            font-weight: 400;
+            line-height: 1.2;
+            color: var(--white);
+            margin-bottom: 24px;
+        }
+        .cta-title em { font-style: italic; color: var(--sun); }
+
+        .cta-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--grey-400);
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 36px;
+            background: var(--sun);
+            color: var(--black);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all var(--duration);
+            cursor: pointer;
+            align-self: flex-start;
+        }
+        .cta-button:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+        }
+        .cta-button svg { width: 16px; height: 16px; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 40px 48px;
+            background: var(--black);
+            border-top: 1px solid var(--grey-700);
+        }
+        @media (max-width: 768px) { .footer { padding: 32px 24px; } }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .footer-logo {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+        .footer-sep { width: 1px; height: 16px; background: var(--grey-600); }
+        .footer-tag { font-size: 0.875rem; color: var(--grey-400); }
+        .footer-credit { font-size: 0.8125rem; color: var(--grey-400); }
+        .footer-credit a { color: var(--sun); }
+        @media (max-width: 600px) {
+            .footer-inner { flex-direction: column; text-align: center; }
+        }
+
+        /* ===== PREVIEW MODAL ===== */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(13, 13, 12, 0.9);
+            backdrop-filter: blur(8px);
+        }
+        .preview-modal.is-active { display: flex; }
+
+        .preview-modal-content {
+            background: var(--white);
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+        }
+
+        .preview-modal-header {
+            padding: 24px 32px;
+            background: var(--pool);
+            color: var(--white);
+        }
+        .preview-modal-badge {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .preview-modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .preview-modal-body { padding: 32px; }
+        .preview-modal-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--grey-600);
+            margin-bottom: 32px;
+        }
+
+        .preview-modal-contact { }
+        .preview-modal-contact-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 12px;
+        }
+        .preview-modal-contact-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .preview-modal-contact-role {
+            font-size: 0.875rem;
+            color: var(--grey-500);
+            margin-bottom: 8px;
+        }
+        .preview-modal-contact-email {
+            font-size: 0.875rem;
+            color: var(--pool);
+        }
+
+        .preview-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            cursor: pointer;
+            color: var(--white);
+            transition: background var(--duration);
+        }
+        .preview-modal-close:hover { background: rgba(255,255,255,0.3); }
+        .preview-modal-close svg { width: 20px; height: 20px; }
+
+        /* Triggers Modal */
+        .triggers-modal {
+            cursor: pointer;
+            transition: transform var(--duration), box-shadow var(--duration);
+        }
+        .triggers-modal:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="sunoaks-brand-house-v9.html" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>Marketing</span> Campaign Playbooks</span>
+        </div>
+        <div class="header-badge">Operations Manual</div>
+    </header>
 
-  <!-- Header -->
-  <header class="header">
-    <a href="../index.html" class="header-logo">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg>
-      <span>Back to Brand House</span>
-    </a>
-    <nav class="header-nav">
-      <a href="../index.html">Home</a>
-      <a href="voice-messaging.html">Voice</a>
-      <a href="membership-funnel.html">Membership</a>
-      <a href="aquatics.html">Aquatics</a>
-    </nav>
-  </header>
+    <!-- HERO: Collins Split -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-eyebrow">
+                <span class="hero-eyebrow-line"></span>
+                <span class="hero-eyebrow-text">Marketing Ops</span>
+            </div>
+            <h1 class="hero-title">Campaign<br><em>Playbooks</em></h1>
+            <p class="hero-desc">Three proven campaigns you can run each year. Copy the structure, swap the details, launch with confidence.</p>
+        </div>
+        <div class="hero-right">
+            <div class="hero-number">
+                <span>7</span>
+            </div>
+            <div class="hero-stat-block">
+                <div class="hero-stat-label">The Framework</div>
+                <div class="hero-stat-text">Same structure, <em>every time.</em><br>Offer. Audience. Channels. Timeline.</div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Hero -->
-  <section class="hero">
-    <span class="hero-badge">Marketing Ops</span>
-    <h1>Campaign Playbooks</h1>
-    <p>Three proven campaigns you can run each year. Copy the structure, swap the details, repeat.</p>
-  </section>
+    <!-- Big Idea -->
+    <section class="big-idea">
+        <p class="big-idea-text">Stop reinventing marketing. <em>Start repeating what works.</em><br>These playbooks have driven enrollment for a decade.</p>
+    </section>
 
-  <!-- Playbooks -->
-  <section class="playbooks">
-
-    <!-- Playbook 1: New Year Promo -->
-    <article class="playbook">
-      <svg class="playbook-bg" viewBox="0 0 240 240">
-        <path d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
-        <path d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
-        <path d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
-      </svg>
-      <div class="playbook-header">
-        <div class="playbook-icon sun">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-        </div>
-        <div class="playbook-title">
-          <h2>New Year, New You</h2>
-          <p>January enrollment push — capture resolution-makers</p>
-        </div>
-        <span class="playbook-tag">Jan 1 – 31</span>
-      </div>
-      <div class="playbook-body">
-        <div class="playbook-section">
-          <h3>Offer</h3>
-          <ul>
-            <li>$0 Initiation Fee</li>
-            <li>First month 50% off</li>
-            <li>Free PT session included</li>
-            <li>7-day trial for referrals</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Audience</h3>
-          <ul>
-            <li>Lapsed leads (6–12 mo)</li>
-            <li>Former members</li>
-            <li>Referral list</li>
-            <li>Local community (geo)</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Channels</h3>
-          <ul>
-            <li>
-              <span class="channel-tag email">Email</span>
-              <span class="channel-tag social">Social</span>
-            </li>
-            <li>
-              <span class="channel-tag inclub">In-Club</span>
-              <span class="channel-tag web">Website</span>
-            </li>
-            <li>Facebook/Instagram Ads</li>
-            <li>Google Search (brand + gym)</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Timeline</h3>
-          <div class="timeline">
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 1</span>
-              <span>Teaser emails + social countdown</span>
+    <!-- ===== PLAYBOOK 1: NEW YEAR ===== -->
+    <article class="playbook reveal">
+        <div class="playbook-sidebar">
+            <div class="playbook-number-block">
+                <span class="playbook-number">01</span>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 2</span>
-              <span>Full campaign launch, ads live</span>
+            <div class="playbook-meta">
+                <span class="playbook-badge">Jan 1 – 31</span>
+                <h2 class="playbook-title">New Year, New You</h2>
+                <p class="playbook-subtitle">January enrollment push—capture resolution-makers while motivation is high.</p>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 3</span>
-              <span>Testimonial push + urgency</span>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 4</span>
-              <span>"Last chance" + retargeting</span>
-            </div>
-          </div>
         </div>
-      </div>
+        <div class="playbook-main">
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Offer</div>
+                <ul class="playbook-list">
+                    <li>$0 Initiation Fee</li>
+                    <li>First month 50% off</li>
+                    <li>Free PT session included</li>
+                    <li>7-day trial for referrals</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Audience</div>
+                <ul class="playbook-list">
+                    <li>Lapsed leads (6–12 mo)</li>
+                    <li>Former members</li>
+                    <li>Referral list</li>
+                    <li>Local community (geo)</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Channels</div>
+                <div class="channel-tags">
+                    <span class="channel-tag email">Email</span>
+                    <span class="channel-tag social">Social</span>
+                    <span class="channel-tag inclub">In-Club</span>
+                    <span class="channel-tag web">Website</span>
+                </div>
+                <ul class="playbook-list">
+                    <li>Facebook/Instagram Ads</li>
+                    <li>Google Search (brand + gym)</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Timeline</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 1</span>
+                        <span>Teaser emails + social countdown</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 2</span>
+                        <span>Full campaign launch, ads live</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 3</span>
+                        <span>Testimonial push + urgency</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 4</span>
+                        <span>"Last chance" + retargeting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </article>
 
-    <!-- Playbook 2: Summer Splash -->
-    <article class="playbook">
-      <svg class="playbook-bg" viewBox="0 0 240 240">
-        <path d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
-        <path d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
-        <path d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
-      </svg>
-      <div class="playbook-header">
-        <div class="playbook-icon pool">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="playbook-title">
-          <h2>Summer Splash</h2>
-          <p>Family & aquatics focus — pools, camps, fun</p>
-        </div>
-        <span class="playbook-tag">May 15 – Jun 30</span>
-      </div>
-      <div class="playbook-body">
-        <div class="playbook-section">
-          <h3>Offer</h3>
-          <ul>
-            <li>Family membership discount</li>
-            <li>Free summer camp week</li>
-            <li>Pool pass bundle</li>
-            <li>Swim lesson package deal</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Audience</h3>
-          <ul>
-            <li>Families w/ kids (5–15)</li>
-            <li>Current members (upsell)</li>
-            <li>School newsletter lists</li>
-            <li>Local parent groups</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Channels</h3>
-          <ul>
-            <li>
-              <span class="channel-tag email">Email</span>
-              <span class="channel-tag social">Social</span>
-            </li>
-            <li>
-              <span class="channel-tag inclub">In-Club</span>
-              <span class="channel-tag web">Website</span>
-            </li>
-            <li>School flyers & partnerships</li>
-            <li>Facebook Groups (local moms)</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Timeline</h3>
-          <div class="timeline">
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 1</span>
-              <span>"Summer is coming" teaser</span>
+    <div class="playbook-divider"></div>
+
+    <!-- ===== PLAYBOOK 2: SUMMER SPLASH ===== -->
+    <article class="playbook playbook--pool reveal">
+        <div class="playbook-sidebar">
+            <div class="playbook-number-block">
+                <span class="playbook-number">02</span>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 2–3</span>
-              <span>Camp registration push</span>
+            <div class="playbook-meta">
+                <span class="playbook-badge">May 15 – Jun 30</span>
+                <h2 class="playbook-title">Summer Splash</h2>
+                <p class="playbook-subtitle">Family & aquatics focus—pools, camps, fun. Capture families before summer plans lock in.</p>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 4–5</span>
-              <span>Pool & swim lesson focus</span>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 6</span>
-              <span>Final push + early bird ends</span>
-            </div>
-          </div>
         </div>
-      </div>
+        <div class="playbook-main">
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Offer</div>
+                <ul class="playbook-list">
+                    <li>Family membership discount</li>
+                    <li>Free summer camp week</li>
+                    <li>Pool pass bundle</li>
+                    <li>Swim lesson package deal</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Audience</div>
+                <ul class="playbook-list">
+                    <li>Families w/ kids (5–15)</li>
+                    <li>Current members (upsell)</li>
+                    <li>School newsletter lists</li>
+                    <li>Local parent groups</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Channels</div>
+                <div class="channel-tags">
+                    <span class="channel-tag email">Email</span>
+                    <span class="channel-tag social">Social</span>
+                    <span class="channel-tag inclub">In-Club</span>
+                    <span class="channel-tag web">Website</span>
+                </div>
+                <ul class="playbook-list">
+                    <li>School flyers & partnerships</li>
+                    <li>Facebook Groups (local moms)</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Timeline</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 1</span>
+                        <span>"Summer is coming" teaser</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 2–3</span>
+                        <span>Camp registration push</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 4–5</span>
+                        <span>Pool & swim lesson focus</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 6</span>
+                        <span>Final push + early bird ends</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </article>
 
-    <!-- Playbook 3: Fall Back -->
-    <article class="playbook">
-      <svg class="playbook-bg" viewBox="0 0 240 240">
-        <path d="M217.67,141.01c2,31.46-28.81,21.65-31.89,31.48,3.91.78,7.7,1.34,10.69,4.12-24.48,31.61-52.54-8-41.32,21.61-49.69,15.97-100.29-15.04-116.32-61.72C20.56,83.3,50.5,26.27,105.21,11.06c52.8-14.68,109.64,19.39,120.33,74.67l-15.84,6.74-9.79-8.4c-16.98-40.25-61.64-60.9-102.65-48.26s-66.62,55.63-57.81,96.2c64.27,37.86,139.11,23.9,187.8-32.84,5.11,15.46-6.5,30.06-18.38,36.25-1.08.76-.42,5.31.84,5.35l7.95.23Z"/>
-        <path d="M231.83,123.59c.01,54.63-43.45,100.06-95.26,107.56-54.66,7.9-106.2-25.1-123.11-77.1C-3.15,102.98,20.42,42.12,72.67,19.61c-39.33,29.7-56.01,75.82-38.95,122.84,15.55,42.86,59.6,71.11,106.65,66.18,45.13-4.73,82.16-38.37,91.46-85.04Z"/>
-        <path d="M105.69,95.23c3.7-1.07,8.16-.69,10.26,1.24,5.85,5.37-2.58,18.21,6.21,21.81,2.85,1.17,8.39-.15,10.99-3.29l16.15-19.56c2.01-2.43,5.88-3.42,8.66-4.07s7.89.68,7.45,4.73l-.98,9.19c-.26,2.42,4.06,4.77,6.77,4.26,11.42-2.15,14.67-20.09,26.19-18.86,3.56,1.43,6.86,6.19,9.77,6.84,4.46,1,8.92-.64,12.44-3.13,2.54-1.5,5.14-1.25,7.7,1.05-42.93,57.51-123.48,73.05-184.82,34.73,29.84-.12,33.34-26.31,63.21-34.92Z"/>
-      </svg>
-      <div class="playbook-header">
-        <div class="playbook-icon deep">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="playbook-title">
-          <h2>Fall Back Into Fitness</h2>
-          <p>Back-to-routine season — recapture summer drop-offs</p>
-        </div>
-        <span class="playbook-tag">Sep 1 – 30</span>
-      </div>
-      <div class="playbook-body">
-        <div class="playbook-section">
-          <h3>Offer</h3>
-          <ul>
-            <li>Rejoin with $0 fee</li>
-            <li>3-month commitment special</li>
-            <li>Free class pack (5 classes)</li>
-            <li>Buddy pass for a friend</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Audience</h3>
-          <ul>
-            <li>Cancelled members (3–12 mo)</li>
-            <li>Summer freeze accounts</li>
-            <li>Trial non-converters</li>
-            <li>Empty nesters</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Channels</h3>
-          <ul>
-            <li>
-              <span class="channel-tag email">Email</span>
-              <span class="channel-tag social">Social</span>
-            </li>
-            <li>
-              <span class="channel-tag inclub">In-Club</span>
-              <span class="channel-tag web">Website</span>
-            </li>
-            <li>Direct mail (lapsed VIPs)</li>
-            <li>Retargeting ads</li>
-          </ul>
-        </div>
-        <div class="playbook-section">
-          <h3>Timeline</h3>
-          <div class="timeline">
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 1</span>
-              <span>"We miss you" personalized email</span>
+    <div class="playbook-divider"></div>
+
+    <!-- ===== PLAYBOOK 3: FALL BACK ===== -->
+    <article class="playbook playbook--deep reveal">
+        <div class="playbook-sidebar">
+            <div class="playbook-number-block">
+                <span class="playbook-number">03</span>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 2</span>
-              <span>New class schedule highlight</span>
+            <div class="playbook-meta">
+                <span class="playbook-badge">Sep 1 – 30</span>
+                <h2 class="playbook-title">Fall Back Into Fitness</h2>
+                <p class="playbook-subtitle">Back-to-routine season—recapture summer drop-offs and empty nesters.</p>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 3</span>
-              <span>Member success stories</span>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-week">Wk 4</span>
-              <span>"Ends soon" final push</span>
-            </div>
-          </div>
         </div>
-      </div>
+        <div class="playbook-main">
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Offer</div>
+                <ul class="playbook-list">
+                    <li>Rejoin with $0 fee</li>
+                    <li>3-month commitment special</li>
+                    <li>Free class pack (5 classes)</li>
+                    <li>Buddy pass for a friend</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Audience</div>
+                <ul class="playbook-list">
+                    <li>Cancelled members (3–12 mo)</li>
+                    <li>Summer freeze accounts</li>
+                    <li>Trial non-converters</li>
+                    <li>Empty nesters</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Channels</div>
+                <div class="channel-tags">
+                    <span class="channel-tag email">Email</span>
+                    <span class="channel-tag social">Social</span>
+                    <span class="channel-tag inclub">In-Club</span>
+                    <span class="channel-tag web">Website</span>
+                </div>
+                <ul class="playbook-list">
+                    <li>Direct mail (lapsed VIPs)</li>
+                    <li>Retargeting ads</li>
+                </ul>
+            </div>
+            <div class="playbook-section triggers-modal">
+                <div class="playbook-section-label">Timeline</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 1</span>
+                        <span>"We miss you" personalized email</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 2</span>
+                        <span>New class schedule highlight</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 3</span>
+                        <span>Member success stories</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-week">Wk 4</span>
+                        <span>"Ends soon" final push</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </article>
 
-  </section>
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-visual">
+            <div class="cta-visual-text">Copy.<br>Customize.<br>Launch.</div>
+        </div>
+        <div class="cta-content reveal">
+            <div class="cta-label">Ready to Execute</div>
+            <h2 class="cta-title">Need the full assets?<br><em>Templates included.</em></h2>
+            <p class="cta-text">Each playbook comes with email templates, social graphics, ad copy, and a project timeline. Contact the Brand House architect for full access.</p>
+            <a href="mailto:phelps@norcalsbdc.org" class="cta-button">
+                Request Full Playbook
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+    </section>
 
-  <script>
-    // Reveal on scroll
-    const playbooks = document.querySelectorAll('.playbook');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.classList.add('visible');
-          }, i * 100);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
+            <div class="footer-credit">Designed by <a href="https://look-serious.com">Look Serious</a> · 2026</div>
+        </div>
+    </footer>
 
-    playbooks.forEach(p => observer.observe(p));
-  </script>
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-modal-content">
+            <button class="preview-modal-close" id="closeModal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="preview-modal-header">
+                <div class="preview-modal-badge">Preview Only</div>
+                <div class="preview-modal-title">Full Playbook Required</div>
+            </div>
+            <div class="preview-modal-body">
+                <p class="preview-modal-text">This section provides an overview of the campaign structure. Full playbooks include email templates, social graphics, ad copy, and detailed project timelines.</p>
+                <div class="preview-modal-contact">
+                    <div class="preview-modal-contact-label">Brand House Architect</div>
+                    <div class="preview-modal-contact-name">Aaron Phelps</div>
+                    <div class="preview-modal-contact-role">Look Serious</div>
+                    <a href="mailto:phelps@norcalsbdc.org" class="preview-modal-contact-email">phelps@norcalsbdc.org</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Preview Modal
+        const modal = document.getElementById('previewModal');
+        const closeBtn = document.getElementById('closeModal');
+        const triggers = document.querySelectorAll('.triggers-modal');
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                modal.classList.add('is-active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('is-active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('is-active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+                modal.classList.remove('is-active');
+            }
+        });
+    </script>
 </body>
 </html>
