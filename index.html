@@ -1610,9 +1610,248 @@
             width: 24px;
             height: 24px;
         }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PASSWORD OVERLAY
+           Collins & Co inspired. Minimal. Elegant. Subtle entrance.
+           ═══════════════════════════════════════════════════════════════ */
+
+        .password-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--cream);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.8s var(--ease-out), visibility 0.8s var(--ease-out);
+        }
+
+        .password-overlay.is-unlocked {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .password-overlay-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 400px;
+            padding: 0 24px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: passwordFadeUp 1s var(--ease-out) 0.2s forwards;
+        }
+
+        @keyframes passwordFadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .password-overlay-logo {
+            width: 160px;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: passwordFadeUp 1s var(--ease-out) 0.1s forwards;
+        }
+
+        .password-overlay-logo img {
+            width: 100%;
+            height: auto;
+        }
+
+        .password-overlay-title {
+            font-family: var(--font-serif);
+            font-weight: 500;
+            font-size: 1.5rem;
+            letter-spacing: -0.01em;
+            color: var(--black);
+            margin-bottom: 8px;
+        }
+
+        .password-overlay-subtitle {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            font-size: 0.9375rem;
+            color: var(--grey-500);
+            margin-bottom: 40px;
+        }
+
+        .password-form {
+            width: 100%;
+            position: relative;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            color: var(--black);
+            background: var(--white);
+            border: 1px solid var(--silver);
+            border-radius: 4px;
+            outline: none;
+            text-align: center;
+            transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+        }
+
+        .password-input::placeholder {
+            color: var(--grey-300);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .password-input:focus {
+            border-color: var(--sun);
+            box-shadow: 0 0 0 3px rgba(247, 181, 0, 0.1);
+        }
+
+        .password-input.is-error {
+            border-color: #D64545;
+            animation: passwordShake 0.5s var(--ease);
+        }
+
+        @keyframes passwordShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        .password-submit {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--grey-400);
+            transition: color 0.3s var(--ease), transform 0.3s var(--ease);
+        }
+
+        .password-submit:hover {
+            color: var(--sun);
+        }
+
+        .password-submit svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .password-error-message {
+            position: absolute;
+            bottom: -28px;
+            left: 0;
+            right: 0;
+            font-family: var(--font-sans);
+            font-size: 0.8125rem;
+            color: #D64545;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+        }
+
+        .password-error-message.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .password-overlay-footer {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            opacity: 0;
+            animation: passwordFadeUp 1s var(--ease-out) 0.5s forwards;
+        }
+
+        .password-overlay-footer-text {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+
+        @media (max-width: 768px) {
+            .password-overlay-logo {
+                width: 120px;
+                margin-bottom: 36px;
+            }
+
+            .password-overlay-title {
+                font-size: 1.25rem;
+            }
+
+            .password-overlay-subtitle {
+                font-size: 0.875rem;
+                margin-bottom: 32px;
+            }
+
+            .password-overlay-footer {
+                bottom: 24px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Password Overlay -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-overlay-content">
+            <div class="password-overlay-logo">
+                <img src="images/logos/SunOaks_Logo_Horizontal_RGB.png" alt="Sun Oaks" />
+            </div>
+            <h1 class="password-overlay-title">Brand House</h1>
+            <p class="password-overlay-subtitle">Enter password to continue</p>
+            <form class="password-form" id="passwordForm">
+                <div class="password-input-wrapper">
+                    <input
+                        type="password"
+                        class="password-input"
+                        id="passwordInput"
+                        placeholder="Password"
+                        autocomplete="off"
+                        autofocus
+                    />
+                    <button type="submit" class="password-submit" aria-label="Submit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <p class="password-error-message" id="passwordError">Incorrect password</p>
+            </form>
+        </div>
+        <div class="password-overlay-footer">
+            <p class="password-overlay-footer-text">Est. 1960 · Redding, California</p>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="header" id="header">
         <a href="#" class="header-logo">
@@ -2136,6 +2375,51 @@
     </div>
 
     <script>
+        // Password Overlay
+        const PASSWORD = 'look2026';
+        const passwordOverlay = document.getElementById('passwordOverlay');
+        const passwordForm = document.getElementById('passwordForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+
+        // Check if already authenticated this session
+        if (sessionStorage.getItem('sunoaks_authenticated') === 'true') {
+            passwordOverlay.classList.add('is-unlocked');
+        }
+
+        passwordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const enteredPassword = passwordInput.value;
+
+            if (enteredPassword === PASSWORD) {
+                // Success - unlock the site
+                sessionStorage.setItem('sunoaks_authenticated', 'true');
+                passwordOverlay.classList.add('is-unlocked');
+                passwordInput.blur();
+            } else {
+                // Error - shake and show message
+                passwordInput.classList.add('is-error');
+                passwordError.classList.add('is-visible');
+                passwordInput.value = '';
+
+                // Remove error state after animation
+                setTimeout(() => {
+                    passwordInput.classList.remove('is-error');
+                }, 500);
+
+                // Hide error message after delay
+                setTimeout(() => {
+                    passwordError.classList.remove('is-visible');
+                }, 2500);
+            }
+        });
+
+        // Clear error on input
+        passwordInput.addEventListener('input', function() {
+            passwordError.classList.remove('is-visible');
+        });
+
         // Header scroll
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
