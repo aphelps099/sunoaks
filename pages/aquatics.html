@@ -70,6 +70,34 @@
         .header-back:hover { opacity: 0.7; }
         .header-back svg { width: 16px; height: 16px; }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--grey-200);
+        }
+
+        .header-chapter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
+
+        .header.scrolled .header-chapter {
+            color: var(--grey-400);
+        }
+
+        .header-chapter span {
+            color: var(--pool);
+        }
+
         .header-cta {
             padding: 10px 20px;
             background: var(--pool);
@@ -730,10 +758,16 @@
 <body>
     <!-- Header -->
     <header class="header" id="header">
-        <a href="sunoaks-brand-house-v9.html" class="header-back">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
-            Brand House
-        </a>
+        <div class="header-left">
+            <a href="/sunoaks/" class="header-back">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 8H3M7 4l-4 4 4 4"/>
+                </svg>
+                Back
+            </a>
+            <span class="header-sep"></span>
+            <span class="header-chapter"><span>Sample</span> Aquatics Page</span>
+        </div>
         <a href="membership-funnel.html" class="header-cta">Join Sun Oaks</a>
     </header>
 
