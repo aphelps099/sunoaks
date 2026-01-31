@@ -1,15 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Media Strategy — Sun Oaks Brand House</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --white: #FFFFFF;
@@ -24,236 +25,802 @@
             --grey-700: #2A2928;
             --grey-800: #1A1918;
             --black: #0D0D0C;
-            
+
             --sun: #F7B500;
             --sun-light: #FFF8E5;
+            --sun-dark: #C99200;
             --pool: #0891A8;
-            --pool-bg: #E5F5F7;
-            
+            --pool-light: #E5F5F7;
+            --pool-deep: #034752;
+
             --instagram: #E4405F;
-            --instagram-bg: #FFF0F3;
+            --instagram-light: #FFF0F3;
             --facebook: #1877F2;
-            --facebook-bg: #EDF4FF;
+            --facebook-light: #EDF4FF;
             --linkedin: #0A66C2;
-            --linkedin-bg: #EDF5FF;
-            
+            --linkedin-light: #EDF5FF;
+
             --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
             --font-serif: 'Newsreader', Georgia, serif;
-            
+
             --ease: cubic-bezier(0.25, 1, 0.5, 1);
             --duration: 0.4s;
         }
-        
+
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { font-size: 16px; scroll-behavior: smooth; }
         body { font-family: var(--font-sans); font-weight: 400; line-height: 1.6; color: var(--black); background: var(--cream); -webkit-font-smoothing: antialiased; }
         ::selection { background: var(--sun); color: var(--black); }
         a { color: inherit; text-decoration: none; }
 
-        /* Header */
-        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 24px 48px; background: rgba(250,249,247,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--silver); }
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(250,249,247,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--silver);
+        }
         @media (max-width: 768px) { .header { padding: 20px 24px; } }
+
         .header-left { display: flex; align-items: center; gap: 24px; }
-        .header-back { display: flex; align-items: center; gap: 8px; font-size: 0.8125rem; font-weight: 500; color: var(--grey-500); transition: color var(--duration); }
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color var(--duration);
+        }
         .header-back:hover { color: var(--black); }
         .header-back svg { width: 16px; height: 16px; }
         .header-sep { width: 1px; height: 20px; background: var(--grey-200); }
-        .header-chapter { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey-400); }
+        .header-chapter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+        }
         .header-chapter span { color: var(--pool); }
-        .header-platforms { display: flex; gap: 8px; }
-        .header-platform { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+        .header-platforms {
+            display: flex;
+            gap: 1px;
+            background: var(--silver);
+        }
+        .header-platform {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+        }
         .header-platform svg { width: 16px; height: 16px; }
-        .header-platform--ig { background: var(--instagram-bg); color: var(--instagram); }
-        .header-platform--fb { background: var(--facebook-bg); color: var(--facebook); }
-        .header-platform--li { background: var(--linkedin-bg); color: var(--linkedin); }
+        .header-platform--ig { color: var(--instagram); }
+        .header-platform--fb { color: var(--facebook); }
+        .header-platform--li { color: var(--linkedin); }
         @media (max-width: 600px) { .header-platforms { display: none; } }
 
-        /* Hero */
-        .hero { padding: 160px 48px 80px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: var(--white); position: relative; overflow: hidden; }
-        @media (max-width: 768px) { .hero { padding: 120px 24px 60px; } }
-        .hero-content { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
-        .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .hero-eyebrow-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--sun); color: var(--black); }
-        .hero-eyebrow-icon svg { width: 16px; height: 16px; }
-        .hero-eyebrow-text { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey-300); }
-        .hero-title { font-family: var(--font-serif); font-size: clamp(36px, 5vw, 56px); font-weight: 500; line-height: 1.1; margin-bottom: 24px; max-width: 700px; opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards; }
-        .hero-desc { font-size: 1.125rem; line-height: 1.7; color: var(--grey-300); max-width: 600px; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
-        .hero-stats { display: flex; gap: 40px; margin-top: 48px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
-        @media (max-width: 600px) { .hero-stats { flex-direction: column; gap: 24px; } }
-        .hero-stat { display: flex; align-items: center; gap: 12px; }
-        .hero-stat-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-        .hero-stat-icon svg { width: 20px; height: 20px; }
+        /* ===== HERO: COLLINS SPLIT ===== */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--black);
+            padding-top: 73px;
+        }
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; min-height: auto; }
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 64px;
+            background: var(--black);
+        }
+        @media (max-width: 768px) { .hero-left { padding: 60px 32px; } }
+
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .hero-eyebrow-line { width: 48px; height: 2px; background: var(--instagram); }
+        .hero-eyebrow-text {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--instagram);
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(40px, 5vw, 64px);
+            font-weight: 400;
+            line-height: 1.05;
+            color: var(--white);
+            margin-bottom: 32px;
+        }
+        .hero-title em { font-style: italic; color: var(--sun); }
+
+        .hero-desc {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--grey-400);
+            max-width: 480px;
+        }
+
+        .hero-right {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 1px;
+            background: var(--grey-800);
+        }
+        @media (max-width: 900px) {
+            .hero-right { min-height: 400px; }
+        }
+
+        .hero-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--instagram);
+        }
+        .hero-number span {
+            font-family: var(--font-serif);
+            font-size: clamp(140px, 20vw, 220px);
+            font-weight: 400;
+            line-height: 0.85;
+            color: var(--white);
+        }
+
+        .hero-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--grey-700);
+        }
+
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 32px 16px;
+            background: var(--grey-800);
+            text-align: center;
+        }
+        .hero-stat-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .hero-stat-icon svg { width: 24px; height: 24px; }
         .hero-stat-icon--ig { background: var(--instagram); color: var(--white); }
         .hero-stat-icon--fb { background: var(--facebook); color: var(--white); }
         .hero-stat-icon--li { background: var(--linkedin); color: var(--white); }
-        .hero-stat-value { font-size: 1.25rem; font-weight: 600; line-height: 1; }
-        .hero-stat-label { font-size: 0.75rem; color: var(--grey-400); margin-top: 4px; }
+        .hero-stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .hero-stat-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+        }
 
-        /* TOC */
-        .toc { padding: 48px; background: var(--white); border-bottom: 1px solid var(--silver); }
-        @media (max-width: 768px) { .toc { padding: 32px 24px; } }
-        .toc-content { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 16px 40px; }
-        .toc-link { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 500; color: var(--grey-500); transition: color var(--duration); }
-        .toc-link:hover { color: var(--black); }
-        .toc-link-num { font-size: 0.75rem; font-weight: 600; color: var(--pool); }
+        /* ===== BIG IDEA STRIP ===== */
+        .big-idea {
+            padding: 80px 48px;
+            background: var(--sun);
+            text-align: center;
+        }
+        @media (max-width: 768px) { .big-idea { padding: 56px 24px; } }
 
-        /* Section base */
-        .section { padding: 100px 48px; }
-        @media (max-width: 768px) { .section { padding: 70px 24px; } }
-        .section-content { max-width: 1200px; margin: 0 auto; }
-        .section-header { margin-bottom: 48px; }
-        .section-label { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pool); margin-bottom: 12px; }
-        .section-title { font-family: var(--font-serif); font-size: clamp(28px, 3.5vw, 40px); font-weight: 500; line-height: 1.15; }
-        .section-desc { font-size: 1rem; line-height: 1.7; color: var(--grey-500); max-width: 600px; margin-top: 16px; }
+        .big-idea-text {
+            font-family: var(--font-serif);
+            font-size: clamp(22px, 3vw, 32px);
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--black);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .big-idea-text em { font-style: italic; }
 
-        /* Strategy cards */
-        .section--strategy { background: var(--cream); }
-        .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        @media (max-width: 900px) { .strategy-grid { grid-template-columns: 1fr; } }
-        .strategy-card { padding: 32px; background: var(--white); border: 1px solid var(--silver); transition: all var(--duration) var(--ease); }
-        .strategy-card:hover { border-color: var(--sun); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.06); }
-        .strategy-card-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; border-radius: 50%; }
-        .strategy-card-icon svg { width: 24px; height: 24px; }
-        .strategy-card-icon--ig { background: var(--instagram-bg); color: var(--instagram); }
-        .strategy-card-icon--fb { background: var(--facebook-bg); color: var(--facebook); }
-        .strategy-card-icon--li { background: var(--linkedin-bg); color: var(--linkedin); }
-        .strategy-card-title { font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
-        .strategy-card-audience { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--grey-400); margin-bottom: 12px; }
-        .strategy-card-desc { font-size: 0.9375rem; line-height: 1.7; color: var(--grey-500); margin-bottom: 20px; }
-        .strategy-card-stats { display: flex; gap: 20px; padding-top: 20px; border-top: 1px solid var(--silver); }
-        .strategy-card-stat-value { font-size: 1.25rem; font-weight: 600; }
-        .strategy-card-stat-label { font-size: 0.6875rem; color: var(--grey-400); }
+        /* ===== SECTION BASE ===== */
+        .section {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 1000px) {
+            .section { grid-template-columns: 1fr; }
+        }
 
-        /* Content Pillars */
-        .section--pillars { background: var(--white); }
-        .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .section-sidebar {
+            display: flex;
+            flex-direction: column;
+            background: var(--cream);
+        }
+
+        .section-number-block {
+            padding: 64px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--pool);
+        }
+        .section-number {
+            font-family: var(--font-serif);
+            font-size: 7rem;
+            font-weight: 400;
+            line-height: 0.85;
+            color: var(--white);
+        }
+
+        .section-meta {
+            padding: 48px;
+            background: var(--cream);
+            flex: 1;
+        }
+        @media (max-width: 768px) { .section-meta { padding: 32px; } }
+
+        .section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--pool);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3vw, 36px);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+
+        .section-main {
+            background: var(--white);
+            padding: 48px;
+        }
+        @media (max-width: 768px) { .section-main { padding: 32px; } }
+
+        /* Color variants */
+        .section--instagram .section-number-block { background: var(--instagram); }
+        .section--instagram .section-label { color: var(--instagram); }
+        .section--facebook .section-number-block { background: var(--facebook); }
+        .section--facebook .section-label { color: var(--facebook); }
+        .section--linkedin .section-number-block { background: var(--linkedin); }
+        .section--linkedin .section-label { color: var(--linkedin); }
+        .section--dark .section-number-block { background: var(--black); }
+        .section--dark .section-label { color: var(--sun); }
+        .section--dark .section-meta { background: var(--grey-800); }
+        .section--dark .section-title { color: var(--white); }
+        .section--dark .section-desc { color: var(--grey-400); }
+        .section--dark .section-main { background: var(--black); }
+
+        /* ===== PLATFORM STRATEGY CARDS ===== */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 900px) {
+            .platform-grid { grid-template-columns: 1fr; }
+        }
+
+        .platform-card {
+            padding: 40px 32px;
+            background: var(--white);
+            cursor: pointer;
+            transition: transform var(--duration);
+        }
+        .platform-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .platform-card-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .platform-card-icon svg { width: 28px; height: 28px; }
+        .platform-card-icon--ig { background: var(--instagram-light); color: var(--instagram); }
+        .platform-card-icon--fb { background: var(--facebook-light); color: var(--facebook); }
+        .platform-card-icon--li { background: var(--linkedin-light); color: var(--linkedin); }
+
+        .platform-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .platform-card-audience {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 16px;
+        }
+
+        .platform-card-desc {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--grey-500);
+            margin-bottom: 24px;
+        }
+
+        .platform-card-stats {
+            display: flex;
+            gap: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--silver);
+        }
+
+        .platform-card-stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .platform-card--ig .platform-card-stat-value { color: var(--instagram); }
+        .platform-card--fb .platform-card-stat-value { color: var(--facebook); }
+        .platform-card--li .platform-card-stat-value { color: var(--linkedin); }
+
+        .platform-card-stat-label {
+            font-size: 0.6875rem;
+            font-weight: 500;
+            color: var(--grey-400);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== CONTENT PILLARS ===== */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
         @media (max-width: 900px) { .pillars-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .pillars-grid { grid-template-columns: 1fr; } }
-        .pillar-card { padding: 28px; background: var(--pearl); border-left: 4px solid var(--sun); }
-        .pillar-card-percent { font-size: 2rem; font-weight: 300; color: var(--sun); margin-bottom: 12px; }
-        .pillar-card-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
-        .pillar-card-desc { font-size: 0.8125rem; line-height: 1.6; color: var(--grey-500); }
 
-        /* Instagram posts */
-        .section--instagram { background: var(--instagram-bg); }
-        .section--instagram .section-label { color: var(--instagram); }
-        .instagram-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        @media (max-width: 900px) { .instagram-grid { grid-template-columns: 1fr; max-width: 400px; } }
-        .ig-post { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .ig-post-category { padding: 12px 16px; background: var(--pearl); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--instagram); }
-        .ig-post-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--silver); }
-        .ig-post-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, var(--sun), var(--pool)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.625rem; font-weight: 700; color: var(--white); }
-        .ig-post-handle { font-size: 0.8125rem; font-weight: 600; }
-        .ig-post-image { aspect-ratio: 1; background: var(--grey-200); display: flex; align-items: center; justify-content: center; position: relative; }
-        .ig-post-image-placeholder { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-400); text-align: center; padding: 20px; }
-        .ig-post-type { position: absolute; top: 12px; right: 12px; padding: 4px 8px; background: rgba(0,0,0,0.7); font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); border-radius: 4px; }
-        .ig-post-actions { display: flex; gap: 16px; padding: 12px 16px; }
-        .ig-post-action svg { width: 22px; height: 22px; color: var(--grey-600); }
-        .ig-post-caption { padding: 0 16px 16px; }
-        .ig-post-caption-handle { font-size: 0.8125rem; font-weight: 600; margin-right: 6px; }
-        .ig-post-caption-text { font-size: 0.8125rem; line-height: 1.5; color: var(--grey-600); }
-        .ig-post-hashtags { font-size: 0.8125rem; color: #00376B; margin-top: 8px; }
+        .pillar-card {
+            padding: 40px 32px;
+            background: var(--white);
+            border-top: 4px solid var(--sun);
+            cursor: pointer;
+            transition: transform var(--duration);
+        }
+        .pillar-card:hover { transform: translateY(-4px); }
 
-        /* Facebook posts */
-        .section--facebook { background: var(--facebook-bg); }
-        .section--facebook .section-label { color: var(--facebook); }
-        .facebook-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-        @media (max-width: 900px) { .facebook-grid { grid-template-columns: 1fr; max-width: 500px; } }
-        .fb-post { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .fb-post-category { padding: 12px 16px; background: var(--pearl); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--facebook); }
-        .fb-post-header { display: flex; align-items: flex-start; gap: 12px; padding: 16px; }
-        .fb-post-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--sun), var(--pool)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--white); flex-shrink: 0; }
-        .fb-post-name { font-size: 0.9375rem; font-weight: 600; margin-bottom: 2px; }
-        .fb-post-time { font-size: 0.75rem; color: var(--grey-400); }
-        .fb-post-content { padding: 0 16px 16px; }
-        .fb-post-text { font-size: 0.9375rem; line-height: 1.6; color: var(--grey-700); white-space: pre-line; }
-        .fb-post-image { width: 100%; aspect-ratio: 16/9; background: var(--grey-200); display: flex; align-items: center; justify-content: center; }
-        .fb-post-image-placeholder { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-400); }
-        .fb-post-engagement { display: flex; justify-content: space-between; padding: 12px 16px; border-top: 1px solid var(--silver); font-size: 0.8125rem; color: var(--grey-400); }
-        .fb-post-actions { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--silver); }
-        .fb-post-action { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; font-size: 0.8125rem; font-weight: 600; color: var(--grey-500); transition: background var(--duration); }
-        .fb-post-action:hover { background: var(--pearl); }
-        .fb-post-action svg { width: 18px; height: 18px; }
+        .pillar-card-percent {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--sun);
+            line-height: 1;
+            margin-bottom: 16px;
+        }
 
-        /* LinkedIn posts */
-        .section--linkedin { background: var(--linkedin-bg); }
-        .section--linkedin .section-label { color: var(--linkedin); }
-        .linkedin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-        @media (max-width: 900px) { .linkedin-grid { grid-template-columns: 1fr; max-width: 550px; } }
-        .li-post { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,0.08); }
-        .li-post-category { padding: 12px 16px; background: var(--pearl); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--linkedin); }
-        .li-post-header { display: flex; align-items: flex-start; gap: 12px; padding: 16px; }
-        .li-post-avatar { width: 48px; height: 48px; background: linear-gradient(135deg, var(--sun), var(--pool)); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 700; color: var(--white); flex-shrink: 0; }
-        .li-post-name { font-size: 0.9375rem; font-weight: 600; margin-bottom: 2px; }
-        .li-post-headline { font-size: 0.75rem; color: var(--grey-500); margin-bottom: 2px; }
-        .li-post-time { font-size: 0.6875rem; color: var(--grey-400); }
-        .li-post-content { padding: 0 16px 16px; }
-        .li-post-text { font-size: 0.875rem; line-height: 1.6; color: var(--grey-700); white-space: pre-line; }
-        .li-post-engagement { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; font-size: 0.75rem; color: var(--grey-400); }
-        .li-post-reactions { display: flex; align-items: center; gap: 4px; }
-        .li-post-reaction { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; margin-left: -4px; }
-        .li-post-reaction:first-child { margin-left: 0; }
-        .li-post-reaction--like { background: var(--linkedin); color: var(--white); }
-        .li-post-reaction--celebrate { background: #6DAE4F; color: var(--white); }
-        .li-post-reaction--love { background: #DF704D; color: var(--white); }
-        .li-post-actions { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--silver); }
-        .li-post-action { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 8px; font-size: 0.75rem; font-weight: 600; color: var(--grey-500); transition: background var(--duration); }
-        .li-post-action:hover { background: var(--pearl); }
-        .li-post-action svg { width: 18px; height: 18px; }
+        .pillar-card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
 
-        /* Calendar */
-        .section--calendar { background: var(--black); color: var(--white); }
-        .section--calendar .section-label { color: var(--sun); }
-        .calendar-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-        .calendar-table th, .calendar-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--grey-700); }
-        .calendar-table th { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-400); }
-        .calendar-table td { font-size: 0.875rem; vertical-align: top; }
-        .calendar-day { font-weight: 600; color: var(--white); }
-        .calendar-platform { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-right: 8px; margin-bottom: 4px; }
-        .calendar-platform--ig { background: rgba(228,64,95,0.2); color: #E4405F; }
-        .calendar-platform--fb { background: rgba(24,119,242,0.2); color: #1877F2; }
-        .calendar-platform--li { background: rgba(10,102,194,0.2); color: #0A66C2; }
-        .calendar-content { color: var(--grey-300); line-height: 1.5; }
-        @media (max-width: 768px) { .calendar-table { display: block; } .calendar-table thead { display: none; } .calendar-table tbody, .calendar-table tr, .calendar-table td { display: block; } .calendar-table tr { padding: 16px 0; border-bottom: 1px solid var(--grey-700); } .calendar-table td { padding: 4px 0; border: none; } .calendar-day { font-size: 1rem; margin-bottom: 8px; } }
+        .pillar-card-desc {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--grey-500);
+        }
 
-        /* Hashtags */
-        .section--hashtags { background: var(--pearl); }
-        .hashtags-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        /* ===== SOCIAL POST SAMPLES ===== */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
+        @media (max-width: 900px) { .posts-grid { grid-template-columns: 1fr; } }
+
+        .social-post {
+            background: var(--white);
+            cursor: pointer;
+            transition: transform var(--duration);
+        }
+        .social-post:hover { transform: translateY(-4px); }
+
+        .social-post-category {
+            padding: 16px 24px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .social-post--ig .social-post-category { background: var(--instagram-light); color: var(--instagram); }
+        .social-post--fb .social-post-category { background: var(--facebook-light); color: var(--facebook); }
+        .social-post--li .social-post-category { background: var(--linkedin-light); color: var(--linkedin); }
+
+        .social-post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--silver);
+        }
+
+        .social-post-avatar {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+        .social-post--ig .social-post-avatar { background: linear-gradient(135deg, var(--sun), var(--instagram)); }
+        .social-post--fb .social-post-avatar { background: var(--facebook); }
+        .social-post--li .social-post-avatar { background: var(--linkedin); }
+
+        .social-post-handle {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .social-post-time {
+            font-size: 0.75rem;
+            color: var(--grey-400);
+        }
+
+        .social-post-image {
+            aspect-ratio: 1;
+            background: var(--pearl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .social-post--fb .social-post-image,
+        .social-post--li .social-post-image { aspect-ratio: 16/9; }
+
+        .social-post-image-text {
+            font-size: 0.6875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            text-align: center;
+            padding: 24px;
+            line-height: 1.6;
+        }
+
+        .social-post-type {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            background: var(--black);
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .social-post-caption {
+            padding: 20px 24px;
+        }
+
+        .social-post-caption-handle {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .social-post-caption-text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--grey-600);
+        }
+
+        .social-post-hashtags {
+            font-size: 0.8125rem;
+            color: var(--pool);
+            margin-top: 12px;
+        }
+
+        /* ===== CALENDAR ===== */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--grey-700);
+        }
+        @media (max-width: 1100px) {
+            .calendar-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 700px) {
+            .calendar-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 450px) {
+            .calendar-grid { grid-template-columns: 1fr; }
+        }
+
+        .calendar-day {
+            padding: 24px 20px;
+            background: var(--grey-800);
+            min-height: 200px;
+        }
+
+        .calendar-day-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--sun);
+        }
+
+        .calendar-platforms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .calendar-platform {
+            padding: 4px 10px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .calendar-platform--ig { background: rgba(228,64,95,0.2); color: var(--instagram); }
+        .calendar-platform--fb { background: rgba(24,119,242,0.2); color: var(--facebook); }
+        .calendar-platform--li { background: rgba(10,102,194,0.2); color: var(--linkedin); }
+
+        .calendar-theme {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--sun);
+            margin-bottom: 8px;
+        }
+
+        .calendar-content {
+            font-size: 0.8125rem;
+            line-height: 1.5;
+            color: var(--grey-400);
+        }
+
+        /* ===== HASHTAGS ===== */
+        .hashtags-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--silver);
+        }
         @media (max-width: 900px) { .hashtags-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .hashtags-grid { grid-template-columns: 1fr; } }
-        .hashtag-group { padding: 28px; background: var(--white); border: 1px solid var(--silver); }
-        .hashtag-group-title { font-size: 0.875rem; font-weight: 600; margin-bottom: 16px; }
-        .hashtag-list { display: flex; flex-wrap: wrap; gap: 8px; }
-        .hashtag { padding: 6px 12px; background: var(--pool-bg); font-size: 0.75rem; font-weight: 500; color: var(--pool); border-radius: 4px; }
 
-        /* Footer */
-        .footer { padding: 32px 48px; background: var(--black); color: var(--white); border-top: 1px solid var(--grey-700); }
+        .hashtag-group {
+            padding: 32px;
+            background: var(--white);
+        }
+
+        .hashtag-group-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--pool);
+        }
+
+        .hashtag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hashtag {
+            padding: 8px 14px;
+            background: var(--pool-light);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--pool);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 40px 48px;
+            background: var(--black);
+            border-top: 1px solid var(--grey-700);
+        }
         @media (max-width: 768px) { .footer { padding: 32px 24px; } }
-        .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
-        .footer-brand { display: flex; align-items: center; gap: 24px; }
-        .footer-logo { font-size: 0.875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .footer-logo {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
         .footer-sep { width: 1px; height: 16px; background: var(--grey-600); }
         .footer-tag { font-size: 0.875rem; color: var(--grey-400); }
         .footer-credit { font-size: 0.8125rem; color: var(--grey-400); }
         .footer-credit a { color: var(--sun); }
-        @media (max-width: 600px) { .footer-inner { flex-direction: column; text-align: center; } }
+        @media (max-width: 600px) {
+            .footer-inner { flex-direction: column; text-align: center; }
+        }
 
-        /* Animations */
-        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
-        .reveal.is-visible { opacity: 1; transform: translateY(0); }
+        /* ===== PREVIEW MODAL ===== */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(13, 13, 12, 0.9);
+            backdrop-filter: blur(8px);
+        }
+        .preview-modal.is-active { display: flex; }
+
+        .preview-modal-content {
+            background: var(--white);
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+        }
+
+        .preview-modal-header {
+            padding: 24px 32px;
+            background: var(--instagram);
+            color: var(--white);
+        }
+        .preview-modal-badge {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .preview-modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .preview-modal-body { padding: 32px; }
+        .preview-modal-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--grey-600);
+            margin-bottom: 32px;
+        }
+
+        .preview-modal-contact { }
+        .preview-modal-contact-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 12px;
+        }
+        .preview-modal-contact-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .preview-modal-contact-role {
+            font-size: 0.875rem;
+            color: var(--grey-500);
+            margin-bottom: 8px;
+        }
+        .preview-modal-contact-email {
+            font-size: 0.875rem;
+            color: var(--instagram);
+        }
+
+        .preview-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            cursor: pointer;
+            color: var(--white);
+            transition: background var(--duration);
+        }
+        .preview-modal-close:hover { background: rgba(255,255,255,0.3); }
+        .preview-modal-close svg { width: 20px; height: 20px; }
+
+        /* Triggers */
+        .triggers-modal { cursor: pointer; }
+
+        /* ===== ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <a href="index.html" class="header-back">
+            <a href="sunoaks-brand-house-v9.html" class="header-back">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4l-4 4 4 4"/></svg>
                 Back
             </a>
             <span class="header-sep"></span>
-            <span class="header-chapter"><span>Marketing</span> Social Media</span>
+            <span class="header-chapter"><span>09</span> Social Media Strategy</span>
         </div>
         <div class="header-platforms">
             <div class="header-platform header-platform--ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></div>
@@ -262,152 +829,221 @@
         </div>
     </header>
 
-    <!-- Hero -->
+    <!-- HERO: Collins Split -->
     <section class="hero">
-        <div class="hero-content">
+        <div class="hero-left">
             <div class="hero-eyebrow">
-                <div class="hero-eyebrow-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg></div>
+                <span class="hero-eyebrow-line"></span>
                 <span class="hero-eyebrow-text">Marketing Resources</span>
             </div>
-            <h1 class="hero-title">Social Media Strategy</h1>
+            <h1 class="hero-title">Social Media<br><em>Strategy</em></h1>
             <p class="hero-desc">A complete playbook for building Sun Oaks' social presence. Platform strategies, content pillars, sample posts, and a posting calendar your team can execute immediately.</p>
-            <div class="hero-stats">
+        </div>
+        <div class="hero-right">
+            <div class="hero-number">
+                <span>09</span>
+            </div>
+            <div class="hero-stat-grid">
                 <div class="hero-stat">
                     <div class="hero-stat-icon hero-stat-icon--ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></div>
-                    <div class="hero-stat-info"><div class="hero-stat-value">5x/week</div><div class="hero-stat-label">Instagram</div></div>
+                    <div class="hero-stat-value">5x</div>
+                    <div class="hero-stat-label">Per Week</div>
                 </div>
                 <div class="hero-stat">
                     <div class="hero-stat-icon hero-stat-icon--fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
-                    <div class="hero-stat-info"><div class="hero-stat-value">4x/week</div><div class="hero-stat-label">Facebook</div></div>
+                    <div class="hero-stat-value">4x</div>
+                    <div class="hero-stat-label">Per Week</div>
                 </div>
                 <div class="hero-stat">
                     <div class="hero-stat-icon hero-stat-icon--li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg></div>
-                    <div class="hero-stat-info"><div class="hero-stat-value">2x/week</div><div class="hero-stat-label">LinkedIn</div></div>
+                    <div class="hero-stat-value">2x</div>
+                    <div class="hero-stat-label">Per Week</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- TOC -->
-    <div class="toc">
-        <div class="toc-content">
-            <a href="#strategy" class="toc-link"><span class="toc-link-num">01</span> Platform Strategy</a>
-            <a href="#pillars" class="toc-link"><span class="toc-link-num">02</span> Content Pillars</a>
-            <a href="#instagram" class="toc-link"><span class="toc-link-num">03</span> Instagram Samples</a>
-            <a href="#facebook" class="toc-link"><span class="toc-link-num">04</span> Facebook Samples</a>
-            <a href="#linkedin" class="toc-link"><span class="toc-link-num">05</span> LinkedIn Samples</a>
-            <a href="#calendar" class="toc-link"><span class="toc-link-num">06</span> Weekly Calendar</a>
-            <a href="#hashtags" class="toc-link"><span class="toc-link-num">07</span> Hashtag Strategy</a>
-        </div>
-    </div>
+    <!-- Big Idea -->
+    <section class="big-idea">
+        <p class="big-idea-text">Different platforms. <em>Different purposes.</em><br>Instagram inspires. Facebook connects families. LinkedIn builds partnerships.</p>
+    </section>
 
-    <!-- Platform Strategy -->
-    <section class="section section--strategy" id="strategy">
-        <div class="section-content">
-            <div class="section-header reveal">
-                <div class="section-label">01 Platform Strategy</div>
-                <h2 class="section-title">Different platforms, different purposes</h2>
-                <p class="section-desc">Each platform serves a unique role in our marketing ecosystem.</p>
+    <!-- ===== PLATFORM STRATEGY ===== -->
+    <section class="section reveal" id="strategy">
+        <div class="section-sidebar">
+            <div class="section-number-block">
+                <span class="section-number">01</span>
             </div>
-            <div class="strategy-grid reveal">
-                <div class="strategy-card">
-                    <div class="strategy-card-icon strategy-card-icon--ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></div>
-                    <h3 class="strategy-card-title">Instagram</h3>
-                    <div class="strategy-card-audience">Adults 25-45 · Visual-first</div>
-                    <p class="strategy-card-desc">Our brand showcase. Beautiful imagery, Stories for daily engagement, Reels for reach. Aspirational and energetic.</p>
-                    <div class="strategy-card-stats">
-                        <div class="strategy-card-stat"><div class="strategy-card-stat-value">5x</div><div class="strategy-card-stat-label">Posts/week</div></div>
-                        <div class="strategy-card-stat"><div class="strategy-card-stat-value">Daily</div><div class="strategy-card-stat-label">Stories</div></div>
+            <div class="section-meta">
+                <div class="section-label">Platform Strategy</div>
+                <h2 class="section-title">Each platform serves a unique role</h2>
+                <p class="section-desc">Don't post the same content everywhere. Tailor your message to each audience.</p>
+            </div>
+        </div>
+        <div class="section-main">
+            <div class="platform-grid">
+                <div class="platform-card platform-card--ig triggers-modal">
+                    <div class="platform-card-icon platform-card-icon--ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></div>
+                    <h3 class="platform-card-title">Instagram</h3>
+                    <div class="platform-card-audience">Adults 25-45 · Visual-first</div>
+                    <p class="platform-card-desc">Our brand showcase. Beautiful imagery, Stories for daily engagement, Reels for reach. Aspirational and energetic.</p>
+                    <div class="platform-card-stats">
+                        <div><div class="platform-card-stat-value">5x</div><div class="platform-card-stat-label">Posts/Week</div></div>
+                        <div><div class="platform-card-stat-value">Daily</div><div class="platform-card-stat-label">Stories</div></div>
                     </div>
                 </div>
-                <div class="strategy-card">
-                    <div class="strategy-card-icon strategy-card-icon--fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
-                    <h3 class="strategy-card-title">Facebook</h3>
-                    <div class="strategy-card-audience">Adults 35-60 · Families</div>
-                    <p class="strategy-card-desc">Our community hub. Event promotion, family content, longer-form updates. Connect with established Redding families.</p>
-                    <div class="strategy-card-stats">
-                        <div class="strategy-card-stat"><div class="strategy-card-stat-value">4x</div><div class="strategy-card-stat-label">Posts/week</div></div>
-                        <div class="strategy-card-stat"><div class="strategy-card-stat-value">Events</div><div class="strategy-card-stat-label">Focus</div></div>
+                <div class="platform-card platform-card--fb triggers-modal">
+                    <div class="platform-card-icon platform-card-icon--fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+                    <h3 class="platform-card-title">Facebook</h3>
+                    <div class="platform-card-audience">Adults 35-60 · Families</div>
+                    <p class="platform-card-desc">Our community hub. Event promotion, family content, longer-form updates. Connect with established Redding families.</p>
+                    <div class="platform-card-stats">
+                        <div><div class="platform-card-stat-value">4x</div><div class="platform-card-stat-label">Posts/Week</div></div>
+                        <div><div class="platform-card-stat-value">Events</div><div class="platform-card-stat-label">Focus</div></div>
                     </div>
                 </div>
-                <div class="strategy-card">
-                    <div class="strategy-card-icon strategy-card-icon--li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg></div>
-                    <h3 class="strategy-card-title">LinkedIn</h3>
-                    <div class="strategy-card-audience">Corporate · B2B · Employers</div>
-                    <p class="strategy-card-desc">Our professional presence. Corporate wellness, employer partnerships, thought leadership. Positions Sun Oaks as a business asset.</p>
-                    <div class="strategy-card-stats">
-                        <div class="strategy-card-stat"><div class="strategy-card-stat-value">2x</div><div class="strategy-card-stat-label">Posts/week</div></div>
-                        <div class="strategy-card-stat"><div class="strategy-card-stat-value">B2B</div><div class="strategy-card-stat-label">Focus</div></div>
+                <div class="platform-card platform-card--li triggers-modal">
+                    <div class="platform-card-icon platform-card-icon--li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg></div>
+                    <h3 class="platform-card-title">LinkedIn</h3>
+                    <div class="platform-card-audience">Corporate · B2B · Employers</div>
+                    <p class="platform-card-desc">Our professional presence. Corporate wellness, employer partnerships, thought leadership. Positions Sun Oaks as a business asset.</p>
+                    <div class="platform-card-stats">
+                        <div><div class="platform-card-stat-value">2x</div><div class="platform-card-stat-label">Posts/Week</div></div>
+                        <div><div class="platform-card-stat-value">B2B</div><div class="platform-card-stat-label">Focus</div></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Content Pillars -->
-    <section class="section section--pillars" id="pillars">
-        <div class="section-content">
-            <div class="section-header reveal">
-                <div class="section-label">02 Content Pillars</div>
+    <!-- ===== CONTENT PILLARS ===== -->
+    <section class="section reveal" id="pillars">
+        <div class="section-sidebar">
+            <div class="section-number-block" style="background: var(--sun);">
+                <span class="section-number" style="color: var(--black);">02</span>
+            </div>
+            <div class="section-meta">
+                <div class="section-label" style="color: var(--sun-dark);">Content Pillars</div>
                 <h2 class="section-title">Four themes that drive our content</h2>
                 <p class="section-desc">Every post should fit one of these pillars. They ensure variety while staying on-brand.</p>
             </div>
-            <div class="pillars-grid reveal">
-                <div class="pillar-card"><div class="pillar-card-percent">40%</div><h3 class="pillar-card-title">Community</h3><p class="pillar-card-desc">Member spotlights, staff highlights, event recaps, group photos. Real people, real stories.</p></div>
-                <div class="pillar-card"><div class="pillar-card-percent">25%</div><h3 class="pillar-card-title">Fitness Education</h3><p class="pillar-card-desc">Tips, techniques, class highlights, trainer knowledge. Position us as experts.</p></div>
-                <div class="pillar-card"><div class="pillar-card-percent">20%</div><h3 class="pillar-card-title">Facility & Programs</h3><p class="pillar-card-desc">Amenity showcases, new equipment, program announcements, schedule updates.</p></div>
-                <div class="pillar-card"><div class="pillar-card-percent">15%</div><h3 class="pillar-card-title">Promotion</h3><p class="pillar-card-desc">Membership offers, PT packages, event registration, seasonal campaigns.</p></div>
+        </div>
+        <div class="section-main">
+            <div class="pillars-grid">
+                <div class="pillar-card triggers-modal">
+                    <div class="pillar-card-percent">40%</div>
+                    <h3 class="pillar-card-title">Community</h3>
+                    <p class="pillar-card-desc">Member spotlights, staff highlights, event recaps, group photos. Real people, real stories.</p>
+                </div>
+                <div class="pillar-card triggers-modal">
+                    <div class="pillar-card-percent">25%</div>
+                    <h3 class="pillar-card-title">Fitness Education</h3>
+                    <p class="pillar-card-desc">Tips, techniques, class highlights, trainer knowledge. Position us as experts.</p>
+                </div>
+                <div class="pillar-card triggers-modal">
+                    <div class="pillar-card-percent">20%</div>
+                    <h3 class="pillar-card-title">Facility & Programs</h3>
+                    <p class="pillar-card-desc">Amenity showcases, new equipment, program announcements, schedule updates.</p>
+                </div>
+                <div class="pillar-card triggers-modal">
+                    <div class="pillar-card-percent">15%</div>
+                    <h3 class="pillar-card-title">Promotion</h3>
+                    <p class="pillar-card-desc">Membership offers, PT packages, event registration, seasonal campaigns.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Instagram Samples -->
-    <section class="section section--instagram" id="instagram">
-        <div class="section-content">
-            <div class="section-header reveal">
-                <div class="section-label">03 Instagram Samples</div>
+    <!-- ===== INSTAGRAM SAMPLES ===== -->
+    <section class="section section--instagram reveal" id="instagram">
+        <div class="section-sidebar">
+            <div class="section-number-block">
+                <span class="section-number">03</span>
+            </div>
+            <div class="section-meta">
+                <div class="section-label">Instagram Samples</div>
                 <h2 class="section-title">Posts that perform</h2>
-                <p class="section-desc">Copy-and-adapt examples for your Instagram feed.</p>
+                <p class="section-desc">Copy-and-adapt examples for your Instagram feed. Visuals first, caption second.</p>
             </div>
-            <div class="instagram-grid reveal">
-                <div class="ig-post">
-                    <div class="ig-post-category">Community Spotlight</div>
-                    <div class="ig-post-header"><div class="ig-post-avatar">SO</div><span class="ig-post-handle">sunoaksredding</span></div>
-                    <div class="ig-post-image"><span class="ig-post-image-placeholder">Photo: Member mid-workout,<br>genuine smile, natural light</span><span class="ig-post-type">Carousel</span></div>
-                    <div class="ig-post-actions"><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></span></div>
-                    <div class="ig-post-caption"><span class="ig-post-caption-handle">sunoaksredding</span><span class="ig-post-caption-text">Meet Sarah. One year ago, she walked in nervous and unsure. Today? She's crushing 6am classes and just ran her first 5K. "Sun Oaks gave me more than fitness—it gave me a community that shows up for me." 💛</span><div class="ig-post-hashtags">#SunOaksFamily #ReddingFitness #TransformationTuesday</div></div>
+        </div>
+        <div class="section-main" style="padding: 0;">
+            <div class="posts-grid">
+                <div class="social-post social-post--ig triggers-modal">
+                    <div class="social-post-category">Community Spotlight</div>
+                    <div class="social-post-header">
+                        <div class="social-post-avatar">SO</div>
+                        <div><div class="social-post-handle">sunoaksredding</div></div>
+                    </div>
+                    <div class="social-post-image">
+                        <span class="social-post-image-text">Photo: Member mid-workout,<br>genuine smile, natural light</span>
+                        <span class="social-post-type">Carousel</span>
+                    </div>
+                    <div class="social-post-caption">
+                        <span class="social-post-caption-handle">sunoaksredding</span>
+                        <span class="social-post-caption-text">Meet Sarah. One year ago, she walked in nervous and unsure. Today? She's crushing 6am classes and just ran her first 5K. "Sun Oaks gave me more than fitness—it gave me a community that shows up for me." 💛</span>
+                        <div class="social-post-hashtags">#SunOaksFamily #ReddingFitness #TransformationTuesday</div>
+                    </div>
                 </div>
-                <div class="ig-post">
-                    <div class="ig-post-category">Fitness Education</div>
-                    <div class="ig-post-header"><div class="ig-post-avatar">SO</div><span class="ig-post-handle">sunoaksredding</span></div>
-                    <div class="ig-post-image"><span class="ig-post-image-placeholder">Video: Trainer demonstrating<br>proper squat form</span><span class="ig-post-type">Reel</span></div>
-                    <div class="ig-post-actions"><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></span></div>
-                    <div class="ig-post-caption"><span class="ig-post-caption-handle">sunoaksredding</span><span class="ig-post-caption-text">Your knees caving in? Here's the fix. 🎯 Coach Mike breaks down the 3 cues that'll transform your squat. Save this one—your joints will thank you.</span><div class="ig-post-hashtags">#SquatForm #FitnessTips #PersonalTraining</div></div>
+                <div class="social-post social-post--ig triggers-modal">
+                    <div class="social-post-category">Fitness Education</div>
+                    <div class="social-post-header">
+                        <div class="social-post-avatar">SO</div>
+                        <div><div class="social-post-handle">sunoaksredding</div></div>
+                    </div>
+                    <div class="social-post-image">
+                        <span class="social-post-image-text">Video: Trainer demonstrating<br>proper squat form</span>
+                        <span class="social-post-type">Reel</span>
+                    </div>
+                    <div class="social-post-caption">
+                        <span class="social-post-caption-handle">sunoaksredding</span>
+                        <span class="social-post-caption-text">Your knees caving in? Here's the fix. 🎯 Coach Mike breaks down the 3 cues that'll transform your squat. Save this one—your joints will thank you.</span>
+                        <div class="social-post-hashtags">#SquatForm #FitnessTips #PersonalTraining</div>
+                    </div>
                 </div>
-                <div class="ig-post">
-                    <div class="ig-post-category">Facility Showcase</div>
-                    <div class="ig-post-header"><div class="ig-post-avatar">SO</div><span class="ig-post-handle">sunoaksredding</span></div>
-                    <div class="ig-post-image"><span class="ig-post-image-placeholder">Photo: Pool at golden hour,<br>steam rising, peaceful</span></div>
-                    <div class="ig-post-actions"><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="ig-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></span></div>
-                    <div class="ig-post-caption"><span class="ig-post-caption-handle">sunoaksredding</span><span class="ig-post-caption-text">5:47am. The pool doesn't lie. ✨ There's something about those first laps when the world is still quiet. Our morning swimmers get it.</span><div class="ig-post-hashtags">#MorningSwim #PoolLife #ReddingCA #SunOaks</div></div>
+                <div class="social-post social-post--ig triggers-modal">
+                    <div class="social-post-category">Facility Showcase</div>
+                    <div class="social-post-header">
+                        <div class="social-post-avatar">SO</div>
+                        <div><div class="social-post-handle">sunoaksredding</div></div>
+                    </div>
+                    <div class="social-post-image">
+                        <span class="social-post-image-text">Photo: Pool at golden hour,<br>steam rising, peaceful</span>
+                    </div>
+                    <div class="social-post-caption">
+                        <span class="social-post-caption-handle">sunoaksredding</span>
+                        <span class="social-post-caption-text">5:47am. The pool doesn't lie. ✨ There's something about those first laps when the world is still quiet. Our morning swimmers get it.</span>
+                        <div class="social-post-hashtags">#MorningSwim #PoolLife #ReddingCA #SunOaks</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Facebook Samples -->
-    <section class="section section--facebook" id="facebook">
-        <div class="section-content">
-            <div class="section-header reveal">
-                <div class="section-label">04 Facebook Samples</div>
-                <h2 class="section-title">Posts that connect</h2>
-                <p class="section-desc">Longer-form content for Facebook's family-focused audience.</p>
+    <!-- ===== FACEBOOK SAMPLES ===== -->
+    <section class="section section--facebook reveal" id="facebook">
+        <div class="section-sidebar">
+            <div class="section-number-block">
+                <span class="section-number">04</span>
             </div>
-            <div class="facebook-grid reveal">
-                <div class="fb-post">
-                    <div class="fb-post-category">Event Promotion</div>
-                    <div class="fb-post-header"><div class="fb-post-avatar">SO</div><div class="fb-post-meta"><div class="fb-post-name">Sun Oaks Tennis & Fitness</div><div class="fb-post-time">Just now · 🌎</div></div></div>
-                    <div class="fb-post-content"><p class="fb-post-text">🎾 FAMILY TENNIS DAY — Saturday, March 15th
+            <div class="section-meta">
+                <div class="section-label">Facebook Samples</div>
+                <h2 class="section-title">Posts that connect</h2>
+                <p class="section-desc">Longer-form content for Facebook's family-focused audience. Events and stories perform best.</p>
+            </div>
+        </div>
+        <div class="section-main" style="padding: 0;">
+            <div class="posts-grid" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="social-post social-post--fb triggers-modal">
+                    <div class="social-post-category">Event Promotion</div>
+                    <div class="social-post-header">
+                        <div class="social-post-avatar">SO</div>
+                        <div>
+                            <div class="social-post-handle">Sun Oaks Tennis & Fitness</div>
+                            <div class="social-post-time">Just now · 🌎</div>
+                        </div>
+                    </div>
+                    <div class="social-post-caption" style="padding-bottom: 16px;">
+                        <span class="social-post-caption-text">🎾 FAMILY TENNIS DAY — Saturday, March 15th
 
 Bring the whole crew for a day of free tennis clinics, games, and good vibes. Whether your kids have never held a racquet or you're looking to dust off your backhand, our pros will have something for everyone.
 
@@ -415,60 +1051,86 @@ Bring the whole crew for a day of free tennis clinics, games, and good vibes. Wh
 ⏰ 10am - 2pm
 💰 FREE for members | $10 per family for non-members
 
-Racquets provided. Snacks included. Memories guaranteed.</p></div>
-                    <div class="fb-post-image"><span class="fb-post-image-placeholder">Event Cover Image</span></div>
-                    <div class="fb-post-engagement"><span>👍 ❤️ 47</span><span>12 comments · 8 shares</span></div>
-                    <div class="fb-post-actions"><button class="fb-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Like</button><button class="fb-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comment</button><button class="fb-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Share</button></div>
+Racquets provided. Snacks included. Memories guaranteed.</span>
+                    </div>
+                    <div class="social-post-image">
+                        <span class="social-post-image-text">Event Cover Image</span>
+                    </div>
                 </div>
-                <div class="fb-post">
-                    <div class="fb-post-category">Community Story</div>
-                    <div class="fb-post-header"><div class="fb-post-avatar">SO</div><div class="fb-post-meta"><div class="fb-post-name">Sun Oaks Tennis & Fitness</div><div class="fb-post-time">2 hrs · 🌎</div></div></div>
-                    <div class="fb-post-content"><p class="fb-post-text">Three generations. One gym. 64 years of memories.
+                <div class="social-post social-post--fb triggers-modal">
+                    <div class="social-post-category">Community Story</div>
+                    <div class="social-post-header">
+                        <div class="social-post-avatar">SO</div>
+                        <div>
+                            <div class="social-post-handle">Sun Oaks Tennis & Fitness</div>
+                            <div class="social-post-time">2 hrs · 🌎</div>
+                        </div>
+                    </div>
+                    <div class="social-post-caption" style="padding-bottom: 16px;">
+                        <span class="social-post-caption-text">Three generations. One gym. 64 years of memories.
 
 We ran into the Martinez family yesterday—grandma Gloria, her daughter Maria, and granddaughter Sofia. Gloria's been a member since 1987. Maria learned to swim in our pool. And now Sofia is in our junior tennis program.
 
 "Sun Oaks isn't just a gym to us," Gloria told us. "It's where our family grows together."
 
-That's exactly why we do what we do. 💛</p></div>
-                    <div class="fb-post-image"><span class="fb-post-image-placeholder">Photo: Three generations smiling together</span></div>
-                    <div class="fb-post-engagement"><span>❤️ 👍 🎉 128</span><span>34 comments · 15 shares</span></div>
-                    <div class="fb-post-actions"><button class="fb-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Like</button><button class="fb-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comment</button><button class="fb-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Share</button></div>
+That's exactly why we do what we do. 💛</span>
+                    </div>
+                    <div class="social-post-image">
+                        <span class="social-post-image-text">Photo: Three generations smiling together</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- LinkedIn Samples -->
-    <section class="section section--linkedin" id="linkedin">
-        <div class="section-content">
-            <div class="section-header reveal">
-                <div class="section-label">05 LinkedIn Samples</div>
-                <h2 class="section-title">Posts that build credibility</h2>
-                <p class="section-desc">Professional content for corporate partnerships and thought leadership.</p>
+    <!-- ===== LINKEDIN SAMPLES ===== -->
+    <section class="section section--linkedin reveal" id="linkedin">
+        <div class="section-sidebar">
+            <div class="section-number-block">
+                <span class="section-number">05</span>
             </div>
-            <div class="linkedin-grid reveal">
-                <div class="li-post">
-                    <div class="li-post-category">Corporate Wellness</div>
-                    <div class="li-post-header"><div class="li-post-avatar">SO</div><div class="li-post-meta"><div class="li-post-name">Sun Oaks Tennis & Fitness</div><div class="li-post-headline">Redding's Premier Fitness Community Since 1960</div><div class="li-post-time">1d · 🌎</div></div></div>
-                    <div class="li-post-content"><p class="li-post-text">The ROI of employee wellness isn't theoretical anymore.
+            <div class="section-meta">
+                <div class="section-label">LinkedIn Samples</div>
+                <h2 class="section-title">Posts that build credibility</h2>
+                <p class="section-desc">Professional content for corporate partnerships and thought leadership. Data and insights perform best.</p>
+            </div>
+        </div>
+        <div class="section-main" style="padding: 0;">
+            <div class="posts-grid" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="social-post social-post--li triggers-modal">
+                    <div class="social-post-category">Corporate Wellness</div>
+                    <div class="social-post-header">
+                        <div class="social-post-avatar">SO</div>
+                        <div>
+                            <div class="social-post-handle">Sun Oaks Tennis & Fitness</div>
+                            <div class="social-post-time">Redding's Premier Fitness Community Since 1960</div>
+                        </div>
+                    </div>
+                    <div class="social-post-caption">
+                        <span class="social-post-caption-text">The ROI of employee wellness isn't theoretical anymore.
 
-When Redding Medical Center partnered with us for their corporate wellness program last year, they weren't sure what to expect. 
+When Redding Medical Center partnered with us for their corporate wellness program last year, they weren't sure what to expect. 12 months later:
 
-12 months later:
 → 34% reduction in sick days among participants
 → 28% improvement in self-reported energy levels
 → 89% of participants renewed their memberships
 
 The best part? Employees started organically forming workout groups. What began as a benefits perk became a culture shift.
 
-We're now accepting corporate partnership applications for Q2.</p></div>
-                    <div class="li-post-engagement"><div class="li-post-reactions"><span class="li-post-reaction li-post-reaction--like">👍</span><span class="li-post-reaction li-post-reaction--celebrate">👏</span><span class="li-post-reaction li-post-reaction--love">❤️</span><span>89</span></div><span>14 comments</span></div>
-                    <div class="li-post-actions"><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Like</button><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comment</button><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>Repost</button><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Send</button></div>
+We're now accepting corporate partnership applications for Q2.</span>
+                    </div>
                 </div>
-                <div class="li-post">
-                    <div class="li-post-category">Thought Leadership</div>
-                    <div class="li-post-header"><div class="li-post-avatar">SO</div><div class="li-post-meta"><div class="li-post-name">Sun Oaks Tennis & Fitness</div><div class="li-post-headline">Redding's Premier Fitness Community Since 1960</div><div class="li-post-time">3d · 🌎</div></div></div>
-                    <div class="li-post-content"><p class="li-post-text">64 years in business taught us something most gyms get wrong:
+                <div class="social-post social-post--li triggers-modal">
+                    <div class="social-post-category">Thought Leadership</div>
+                    <div class="social-post-header">
+                        <div class="social-post-avatar">SO</div>
+                        <div>
+                            <div class="social-post-handle">Sun Oaks Tennis & Fitness</div>
+                            <div class="social-post-time">Redding's Premier Fitness Community Since 1960</div>
+                        </div>
+                    </div>
+                    <div class="social-post-caption">
+                        <span class="social-post-caption-text">64 years in business taught us something most gyms get wrong:
 
 Retention isn't about equipment.
 It's not about price.
@@ -478,52 +1140,166 @@ It's about belonging.
 
 The members who stay for decades aren't chasing PRs. They're showing up because Tuesday morning spin is where they see their friends. Because the front desk knows their name.
 
-In an industry obsessed with acquisition, we've learned that the real competitive advantage is becoming irreplaceable in people's lives.</p></div>
-                    <div class="li-post-engagement"><div class="li-post-reactions"><span class="li-post-reaction li-post-reaction--like">👍</span><span class="li-post-reaction li-post-reaction--love">❤️</span><span>156</span></div><span>28 comments</span></div>
-                    <div class="li-post-actions"><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Like</button><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comment</button><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>Repost</button><button class="li-post-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Send</button></div>
+In an industry obsessed with acquisition, we've learned that the real competitive advantage is becoming irreplaceable in people's lives.</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Weekly Calendar -->
-    <section class="section section--calendar" id="calendar">
-        <div class="section-content">
-            <div class="section-header reveal">
-                <div class="section-label">06 Weekly Calendar</div>
-                <h2 class="section-title">Your weekly posting rhythm</h2>
-                <p class="section-desc" style="color: var(--grey-300);">A sustainable schedule your team can actually maintain.</p>
+    <!-- ===== WEEKLY CALENDAR ===== -->
+    <section class="section section--dark reveal" id="calendar">
+        <div class="section-sidebar">
+            <div class="section-number-block">
+                <span class="section-number">06</span>
             </div>
-            <table class="calendar-table reveal">
-                <thead><tr><th>Day</th><th>Platform</th><th>Content Focus</th></tr></thead>
-                <tbody>
-                    <tr><td><span class="calendar-day">Monday</span></td><td><span class="calendar-platform calendar-platform--ig">IG</span><span class="calendar-platform calendar-platform--fb">FB</span></td><td class="calendar-content"><strong>Motivation Monday</strong> — Inspirational quote, member transformation, or "start your week right" content.</td></tr>
-                    <tr><td><span class="calendar-day">Tuesday</span></td><td><span class="calendar-platform calendar-platform--ig">IG</span><span class="calendar-platform calendar-platform--li">LI</span></td><td class="calendar-content"><strong>Tip Tuesday</strong> — Educational content. Fitness tips, nutrition advice, trainer knowledge.</td></tr>
-                    <tr><td><span class="calendar-day">Wednesday</span></td><td><span class="calendar-platform calendar-platform--ig">IG</span><span class="calendar-platform calendar-platform--fb">FB</span></td><td class="calendar-content"><strong>Community Wednesday</strong> — Member spotlights, staff highlights, behind-the-scenes.</td></tr>
-                    <tr><td><span class="calendar-day">Thursday</span></td><td><span class="calendar-platform calendar-platform--ig">IG</span><span class="calendar-platform calendar-platform--fb">FB</span></td><td class="calendar-content"><strong>Throwback / Program Highlight</strong> — Facility showcases, class highlights, nostalgic content.</td></tr>
-                    <tr><td><span class="calendar-day">Friday</span></td><td><span class="calendar-platform calendar-platform--ig">IG</span><span class="calendar-platform calendar-platform--li">LI</span></td><td class="calendar-content"><strong>Weekend Preview</strong> — Event reminders, weekend schedules. LinkedIn: thought leadership.</td></tr>
-                    <tr><td><span class="calendar-day">Saturday</span></td><td><span class="calendar-platform calendar-platform--ig">IG Stories</span></td><td class="calendar-content"><strong>Live Content</strong> — Real-time Stories from classes, events, facility life.</td></tr>
-                    <tr><td><span class="calendar-day">Sunday</span></td><td><span class="calendar-platform calendar-platform--fb">FB</span></td><td class="calendar-content"><strong>Week Ahead</strong> — Preview upcoming week. Class highlights, events, "set your intentions."</td></tr>
-                </tbody>
-            </table>
+            <div class="section-meta">
+                <div class="section-label">Weekly Calendar</div>
+                <h2 class="section-title">Your weekly posting rhythm</h2>
+                <p class="section-desc">A sustainable schedule your team can actually maintain week after week.</p>
+            </div>
+        </div>
+        <div class="section-main" style="padding: 0;">
+            <div class="calendar-grid">
+                <div class="calendar-day">
+                    <div class="calendar-day-name">Monday</div>
+                    <div class="calendar-platforms">
+                        <span class="calendar-platform calendar-platform--ig">IG</span>
+                        <span class="calendar-platform calendar-platform--fb">FB</span>
+                    </div>
+                    <div class="calendar-theme">Motivation Monday</div>
+                    <div class="calendar-content">Inspirational quote, member transformation, or "start your week right" content.</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day-name">Tuesday</div>
+                    <div class="calendar-platforms">
+                        <span class="calendar-platform calendar-platform--ig">IG</span>
+                        <span class="calendar-platform calendar-platform--li">LI</span>
+                    </div>
+                    <div class="calendar-theme">Tip Tuesday</div>
+                    <div class="calendar-content">Educational content. Fitness tips, nutrition advice, trainer knowledge.</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day-name">Wednesday</div>
+                    <div class="calendar-platforms">
+                        <span class="calendar-platform calendar-platform--ig">IG</span>
+                        <span class="calendar-platform calendar-platform--fb">FB</span>
+                    </div>
+                    <div class="calendar-theme">Community Wednesday</div>
+                    <div class="calendar-content">Member spotlights, staff highlights, behind-the-scenes.</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day-name">Thursday</div>
+                    <div class="calendar-platforms">
+                        <span class="calendar-platform calendar-platform--ig">IG</span>
+                        <span class="calendar-platform calendar-platform--fb">FB</span>
+                    </div>
+                    <div class="calendar-theme">Throwback / Highlight</div>
+                    <div class="calendar-content">Facility showcases, class highlights, nostalgic content.</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day-name">Friday</div>
+                    <div class="calendar-platforms">
+                        <span class="calendar-platform calendar-platform--ig">IG</span>
+                        <span class="calendar-platform calendar-platform--li">LI</span>
+                    </div>
+                    <div class="calendar-theme">Weekend Preview</div>
+                    <div class="calendar-content">Event reminders, weekend schedules. LinkedIn: thought leadership.</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day-name">Saturday</div>
+                    <div class="calendar-platforms">
+                        <span class="calendar-platform calendar-platform--ig">Stories</span>
+                    </div>
+                    <div class="calendar-theme">Live Content</div>
+                    <div class="calendar-content">Real-time Stories from classes, events, facility life.</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day-name">Sunday</div>
+                    <div class="calendar-platforms">
+                        <span class="calendar-platform calendar-platform--fb">FB</span>
+                    </div>
+                    <div class="calendar-theme">Week Ahead</div>
+                    <div class="calendar-content">Preview upcoming week. Class highlights, events, "set your intentions."</div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Hashtag Strategy -->
-    <section class="section section--hashtags" id="hashtags">
-        <div class="section-content">
-            <div class="section-header reveal">
-                <div class="section-label">07 Hashtag Strategy</div>
+    <!-- ===== HASHTAG STRATEGY ===== -->
+    <section class="section reveal" id="hashtags">
+        <div class="section-sidebar">
+            <div class="section-number-block" style="background: var(--pool-deep);">
+                <span class="section-number">07</span>
+            </div>
+            <div class="section-meta">
+                <div class="section-label" style="color: var(--pool-deep);">Hashtag Strategy</div>
                 <h2 class="section-title">Tags that extend reach</h2>
                 <p class="section-desc">Mix branded, local, and fitness hashtags. Use 8-15 per Instagram post.</p>
             </div>
-            <div class="hashtags-grid reveal">
-                <div class="hashtag-group"><h3 class="hashtag-group-title">Branded (Always Use)</h3><div class="hashtag-list"><span class="hashtag">#SunOaks</span><span class="hashtag">#SunOaksRedding</span><span class="hashtag">#SunOaksFamily</span><span class="hashtag">#SunOaksFitness</span><span class="hashtag">#YourFitnessFamily</span></div></div>
-                <div class="hashtag-group"><h3 class="hashtag-group-title">Local (Geo-targeting)</h3><div class="hashtag-list"><span class="hashtag">#ReddingCA</span><span class="hashtag">#ReddingCalifornia</span><span class="hashtag">#ReddingFitness</span><span class="hashtag">#NorCalFitness</span><span class="hashtag">#ShastaCounty</span></div></div>
-                <div class="hashtag-group"><h3 class="hashtag-group-title">Fitness (Reach)</h3><div class="hashtag-list"><span class="hashtag">#FitnessMotivation</span><span class="hashtag">#GymLife</span><span class="hashtag">#FitFam</span><span class="hashtag">#HealthyLifestyle</span><span class="hashtag">#FitnessJourney</span></div></div>
-                <div class="hashtag-group"><h3 class="hashtag-group-title">Tennis & Pickleball</h3><div class="hashtag-list"><span class="hashtag">#TennisLife</span><span class="hashtag">#TennisCommunity</span><span class="hashtag">#Pickleball</span><span class="hashtag">#PickleballLife</span><span class="hashtag">#RacquetSports</span></div></div>
-                <div class="hashtag-group"><h3 class="hashtag-group-title">Aquatics & Family</h3><div class="hashtag-list"><span class="hashtag">#SwimLife</span><span class="hashtag">#LearnToSwim</span><span class="hashtag">#PoolTime</span><span class="hashtag">#FamilyFitness</span><span class="hashtag">#ActiveFamily</span></div></div>
-                <div class="hashtag-group"><h3 class="hashtag-group-title">Day-Specific</h3><div class="hashtag-list"><span class="hashtag">#MondayMotivation</span><span class="hashtag">#TransformationTuesday</span><span class="hashtag">#WellnessWednesday</span><span class="hashtag">#ThrowbackThursday</span><span class="hashtag">#FitnessFriday</span></div></div>
+        </div>
+        <div class="section-main" style="padding: 0;">
+            <div class="hashtags-grid">
+                <div class="hashtag-group">
+                    <h3 class="hashtag-group-title">Branded (Always Use)</h3>
+                    <div class="hashtag-list">
+                        <span class="hashtag">#SunOaks</span>
+                        <span class="hashtag">#SunOaksRedding</span>
+                        <span class="hashtag">#SunOaksFamily</span>
+                        <span class="hashtag">#SunOaksFitness</span>
+                        <span class="hashtag">#YourFitnessFamily</span>
+                    </div>
+                </div>
+                <div class="hashtag-group">
+                    <h3 class="hashtag-group-title">Local (Geo-targeting)</h3>
+                    <div class="hashtag-list">
+                        <span class="hashtag">#ReddingCA</span>
+                        <span class="hashtag">#ReddingCalifornia</span>
+                        <span class="hashtag">#ReddingFitness</span>
+                        <span class="hashtag">#NorCalFitness</span>
+                        <span class="hashtag">#ShastaCounty</span>
+                    </div>
+                </div>
+                <div class="hashtag-group">
+                    <h3 class="hashtag-group-title">Fitness (Reach)</h3>
+                    <div class="hashtag-list">
+                        <span class="hashtag">#FitnessMotivation</span>
+                        <span class="hashtag">#GymLife</span>
+                        <span class="hashtag">#FitFam</span>
+                        <span class="hashtag">#HealthyLifestyle</span>
+                        <span class="hashtag">#FitnessJourney</span>
+                    </div>
+                </div>
+                <div class="hashtag-group">
+                    <h3 class="hashtag-group-title">Tennis & Pickleball</h3>
+                    <div class="hashtag-list">
+                        <span class="hashtag">#TennisLife</span>
+                        <span class="hashtag">#TennisCommunity</span>
+                        <span class="hashtag">#Pickleball</span>
+                        <span class="hashtag">#PickleballLife</span>
+                        <span class="hashtag">#RacquetSports</span>
+                    </div>
+                </div>
+                <div class="hashtag-group">
+                    <h3 class="hashtag-group-title">Aquatics & Family</h3>
+                    <div class="hashtag-list">
+                        <span class="hashtag">#SwimLife</span>
+                        <span class="hashtag">#LearnToSwim</span>
+                        <span class="hashtag">#PoolTime</span>
+                        <span class="hashtag">#FamilyFitness</span>
+                        <span class="hashtag">#ActiveFamily</span>
+                    </div>
+                </div>
+                <div class="hashtag-group">
+                    <h3 class="hashtag-group-title">Day-Specific</h3>
+                    <div class="hashtag-list">
+                        <span class="hashtag">#MondayMotivation</span>
+                        <span class="hashtag">#TransformationTuesday</span>
+                        <span class="hashtag">#WellnessWednesday</span>
+                        <span class="hashtag">#ThrowbackThursday</span>
+                        <span class="hashtag">#FitnessFriday</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -531,15 +1307,89 @@ In an industry obsessed with acquisition, we've learned that the real competitiv
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-inner">
-            <div class="footer-brand"><span class="footer-logo">Sun Oaks</span><span class="footer-sep"></span><span class="footer-tag">Brand House</span></div>
+            <div class="footer-brand">
+                <span class="footer-logo">Sun Oaks</span>
+                <span class="footer-sep"></span>
+                <span class="footer-tag">Brand House</span>
+            </div>
             <div class="footer-credit">Designed by <a href="https://look-serious.com">Look Serious</a> · 2026</div>
         </div>
     </footer>
 
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-modal-content">
+            <button class="preview-modal-close" id="closeModal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="preview-modal-header">
+                <div class="preview-modal-badge">Preview Only</div>
+                <div class="preview-modal-title">Full Strategy Required</div>
+            </div>
+            <div class="preview-modal-body">
+                <p class="preview-modal-text">This section provides an overview of the social media strategy. Full access includes editable templates, scheduling tools, and detailed caption libraries for each platform.</p>
+                <div class="preview-modal-contact">
+                    <div class="preview-modal-contact-label">Brand House Architect</div>
+                    <div class="preview-modal-contact-name">Aaron Phelps</div>
+                    <div class="preview-modal-contact-role">Look Serious</div>
+                    <a href="mailto:phelps@norcalsbdc.org" class="preview-modal-contact-email">phelps@norcalsbdc.org</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const observer = new IntersectionObserver((entries) => { entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } }); }, { threshold: 0.1, rootMargin: '-40px' });
+        // Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '-40px' });
+
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { e.preventDefault(); const target = document.querySelector(this.getAttribute('href')); if (target) { const offset = 100; window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - offset, behavior: 'smooth' }); } }); });
+
+        // Preview Modal
+        const modal = document.getElementById('previewModal');
+        const closeBtn = document.getElementById('closeModal');
+        const triggers = document.querySelectorAll('.triggers-modal');
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                modal.classList.add('is-active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('is-active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('is-active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+                modal.classList.remove('is-active');
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.getBoundingClientRect().top + window.pageYOffset - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
