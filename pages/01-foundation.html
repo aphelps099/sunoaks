@@ -141,38 +141,17 @@
             color: var(--sun);
         }
         
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .header-badge {
+            padding: 6px 12px;
+            background: var(--sun);
+            background: linear-gradient(135deg, var(--sun) 0%, var(--sun-hover) 100%);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--black);
         }
-        
-        .header-nav-btn {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--pearl);
-            border: none;
-            cursor: pointer;
-            transition: all var(--duration) var(--ease);
-        }
-        
-        .header-nav-btn:hover {
-            background: var(--black);
-            color: var(--white);
-        }
-        
-        .header-nav-btn svg {
-            width: 16px;
-            height: 16px;
-        }
-        
-        .header-nav-btn.is-disabled {
-            opacity: 0.3;
-            pointer-events: none;
-        }
+        @media (max-width: 600px) { .header-badge { display: none; } }
         
         /* ═══════════════════════════════════════════════════════════════
            HERO
@@ -1068,18 +1047,7 @@
             <span class="header-sep"></span>
             <span class="header-chapter"><span>01</span> Brand Foundation</span>
         </div>
-        <div class="header-nav">
-            <button class="header-nav-btn is-disabled" aria-label="Previous chapter">
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M13 8H3M7 4l-4 4 4 4"/>
-                </svg>
-            </button>
-            <button class="header-nav-btn" aria-label="Next chapter" onclick="location.href='membership-resources.html'">
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 8h10M9 4l4 4-4 4"/>
-                </svg>
-            </button>
-        </div>
+        <div class="header-badge">Chapter 01</div>
     </header>
     
     <!-- Hero -->
