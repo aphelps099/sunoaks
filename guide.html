@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun Oaks Brand House — Guide</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+            --sun: #F7B500;
+            --sun-hover: #FFBF00;
+            --pool: #0891A8;
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--black);
+            background: var(--white);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection {
+            background: var(--sun);
+            color: var(--black);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ─── Layout ─── */
+
+        .page {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 80px 48px 120px;
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 48px 24px 80px;
+            }
+        }
+
+        /* ─── Header ─── */
+
+        .guide-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 80px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--silver);
+        }
+
+        .guide-logo img {
+            height: 28px;
+            width: auto;
+        }
+
+        .guide-badge {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            padding: 6px 14px;
+            border: 1px solid var(--silver);
+        }
+
+        /* ─── Intro ─── */
+
+        .guide-title {
+            font-family: var(--font-serif);
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+
+        .guide-title em {
+            font-style: italic;
+            color: var(--grey-500);
+        }
+
+        .guide-intro {
+            font-size: 1.0625rem;
+            font-weight: 400;
+            line-height: 1.75;
+            color: var(--grey-500);
+            max-width: 600px;
+            margin-bottom: 64px;
+        }
+
+        .guide-intro strong {
+            color: var(--black);
+            font-weight: 600;
+        }
+
+        /* ─── How to Use ─── */
+
+        .how-to {
+            background: var(--pearl);
+            padding: 32px 36px;
+            margin-bottom: 64px;
+        }
+
+        .how-to-label {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--pool);
+            margin-bottom: 16px;
+        }
+
+        .how-to-steps {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .how-to-step {
+            counter-increment: steps;
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--silver);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--grey-600);
+        }
+
+        .how-to-step:last-child {
+            border-bottom: none;
+        }
+
+        .how-to-step::before {
+            content: counter(steps);
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--sun);
+            min-width: 20px;
+        }
+
+        .how-to-step code {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.8125rem;
+            background: var(--white);
+            padding: 2px 8px;
+            color: var(--black);
+        }
+
+        /* ─── Section Label ─── */
+
+        .section-label {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--silver);
+        }
+
+        /* ─── Chapter List ─── */
+
+        .chapter-list {
+            list-style: none;
+            margin-bottom: 64px;
+        }
+
+        .chapter-item {
+            display: grid;
+            grid-template-columns: 40px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--silver);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .chapter-item:hover {
+            padding-left: 8px;
+        }
+
+        .chapter-item:first-child {
+            border-top: 1px solid var(--silver);
+        }
+
+        .chapter-num {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--sun);
+        }
+
+        .chapter-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .chapter-name {
+            font-family: var(--font-serif);
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--black);
+        }
+
+        .chapter-about {
+            font-size: 0.8125rem;
+            color: var(--grey-400);
+            line-height: 1.5;
+        }
+
+        .chapter-status {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+        }
+
+        .chapter-status.is-live {
+            color: #2D7D46;
+            background: #E8F5E9;
+        }
+
+        .chapter-status.is-preview {
+            color: var(--grey-500);
+            background: var(--pearl);
+        }
+
+        .chapter-link {
+            display: grid;
+            grid-template-columns: 40px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--silver);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .chapter-link:first-child {
+            border-top: 1px solid var(--silver);
+        }
+
+        .chapter-link:hover {
+            padding-left: 8px;
+        }
+
+        .chapter-link:hover .chapter-name {
+            color: var(--pool);
+        }
+
+        .chapter-link:hover .chapter-arrow-sm {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .chapter-arrow-sm {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun);
+            color: var(--black);
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .chapter-arrow-sm svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ─── Launch CTA ─── */
+
+        .launch-section {
+            text-align: center;
+            padding: 64px 0;
+            border-top: 1px solid var(--silver);
+        }
+
+        .launch-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 24px;
+        }
+
+        .launch-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 40px;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .launch-cta:hover {
+            background: var(--grey-700);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .launch-cta svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .launch-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* ─── Footer ─── */
+
+        .guide-footer {
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 1px solid var(--silver);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .guide-footer-text {
+            font-size: 0.75rem;
+            color: var(--grey-400);
+        }
+
+        .guide-footer-credit {
+            font-size: 0.75rem;
+            color: var(--grey-300);
+        }
+
+        .guide-footer-credit a {
+            color: var(--grey-500);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- Header -->
+    <div class="guide-header">
+        <a href="index.html" class="guide-logo">
+            <img src="images/logos/SunOaks_Logo_Horizontal_RGB.png" alt="Sun Oaks" />
+        </a>
+        <span class="guide-badge">Brand House Guide</span>
+    </div>
+
+    <!-- Intro -->
+    <h1 class="guide-title">Welcome to the<br>Sun Oaks <em>Brand House.</em></h1>
+    <p class="guide-intro">
+        <strong>This is your central resource for the Sun Oaks brand.</strong>
+        Inside you'll find brand foundations, messaging frameworks, membership tools, campaign playbooks, and design templates — everything your team needs to market Sun Oaks with clarity and consistency.
+    </p>
+
+    <!-- How to Use -->
+    <div class="how-to">
+        <div class="how-to-label">How to use this</div>
+        <ol class="how-to-steps">
+            <li class="how-to-step">Open <code>index.html</code> in any web browser (Chrome, Safari, Firefox) to launch the Brand House</li>
+            <li class="how-to-step">Scroll down to the <strong>Brand Resources</strong> section to see all 10 chapters</li>
+            <li class="how-to-step">Click any chapter card to open that resource — each page has a back button to return home</li>
+            <li class="how-to-step">Use the <strong>Explore</strong> button in the top-right corner for a quick-access menu to all pages</li>
+        </ol>
+    </div>
+
+    <!-- Chapter Index -->
+    <div class="section-label">What's Inside — 10 Chapters</div>
+
+    <ul class="chapter-list">
+        <li>
+            <a href="pages/01-foundation.html" class="chapter-link">
+                <span class="chapter-num">01</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Brand Foundation</span>
+                    <span class="chapter-about">Our story, essence, promise, and personality — the soul of Sun Oaks</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="pages/membership-resources.html" class="chapter-link">
+                <span class="chapter-num">02</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Membership</span>
+                    <span class="chapter-about">Sales resources, pricing frameworks, and member journey maps</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="pages/voice-messaging.html" class="chapter-link">
+                <span class="chapter-num">03</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Voice & Messaging</span>
+                    <span class="chapter-about">How we speak, our tone of voice, and key messaging frameworks</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="pages/membership-funnel.html" class="chapter-link">
+                <span class="chapter-num">04</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Membership Funnel</span>
+                    <span class="chapter-about">Consumer-facing landing page — "Where Redding comes to grow"</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="pages/service-architecture.html" class="chapter-link">
+                <span class="chapter-num">05</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Service Architecture</span>
+                    <span class="chapter-about">Seven service lines, one family — how our offerings connect</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <div class="chapter-item">
+                <span class="chapter-num">06</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Templates & Assets</span>
+                    <span class="chapter-about">Ready-to-deploy designs for print, digital, social, and signage</span>
+                </div>
+                <span class="chapter-status is-preview">Preview</span>
+            </div>
+        </li>
+        <li>
+            <a href="pages/campaign-playbooks.html" class="chapter-link">
+                <span class="chapter-num">07</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Campaign Playbooks</span>
+                    <span class="chapter-about">Seasonal marketing frameworks and campaign blueprints</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="pages/email-templates.html" class="chapter-link">
+                <span class="chapter-num">08</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Email Templates</span>
+                    <span class="chapter-about">Ready-to-deploy email campaigns and sequence templates</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="pages/social-media-strategy.html" class="chapter-link">
+                <span class="chapter-num">09</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Social Media Strategy</span>
+                    <span class="chapter-about">Content pillars, posting framework, and platform guidelines</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="pages/digital-standards.html" class="chapter-link">
+                <span class="chapter-num">10</span>
+                <div class="chapter-info">
+                    <span class="chapter-name">Digital Standards</span>
+                    <span class="chapter-about">Website guidelines, mobile experience, and booking flows</span>
+                </div>
+                <span class="chapter-arrow-sm">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Launch -->
+    <div class="launch-section">
+        <div class="launch-label">Ready to explore?</div>
+        <a href="index.html" class="launch-cta">
+            Open Brand House
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="guide-footer">
+        <span class="guide-footer-text">Sun Oaks Brand House &middot; Est. 1960 &middot; Redding, California</span>
+        <span class="guide-footer-credit">Designed by <a href="https://look-serious.com">Look Serious</a> &middot; 2026</span>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun Oaks — Hero Concept (Collins Style)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           HERO CONCEPT — COLLINS-STYLE REDESIGN
+           Typography-dominant. Monochrome + yellow accent.
+           Extreme whitespace. Editorial authority.
+           ═══════════════════════════════════════════════════════════════ */
+
+        :root {
+            --white: #FFFFFF;
+            --cream: #FAF9F7;
+            --pearl: #F4F3F1;
+            --silver: #E9E8E6;
+            --grey-200: #D1D0CE;
+            --grey-300: #A8A7A5;
+            --grey-400: #7D7C7A;
+            --grey-500: #5C5B59;
+            --grey-600: #3D3C3A;
+            --grey-700: #2A2928;
+            --grey-800: #1A1918;
+            --black: #0D0D0C;
+            --sun: #F7B500;
+            --sun-hover: #FFBF00;
+            --pool: #0891A8;
+            --font-sans: 'Jost', 'Futura', -apple-system, sans-serif;
+            --font-serif: 'Newsreader', Georgia, serif;
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--black);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--sun);
+            color: var(--black);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CONCEPT NOTE — remove this in production
+           ═══════════════════════════════════════════════════════════════ */
+
+        .concept-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: var(--black);
+            color: var(--cream);
+            text-align: center;
+            padding: 10px 24px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+        }
+
+        .concept-banner strong {
+            color: var(--sun);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HEADER — Same structure, refined for this context
+           ═══════════════════════════════════════════════════════════════ */
+
+        .header {
+            position: fixed;
+            top: 38px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 24px;
+            }
+        }
+
+        .header-logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .header-link {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--grey-500);
+            transition: color 0.4s;
+        }
+
+        .header-link:hover {
+            color: var(--black);
+        }
+
+        .header-cta {
+            padding: 12px 24px;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s var(--ease);
+        }
+
+        .header-cta:hover {
+            background: var(--grey-700);
+        }
+
+        @media (max-width: 768px) {
+            .header-link { display: none; }
+            .header-nav { gap: 16px; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HERO — Collins-style. Typography IS the design.
+           ═══════════════════════════════════════════════════════════════ */
+
+        .hero {
+            min-height: 100vh;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            background: var(--cream);
+            overflow: hidden;
+        }
+
+        /* ─── Content ─── */
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 0 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 24px;
+            }
+        }
+
+        /* ─── Eyebrow ─── */
+
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeIn 0.8s var(--ease-out) 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .hero-eyebrow-line {
+            width: 48px;
+            height: 1px;
+            background: var(--black);
+        }
+
+        .hero-eyebrow-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--grey-500);
+        }
+
+        /* ─── The Headline — this IS the hero ─── */
+
+        .hero-headline {
+            margin-bottom: 48px;
+        }
+
+        .hero-headline-line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-headline-text {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: clamp(48px, 9vw, 120px);
+            font-weight: 500;
+            line-height: 1.0;
+            letter-spacing: -0.03em;
+            color: var(--black);
+            transform: translateY(110%);
+            animation: textReveal 1.2s var(--ease-out) forwards;
+        }
+
+        .hero-headline-line:nth-child(1) .hero-headline-text { animation-delay: 0.5s; }
+        .hero-headline-line:nth-child(2) .hero-headline-text { animation-delay: 0.65s; }
+        .hero-headline-line:nth-child(3) .hero-headline-text { animation-delay: 0.8s; }
+
+        @keyframes textReveal {
+            to { transform: translateY(0); }
+        }
+
+        /* The italic accent — "itself" */
+        .hero-headline-em {
+            font-style: italic;
+        }
+
+        /* The yellow rule — a single bold punctuation mark */
+        .hero-accent {
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--sun);
+            margin-top: 8px;
+            opacity: 0;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: accentReveal 0.8s var(--ease-out) 1.2s forwards;
+        }
+
+        @keyframes accentReveal {
+            to {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
+
+        /* ─── Subtext — restrained, editorial ─── */
+
+        .hero-subtext {
+            max-width: 520px;
+            font-family: var(--font-sans);
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            font-weight: 400;
+            line-height: 1.75;
+            color: var(--grey-500);
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeUp 0.8s var(--ease-out) 1.4s forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtext strong {
+            color: var(--black);
+            font-weight: 600;
+        }
+
+        /* ─── CTA ─── */
+
+        .hero-cta-row {
+            margin-top: 48px;
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeUp 0.8s var(--ease-out) 1.6s forwards;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 32px;
+            background: var(--sun);
+            color: var(--black);
+            font-family: var(--font-sans);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition: all 0.4s var(--ease);
+        }
+
+        .hero-cta:hover {
+            background: var(--sun-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(247, 181, 0, 0.3);
+        }
+
+        .hero-cta svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .hero-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           STAT BAR — anchored at bottom of hero
+           ═══════════════════════════════════════════════════════════════ */
+
+        .hero-stats {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 3;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--silver);
+            background: var(--white);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s var(--ease-out) 1.8s forwards;
+        }
+
+        .hero-stat {
+            padding: 32px 48px;
+            border-right: 1px solid var(--silver);
+            text-align: center;
+        }
+
+        .hero-stat:last-child {
+            border-right: none;
+        }
+
+        .hero-stat-value {
+            font-family: var(--font-sans);
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 300;
+            line-height: 1;
+            color: var(--black);
+        }
+
+        .hero-stat-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-top: 6px;
+        }
+
+        @media (max-width: 900px) {
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-stat:nth-child(2) {
+                border-right: none;
+            }
+
+            .hero-stat:nth-child(3),
+            .hero-stat:nth-child(4) {
+                border-top: 1px solid var(--silver);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .hero-stat {
+                padding: 24px 20px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           COMPARISON SECTION — current vs. concept
+           ═══════════════════════════════════════════════════════════════ */
+
+        .comparison {
+            padding: 120px 48px;
+            background: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                padding: 80px 24px;
+            }
+        }
+
+        .comparison-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .comparison-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--pool);
+            margin-bottom: 24px;
+        }
+
+        .comparison-title {
+            font-family: var(--font-serif);
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin-bottom: 48px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+
+        @media (max-width: 640px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        .comparison-col-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--grey-400);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--silver);
+        }
+
+        .comparison-list {
+            list-style: none;
+        }
+
+        .comparison-item {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--grey-600);
+            padding: 6px 0;
+        }
+
+        .comparison-item::before {
+            content: '—';
+            color: var(--grey-300);
+            margin-right: 8px;
+        }
+
+        .comparison-col:last-child .comparison-item::before {
+            content: '+';
+            color: var(--sun);
+            font-weight: 700;
+        }
+
+        .comparison-note {
+            margin-top: 48px;
+            padding: 24px 28px;
+            background: var(--pearl);
+            font-size: 0.875rem;
+            line-height: 1.7;
+            color: var(--grey-500);
+        }
+
+        .comparison-note strong {
+            color: var(--black);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Concept Banner -->
+    <div class="concept-banner">
+        <strong>Design Concept</strong> &nbsp;&mdash;&nbsp; This is a preview of the proposed hero section. Not yet live.
+    </div>
+
+    <!-- Header (same as production) -->
+    <header class="header">
+        <a href="index.html" class="header-logo">
+            <img src="images/logos/SunOaks_Logo_Horizontal_RGB.png" alt="Sun Oaks" />
+        </a>
+        <nav class="header-nav">
+            <a href="#" class="header-link">Story</a>
+            <a href="#" class="header-link">Chapters</a>
+            <a href="#" class="header-link">Services</a>
+            <button class="header-cta">Explore</button>
+        </nav>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         HERO — Collins-style
+         Typography dominates. No photo cluster. No spinning sun.
+         The words ARE the design.
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="hero">
+
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                <span class="hero-eyebrow-line"></span>
+                <span class="hero-eyebrow-text">Est. 1960 &middot; Redding, California</span>
+            </div>
+
+            <h1 class="hero-headline">
+                <span class="hero-headline-line">
+                    <span class="hero-headline-text">The place where</span>
+                </span>
+                <span class="hero-headline-line">
+                    <span class="hero-headline-text">a community</span>
+                </span>
+                <span class="hero-headline-line">
+                    <span class="hero-headline-text">finds <span class="hero-headline-em">itself.</span></span>
+                </span>
+            </h1>
+
+            <span class="hero-accent"></span>
+
+            <div class="hero-subtext">
+                <p><strong>For sixty-four years, Sun Oaks has been the place.</strong> Three generations of families. Morning swimmers and after-school tennis kids. This is where Redding grows — together.</p>
+            </div>
+
+            <div class="hero-cta-row">
+                <a href="index.html#chapters" class="hero-cta">
+                    View the Brand House
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 8h10M9 4l4 4-4 4"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Stat Bar -->
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">1960</div>
+                <div class="hero-stat-label">Founded</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">6</div>
+                <div class="hero-stat-label">Acres</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">7</div>
+                <div class="hero-stat-label">Service Lines</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">10</div>
+                <div class="hero-stat-label">Chapters Inside</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         DESIGN NOTES — What changed and why
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="comparison">
+        <div class="comparison-inner">
+            <div class="comparison-label">Design Notes</div>
+            <h2 class="comparison-title">What changed and why</h2>
+
+            <div class="comparison-grid">
+                <div class="comparison-col">
+                    <div class="comparison-col-label">Current Hero</div>
+                    <ul class="comparison-list">
+                        <li class="comparison-item">Large yellow sun circle with spinning rays</li>
+                        <li class="comparison-item">Three circular photo cutouts</li>
+                        <li class="comparison-item">Headline shares space with imagery</li>
+                        <li class="comparison-item">Two stats + CTA in bottom bar</li>
+                        <li class="comparison-item">Multiple competing focal points</li>
+                    </ul>
+                </div>
+                <div class="comparison-col">
+                    <div class="comparison-col-label">This Concept</div>
+                    <ul class="comparison-list">
+                        <li class="comparison-item">Typography IS the hero — nothing competes</li>
+                        <li class="comparison-item">Headline at ~9vw, three lines, owns the viewport</li>
+                        <li class="comparison-item">Single yellow rule as color punctuation</li>
+                        <li class="comparison-item">Four-column stat bar anchored at bottom</li>
+                        <li class="comparison-item">Staggered text reveal animation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comparison-note">
+                <strong>Collins-inspired principle:</strong> "Ubiquity = invisibility. What becomes common, we stop seeing." This hero strips away decorative elements so the brand statement hits with authority. The yellow sun circle and photo cluster can still appear further down the page — they don't need to compete with the opening statement.
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
