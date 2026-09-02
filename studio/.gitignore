@@ -1,0 +1,9 @@
+node_modules/
+.next/
+data/studio.json
+data/*.tmp
+.env.local
+coverage/
+qa-*
+.qa-*
+*.tsbuildinfo
