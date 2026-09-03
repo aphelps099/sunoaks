@@ -190,6 +190,39 @@ export const campaignSchema = z.object({
   createdAt: z.string(),
 });
 
+export const reviewLinkSchema = z.object({
+  id: z.string(),
+  campaignId: z.string().nullable().default(null),
+  creativeProjectId: z.string().nullable().default(null),
+  tokenHash: z.string().regex(/^[a-f0-9]{64}$/),
+  selectedDeliverableIds: z.array(z.string()).default([]),
+  selectedArtworkKeys: z.array(z.string()).default([]),
+  projectSnapshot: z.object({
+    kind: z.enum(["promo", "motion"]),
+    payload: z.record(z.string(), z.unknown()),
+  }).nullable().default(null),
+  title: z.string().min(1).max(160),
+  version: z.number().int().positive(),
+  approvalState: z.enum(["pending", "approved", "changes_requested"]),
+  reviewerComment: z.string().max(4000).nullable(),
+  createdAt: z.string().datetime(),
+  expiresAt: z.string().datetime(),
+  revokedAt: z.string().datetime().nullable(),
+  reviewedAt: z.string().datetime().nullable(),
+}).refine((link) => Boolean(link.campaignId) !== Boolean(link.creativeProjectId), "Review link must target one campaign or creative project.");
+
+export const creativeProjectSchema = z.object({
+  id: z.string(),
+  kind: z.enum(["promo", "motion"]),
+  recordId: z.string(),
+  title: z.string().min(1).max(160),
+  version: z.number().int().positive(),
+  sourceRecordVersion: z.number().int().positive(),
+  payload: z.record(z.string(), z.unknown()),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
 export const databaseSchema = z.object({
   schemaVersion: z.literal(1),
   sources: z.array(sourceDocumentSchema),
@@ -202,6 +235,8 @@ export const databaseSchema = z.object({
   campaigns: z.array(campaignSchema),
   deliverables: z.array(deliverableSchema),
   exportEvents: z.array(exportEventSchema).default([]),
+  reviewLinks: z.array(reviewLinkSchema).default([]),
+  creativeProjects: z.array(creativeProjectSchema).default([]),
 });
 
 export type Database = z.infer<typeof databaseSchema>;
@@ -214,6 +249,8 @@ export type Campaign = z.infer<typeof campaignSchema>;
 export type Deliverable = z.infer<typeof deliverableSchema>;
 export type SourceSnapshot = z.infer<typeof sourceSnapshotSchema>;
 export type ExportEvent = z.infer<typeof exportEventSchema>;
+export type ReviewLink = z.infer<typeof reviewLinkSchema>;
+export type CreativeProject = z.infer<typeof creativeProjectSchema>;
 
 const LIFECYCLE_ORDER: Record<CalendarItem["status"], number> = {
   needs_information: 0,
@@ -399,6 +436,17 @@ export function validateDatabaseIntegrity(db: Database) {
     if (deliverable?.campaignId !== event.campaignId || campaign?.calendarItemId !== event.calendarItemId) {
       throw new Error(`Export event ${event.id} does not match deliverable ownership.`);
     }
+  }
+  for (const link of db.reviewLinks) {
+    if (link.campaignId && !campaignIds.has(link.campaignId)) throw new Error(`Review link ${link.id} has no campaign.`);
+    if (link.creativeProjectId && !db.creativeProjects.some((item) => item.id === link.creativeProjectId)) throw new Error(`Review link ${link.id} has no creative project.`);
+    if (link.campaignId && link.selectedDeliverableIds.some((id) => !db.deliverables.some((item) => item.id === id && item.campaignId === link.campaignId))) {
+      throw new Error(`Review link ${link.id} contains artwork outside its campaign.`);
+    }
+  }
+  for (const project of db.creativeProjects) {
+    const record = db.records.find((item) => item.id === project.recordId && item.verificationStatus === "verified");
+    if (!record) throw new Error(`Creative project ${project.id} has no verified source record.`);
   }
   return db;
 }

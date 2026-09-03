@@ -4,14 +4,16 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Archive, ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, ChevronRight, Clipboard,
   Download, FileCheck2, FileText, Grid3X3, Image as ImageIcon, ScanLine, Library, List, LogOut,
-  Menu, Moon, Plus, Search, ShieldCheck, Sparkles, Sun, Video, X,
+  Menu, Moon, Plus, Search, ShieldCheck, Sparkles, Sun, Video, X, WandSparkles, Clapperboard, Link2, RefreshCw, Ban,
 } from "lucide-react";
 import { MotionCanvas, StillCanvas } from "./CreativeCanvas";
 import type { Asset, CalendarItem, Campaign, Candidate, ContentRecord, Deliverable, StudioData } from "@/lib/client-types";
 import { isDateInMonth } from "@/lib/calendar";
+import PromoKit from "./PromoKit";
+import MotionStudio from "./MotionStudio";
 
 const API = "/studio/api";
-type View = "calendar" | "ingester" | "library" | "campaigns";
+type View = "calendar" | "promo" | "motion" | "ingester" | "library" | "campaigns";
 const STATUS: Record<string, { label: string; tone: string }> = {
   needs_information: { label: "Needs information", tone: "neutral" },
   verified: { label: "Verified", tone: "teal" },
@@ -141,6 +143,8 @@ export default function StudioApp() {
 
   const nav = [
     { id: "calendar" as const, label: "Calendar", icon: CalendarDays },
+    { id: "promo" as const, label: "Promo Kit", icon: WandSparkles },
+    { id: "motion" as const, label: "Motion Studio", icon: Clapperboard },
     { id: "ingester" as const, label: "Ingester", icon: ScanLine },
     { id: "library" as const, label: "Trusted Library", icon: Library },
     { id: "campaigns" as const, label: "Campaigns", icon: Sparkles },
@@ -177,6 +181,8 @@ export default function StudioApp() {
         {error && <div className="global-error" role="alert">{error}<button onClick={() => setError("")} aria-label="Dismiss error"><X size={16} /></button></div>}
         <main id="main-content" className="content">
           {view === "calendar" && <CalendarView data={data} mutate={mutate} goCampaigns={() => go("campaigns")} />}
+          {view === "promo" && <PromoKit data={data} mutate={mutate} />}
+          {view === "motion" && <MotionStudio data={data} mutate={mutate} />}
           {view === "ingester" && <IngesterView data={data} mutate={mutate} onPublished={() => go("calendar")} />}
           {view === "library" && <LibraryView data={data} />}
           {view === "campaigns" && <CampaignsView data={data} mutate={mutate} />}
@@ -508,8 +514,42 @@ function CampaignWorkspace({ campaign, data, mutate, onSelect }: { campaign: Cam
             {campaign.sourceSnapshot.target.type === "occurrence" && <div><dt>Target</dt><dd>{new Date(campaign.sourceSnapshot.target.startsAt).toLocaleString()}</dd></div>}
           </dl></section>
           <section><p className="eyebrow">CAMPAIGN IMAGE SNAPSHOT</p><div className="snapshot-asset"><ImageIcon size={17} /><span><strong>{campaign.sourceSnapshot.asset?.title || "No-photo brand fallback"}</strong><small>Locked when this campaign was generated</small></span></div></section>
+          <ReviewShare campaign={campaign} deliverables={deliverables} data={data} mutate={mutate} />
         </aside>
       </section>
     </>
   );
+}
+
+function ReviewShare({ campaign, deliverables, data, mutate }: {
+  campaign: Campaign; deliverables: Deliverable[]; data: StudioData;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+}) {
+  const artwork = deliverables.filter((item) => item.deliverableType === "still" || item.deliverableType === "motion");
+  const [selected, setSelected] = useState(() => artwork.map((item) => item.id));
+  const [expiresInHours, setExpiresInHours] = useState(72);
+  const [latestUrl, setLatestUrl] = useState("");
+  const links = data.reviewLinks.filter((link) => link.campaignId === campaign.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const copy = async (url: string) => {
+    await navigator.clipboard.writeText(url);
+  };
+  const create = async () => {
+    const result = await mutate({ action: "createReviewLink", campaignId: campaign.id, selectedDeliverableIds: selected, expiresInHours });
+    const url = String(result.reviewUrl || "");
+    setLatestUrl(url);
+    if (url) await copy(url);
+  };
+  return <section className="review-share">
+    <p className="eyebrow">GM REVIEW LINK</p>
+    <p className="review-share-copy">Share only selected artwork through an expiring, revocable link.</p>
+    <fieldset><legend>Artwork</legend>{artwork.map((item) => <label key={item.id}><input type="checkbox" checked={selected.includes(item.id)} onChange={() => setSelected((current) => current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id])} />{item.format.replaceAll("-", " ")}</label>)}</fieldset>
+    <label className="review-expiry">Expires<select value={expiresInHours} onChange={(event) => setExpiresInHours(Number(event.target.value))}><option value={24}>24 hours</option><option value={72}>3 days</option><option value={168}>7 days</option><option value={720}>30 days</option></select></label>
+    <button className="button primary full" disabled={!selected.length} onClick={create} data-testid="button-create-review"><Link2 size={16} />Create & copy link</button>
+    {latestUrl && <div className="review-url"><input readOnly value={latestUrl} aria-label="Latest review URL" /><button className="icon-button" onClick={() => copy(latestUrl)} aria-label="Copy review URL"><Clipboard size={15} /></button></div>}
+    {links.length > 0 && <div className="review-link-list">{links.map((link) => <article key={link.id}>
+      <div><strong>{link.approvalState.replaceAll("_", " ")}</strong><small>{link.revokedAt ? "Revoked" : new Date(link.expiresAt) <= new Date() ? "Expired" : `Expires ${new Date(link.expiresAt).toLocaleDateString()}`}</small></div>
+      <button className="icon-button" title="Regenerate review link" aria-label="Regenerate review link" onClick={async () => { const result = await mutate({ action: "regenerateReviewLink", reviewLinkId: link.id }); const url = String(result.reviewUrl || ""); setLatestUrl(url); if (url) await copy(url); }}><RefreshCw size={15} /></button>
+      <button className="icon-button" title="Revoke review link" aria-label="Revoke review link" disabled={Boolean(link.revokedAt)} onClick={() => mutate({ action: "revokeReviewLink", reviewLinkId: link.id })}><Ban size={15} /></button>
+    </article>)}</div>}
+  </section>;
 }

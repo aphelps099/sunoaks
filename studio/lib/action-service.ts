@@ -16,6 +16,7 @@ import {
   type Database,
 } from "./domain";
 import type { StudioRepository } from "./store";
+import { createProjectReviewLink, createReviewLink, regenerateReviewLink, revokeReviewLink } from "./review-service";
 
 const candidateBase = {
   name: z.string().trim().min(2),
@@ -55,6 +56,28 @@ export const actionRequestSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("setRecordAsset"), recordId: z.string(), assetId: z.string().nullable() }),
   z.object({ action: z.literal("authorizeExport"), calendarItemId: z.string(), deliverableId: z.string() }),
   z.object({ action: z.literal("markExported"), calendarItemId: z.string(), deliverableId: z.string() }),
+  z.object({
+    action: z.literal("createReviewLink"),
+    campaignId: z.string(),
+    selectedDeliverableIds: z.array(z.string()).min(1).max(20),
+    expiresInHours: z.number().min(1).max(720).default(72),
+  }),
+  z.object({ action: z.literal("revokeReviewLink"), reviewLinkId: z.string() }),
+  z.object({ action: z.literal("regenerateReviewLink"), reviewLinkId: z.string() }),
+  z.object({
+    action: z.literal("saveCreativeProject"),
+    projectId: z.string().optional(),
+    kind: z.enum(["promo", "motion"]),
+    recordId: z.string(),
+    title: z.string().trim().min(1).max(160),
+    payload: z.record(z.string(), z.unknown()),
+  }),
+  z.object({
+    action: z.literal("createProjectReviewLink"),
+    creativeProjectId: z.string(),
+    selectedArtworkKeys: z.array(z.string()).min(1).max(20),
+    expiresInHours: z.number().min(1).max(720).default(72),
+  }),
 ]);
 
 export type ActionInput = z.infer<typeof actionRequestSchema>;
@@ -222,6 +245,61 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
     });
     record.status = deriveRecordStatus(record, db.calendarItems);
     return { ok: true, version: record.version };
+  }
+
+  if (input.action === "createReviewLink") {
+    const { link, token } = createReviewLink(db, input);
+    return { ok: true, reviewLinkId: link.id, token, expiresAt: link.expiresAt };
+  }
+
+  if (input.action === "revokeReviewLink") {
+    const link = revokeReviewLink(db, input.reviewLinkId);
+    return { ok: true, reviewLinkId: link.id, revokedAt: link.revokedAt };
+  }
+
+  if (input.action === "regenerateReviewLink") {
+    const { link, token } = regenerateReviewLink(db, input.reviewLinkId);
+    return { ok: true, reviewLinkId: link.id, token, expiresAt: link.expiresAt };
+  }
+
+  if (input.action === "saveCreativeProject") {
+    const record = db.records.find((item) => item.id === input.recordId && item.active && item.verificationStatus === "verified");
+    if (!record) throw new Error("Creative projects require an active verified source record.");
+    const serialized = JSON.stringify(input.payload);
+    if (serialized.length > 8_000_000) throw new Error("Project snapshot is too large. Use approved library images or fewer artboards.");
+    if (!Array.isArray(input.payload.artworks) || input.payload.artworks.length === 0) throw new Error("Project must include rendered artwork.");
+    if (input.kind === "promo") {
+      const fields = input.payload.fields as Record<string, unknown> | undefined;
+      const schedule = [
+        record.date ? new Date(`${record.date}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "",
+        record.startTime ? new Date(`2000-01-01T${record.startTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "",
+      ].filter(Boolean).join(" · ");
+      const expected = { headline: record.name, summary: record.summary, schedule, location: record.location || "", cta: record.cta };
+      if (!fields || Object.entries(expected).some(([key, value]) => fields[key] !== value)) throw new Error("Promo project facts must exactly match the verified record.");
+    }
+    const now = new Date().toISOString();
+    const existing = input.projectId ? db.creativeProjects.find((item) => item.id === input.projectId) : undefined;
+    if (input.projectId && !existing) throw new Error("Creative project not found.");
+    if (existing && (existing.kind !== input.kind || existing.recordId !== input.recordId)) throw new Error("A project cannot change its type or verified source.");
+    if (existing) {
+      existing.title = input.title;
+      existing.version += 1;
+      existing.sourceRecordVersion = record.version;
+      existing.payload = structuredClone(input.payload);
+      existing.updatedAt = now;
+      return { ok: true, creativeProjectId: existing.id, version: existing.version };
+    }
+    const project = {
+      id: randomUUID(), kind: input.kind, recordId: record.id, title: input.title, version: 1,
+      sourceRecordVersion: record.version, payload: structuredClone(input.payload), createdAt: now, updatedAt: now,
+    };
+    db.creativeProjects.push(project);
+    return { ok: true, creativeProjectId: project.id, version: project.version };
+  }
+
+  if (input.action === "createProjectReviewLink") {
+    const { link, token } = createProjectReviewLink(db, input);
+    return { ok: true, reviewLinkId: link.id, token, expiresAt: link.expiresAt };
   }
 
   const item = db.calendarItems.find((entry) => entry.id === input.calendarItemId);
