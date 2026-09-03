@@ -49,5 +49,7 @@ export function fixtureDatabase(): Database {
     campaigns: [],
     deliverables: [],
     exportEvents: [],
+    reviewLinks: [],
+    creativeProjects: [],
   };
 }

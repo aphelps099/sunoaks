@@ -38,6 +38,15 @@ export type StudioData = {
   records: ContentRecord[]; scheduleRules: ScheduleRule[]; occurrences: unknown[]; calendarItems: CalendarItem[];
   assets: Asset[]; campaigns: Campaign[]; deliverables: Deliverable[];
   exportEvents: { id: string; deliverableId: string; campaignId: string; calendarItemId: string; format: string; exportedAt: string }[];
+  reviewLinks: {
+    id: string; campaignId: string | null; creativeProjectId: string | null; selectedDeliverableIds: string[]; selectedArtworkKeys: string[]; title: string; version: number;
+    approvalState: "pending" | "approved" | "changes_requested"; reviewerComment: string | null;
+    createdAt: string; expiresAt: string; revokedAt: string | null; reviewedAt: string | null;
+  }[];
+  creativeProjects: {
+    id: string; kind: "promo" | "motion"; recordId: string; title: string; version: number;
+    sourceRecordVersion: number; payload: Record<string, unknown>; createdAt: string; updatedAt: string;
+  }[];
 };
 export type Candidate = {
   recordType: "event" | "recurring_class"; name: string; summary: string; description: string; date?: string;

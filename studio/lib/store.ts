@@ -71,6 +71,8 @@ function migrateLegacyData(value: unknown) {
   if (!value || typeof value !== "object") return value;
   const raw = value as Record<string, unknown>;
   if (!Array.isArray(raw.exportEvents)) raw.exportEvents = [];
+  if (!Array.isArray(raw.reviewLinks)) raw.reviewLinks = [];
+  if (!Array.isArray(raw.creativeProjects)) raw.creativeProjects = [];
   if (!Array.isArray(raw.campaigns) || !Array.isArray(raw.calendarItems) || !Array.isArray(raw.records) || !Array.isArray(raw.assets)) return raw;
   for (const campaignValue of raw.campaigns) {
     const campaign = campaignValue as Record<string, unknown>;
@@ -160,6 +162,8 @@ function seedDatabase(): Database {
     campaigns: [],
     deliverables: [],
     exportEvents: [],
+    reviewLinks: [],
+    creativeProjects: [],
   };
 }
 
