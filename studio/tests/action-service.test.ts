@@ -34,6 +34,31 @@ describe("server-side candidate validation", () => {
 });
 
 describe("recurring-class version updates", () => {
+  it("versions direct trusted-record edits and keeps existing campaign snapshots immutable", () => {
+    const db = fixtureDatabase();
+    applyAction({ action: "generateCampaign", calendarItemId: "calendar-event", packId: "event-promo" }, db);
+    const result = applyAction({
+      action: "updateRecord",
+      recordId: "record-event",
+      changes: { summary: "A refreshed evening for members and guests.", location: "Family Pool" },
+    }, db);
+    expect(result).toMatchObject({ ok: true, version: 2, changedFields: ["summary", "location"] });
+    expect(db.records[0]).toMatchObject({ version: 2, summary: "A refreshed evening for members and guests.", location: "Family Pool" });
+    expect(db.recordVersions.at(-1)).toMatchObject({ recordId: "record-event", version: 2, changedFields: ["summary", "location"] });
+    expect(db.campaigns[0].sourceSnapshot.facts.location).toBe("Outdoor Pool");
+  });
+
+  it("updates recurring schedule facts alongside a direct record edit", () => {
+    const db = fixtureDatabase();
+    applyAction({
+      action: "updateRecord",
+      recordId: "record-class",
+      changes: { startTime: "07:15", endTime: "08:00", location: "Studio B" },
+    }, db);
+    expect(db.scheduleRules[0]).toMatchObject({ startTime: "07:15", endTime: "08:00", location: "Studio B" });
+    expect(validateDatabaseIntegrity(db)).toBe(db);
+  });
+
   it("updates the existing schedule rule atomically with the record", () => {
     const db = fixtureDatabase();
     const input = actionRequestSchema.parse({

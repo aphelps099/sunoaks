@@ -5,6 +5,7 @@ import {
   Archive, ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, ChevronRight, Clipboard,
   Download, FileCheck2, FileText, Grid3X3, Image as ImageIcon, ScanLine, Library, List, LogOut,
   Menu, Moon, Plus, Search, ShieldCheck, Sparkles, Sun, Video, X, WandSparkles, Clapperboard, Link2, RefreshCw, Ban,
+  PanelLeftClose, PanelLeftOpen, Pencil, Upload,
 } from "lucide-react";
 import { MotionCanvas, StillCanvas } from "./CreativeCanvas";
 import type { Asset, CalendarItem, Campaign, Candidate, ContentRecord, Deliverable, StudioData } from "@/lib/client-types";
@@ -13,7 +14,7 @@ import PromoKit from "./PromoKit";
 import MotionStudio from "./MotionStudio";
 
 const API = "/studio/api";
-type View = "calendar" | "promo" | "motion" | "ingester" | "library" | "campaigns";
+type View = "create" | "calendar" | "promo" | "motion" | "ingester" | "library" | "campaigns";
 const STATUS: Record<string, { label: string; tone: string }> = {
   needs_information: { label: "Needs information", tone: "neutral" },
   verified: { label: "Verified", tone: "teal" },
@@ -31,6 +32,21 @@ async function api<T>(path: string, options?: RequestInit): Promise<T> {
   const body = await response.json();
   if (!response.ok) throw new Error(body.error || "Something went wrong.");
   return body;
+}
+
+async function uploadAsset(file: File) {
+  const bitmap = await createImageBitmap(file);
+  const form = new FormData();
+  form.set("file", file);
+  form.set("width", String(bitmap.width));
+  form.set("height", String(bitmap.height));
+  form.set("title", file.name.replace(/\.[^.]+$/, ""));
+  form.set("altText", `Sun Oaks campaign image: ${file.name.replace(/\.[^.]+$/, "")}`);
+  bitmap.close();
+  const response = await fetch(`${API}/assets/upload`, { method: "POST", body: form });
+  const body = await response.json();
+  if (!response.ok) throw new Error(body.error || "The image could not be uploaded.");
+  return body.asset as Asset;
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -99,9 +115,12 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
 export default function StudioApp() {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [data, setData] = useState<StudioData | null>(null);
-  const [view, setView] = useState<View>("calendar");
+  const [view, setView] = useState<View>("create");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [mobileNav, setMobileNav] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [editorRecordId, setEditorRecordId] = useState("");
+  const [editorOrigin, setEditorOrigin] = useState<"create" | "campaigns" | "library">("create");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const load = async () => {
@@ -142,29 +161,33 @@ export default function StudioApp() {
   if (!data) return <main className="boot-screen"><BrandMark /><div className="skeleton-line" /></main>;
 
   const nav = [
-    { id: "calendar" as const, label: "Calendar", icon: CalendarDays },
-    { id: "promo" as const, label: "Promo Kit", icon: WandSparkles },
-    { id: "motion" as const, label: "Motion Studio", icon: Clapperboard },
-    { id: "ingester" as const, label: "Ingester", icon: ScanLine },
-    { id: "library" as const, label: "Trusted Library", icon: Library },
+    { id: "create" as const, label: "Create", icon: Plus },
     { id: "campaigns" as const, label: "Campaigns", icon: Sparkles },
+    { id: "library" as const, label: "Trusted Library", icon: Library },
+    { id: "calendar" as const, label: "Calendar", icon: CalendarDays },
   ];
   const go = (next: View) => { setView(next); setMobileNav(false); };
+  const openEditor = (next: "promo" | "motion", recordId: string, origin: typeof editorOrigin) => {
+    setEditorRecordId(recordId);
+    setEditorOrigin(origin);
+    go(next);
+  };
+  const activePrimary = view === "promo" || view === "motion" || view === "ingester" ? editorOrigin : view;
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${sidebarCollapsed ? "sidebar-is-collapsed" : ""}`}>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <aside className={`sidebar ${mobileNav ? "is-open" : ""}`}>
+      <aside className={`sidebar ${mobileNav ? "is-open" : ""} ${sidebarCollapsed ? "is-collapsed" : ""}`}>
         <div className="sidebar-head"><BrandMark inverse /><button className="icon-button mobile-only" onClick={() => setMobileNav(false)} aria-label="Close navigation"><X /></button></div>
         <nav aria-label="Studio navigation">
           {nav.map((item) => {
             const Icon = item.icon;
-            return <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => go(item.id)} data-testid={`nav-${item.id}`}><Icon size={19} />{item.label}</button>;
+            return <button key={item.id} className={activePrimary === item.id ? "active" : ""} onClick={() => go(item.id)} data-testid={`nav-${item.id}`} title={sidebarCollapsed ? item.label : undefined}><Icon size={19} /><span>{item.label}</span></button>;
           })}
         </nav>
         <div className="sidebar-foot">
           {/* Static Brand House is intentionally outside the Next.js base path. */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/" className="brand-house-link"><Archive size={17} />Brand House</a>
+          <a href="/" className="brand-house-link" title={sidebarCollapsed ? "Brand House" : undefined}><Archive size={17} /><span>Brand House</span></a>
           <div className="account-row"><span className="avatar">SO</span><span>Pilot account<small>All capabilities</small></span>
             <button className="icon-button inverse" aria-label="Sign out" title="Sign out" onClick={async () => { await api("/auth/logout", { method: "POST" }); setAuthenticated(false); }}><LogOut size={17} /></button>
           </div>
@@ -173,6 +196,9 @@ export default function StudioApp() {
       <div className="app-main">
         <header className="topbar">
           <button className="icon-button mobile-only" onClick={() => setMobileNav(true)} aria-label="Open navigation"><Menu /></button>
+          <button className="icon-button desktop-only" onClick={() => setSidebarCollapsed((value) => !value)} aria-label={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} title={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} data-testid="button-collapse-nav">
+            {sidebarCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+          </button>
           <div className="topbar-context"><span className="sync-dot" />Durable pilot storage · synced now</div>
           <button className="icon-button" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} data-testid="button-theme">
             {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
@@ -180,12 +206,13 @@ export default function StudioApp() {
         </header>
         {error && <div className="global-error" role="alert">{error}<button onClick={() => setError("")} aria-label="Dismiss error"><X size={16} /></button></div>}
         <main id="main-content" className="content">
-          {view === "calendar" && <CalendarView data={data} mutate={mutate} goCampaigns={() => go("campaigns")} />}
-          {view === "promo" && <PromoKit data={data} mutate={mutate} />}
-          {view === "motion" && <MotionStudio data={data} mutate={mutate} />}
-          {view === "ingester" && <IngesterView data={data} mutate={mutate} onPublished={() => go("calendar")} />}
-          {view === "library" && <LibraryView data={data} />}
-          {view === "campaigns" && <CampaignsView data={data} mutate={mutate} />}
+          {view === "create" && <CreateView data={data} mutate={mutate} refresh={load} openEditor={(next, id) => openEditor(next, id, "create")} openImport={() => { setEditorOrigin("create"); go("ingester"); }} goCampaigns={() => go("campaigns")} />}
+          {view === "calendar" && <CalendarView data={data} mutate={mutate} goCampaigns={() => go("campaigns")} goCreate={() => go("create")} />}
+          {view === "promo" && <PromoKit key={`promo-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onBack={() => go(editorOrigin)} />}
+          {view === "motion" && <MotionStudio key={`motion-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onBack={() => go(editorOrigin)} />}
+          {view === "ingester" && <IngesterView data={data} mutate={mutate} onPublished={() => go("create")} />}
+          {view === "library" && <LibraryView data={data} mutate={mutate} refresh={load} openEditor={(next, id) => openEditor(next, id, "library")} />}
+          {view === "campaigns" && <CampaignsView data={data} mutate={mutate} refresh={load} openEditor={(next, id) => openEditor(next, id, "campaigns")} goCreate={() => go("create")} />}
         </main>
         {loading && <div className="saving-indicator" role="status">Saving to Studio…</div>}
       </div>
@@ -202,7 +229,82 @@ function PageHeading({ eyebrow, title, description, action }: { eyebrow: string;
   return <header className="page-heading"><div><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></div>{action}</header>;
 }
 
-function CalendarView({ data, mutate, goCampaigns }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; goCampaigns: () => void }) {
+function CreateView({ data, mutate, refresh, openEditor, openImport, goCampaigns }: {
+  data: StudioData;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  refresh: () => Promise<void>;
+  openEditor: (view: "promo" | "motion", recordId: string) => void;
+  openImport: () => void;
+  goCampaigns: () => void;
+}) {
+  const records = data.records.filter((record) => record.active && record.verificationStatus === "verified");
+  const [recordId, setRecordId] = useState(records[0]?.id || "");
+  const [uploading, setUploading] = useState(false);
+  const record = records.find((item) => item.id === recordId) || records[0];
+  const asset = data.assets.find((item) => item.id === record?.assetId);
+  const pendingItem = data.calendarItems.find((item) => item.contentRecordId === record?.id && !item.campaignId);
+  const currentCampaign = data.campaigns.find((campaign) => campaign.sourceSnapshot.contentRecordId === record?.id);
+  const attachImage = async (file: File) => {
+    if (!record) return;
+    setUploading(true);
+    try {
+      const uploaded = await uploadAsset(file);
+      await mutate({ action: "setRecordAsset", recordId: record.id, assetId: uploaded.id });
+      await refresh();
+    } finally {
+      setUploading(false);
+    }
+  };
+  const startCampaign = async () => {
+    if (currentCampaign) return goCampaigns();
+    if (!pendingItem || !record) return;
+    await mutate({
+      action: "generateCampaign",
+      calendarItemId: pendingItem.id,
+      packId: record.recordType === "event" ? "event-promo" : "class-spotlight",
+    });
+    goCampaigns();
+  };
+  if (!record) return <section className="empty-state"><Sparkles size={40} /><h2>Add your first campaign source</h2><p>Import an announcement, verify the facts, then create social and motion output.</p><button className="button primary" onClick={openImport}>Add information</button></section>;
+  return <>
+    <PageHeading eyebrow="CREATE" title="Make something useful now" description="Choose a trusted record, add its campaign image, then open a ready-made social card or motion story."
+      action={<button className="button secondary" onClick={openImport}><ScanLine size={17} />Import new information</button>} />
+    <section className="create-source">
+      <div>
+        <label>Campaign source<select value={record.id} onChange={(event) => setRecordId(event.target.value)} data-testid="select-create-record">{records.map((item) => <option key={item.id} value={item.id}>{item.name} · v{item.version}</option>)}</select></label>
+        <span className="verified-line"><ShieldCheck size={16} />Verified source record</span>
+      </div>
+      <div className="create-source-image">
+        <span className="asset-thumb">{asset ? <ImageIcon size={18} /> : <span>SO</span>}</span>
+        <span><strong>{asset?.title || "Add a campaign image"}</strong><small>{asset ? "Approved for campaign use" : "JPEG, PNG, or WebP · up to 10 MB"}</small></span>
+        <label className="button secondary compact"><Upload size={15} />{uploading ? "Uploading…" : asset ? "Replace image" : "Add image"}<input type="file" accept="image/jpeg,image/png,image/webp" hidden disabled={uploading} onChange={(event) => { const file = event.target.files?.[0]; if (file) void attachImage(file); event.target.value = ""; }} /></label>
+      </div>
+    </section>
+    <section className="social-starters">
+      <header><div><p className="eyebrow">SOCIAL SHARE CARDS</p><h2>Two useful starting points</h2></div><p>Both open as editable Promo Kit artboards and download as production-size PNGs.</p></header>
+      <div className="social-card-grid">
+        <article className="social-starter square">
+          <div className="social-card-preview" style={asset ? { backgroundImage: `linear-gradient(180deg, transparent 24%, rgba(13,13,12,.9) 84%), url("${asset.fileReference}")` } : undefined}>
+            <span>{record.recordType === "event" ? "SUN OAKS EVENT" : "CLASS SPOTLIGHT"}</span><strong>{record.name}</strong><small>{record.date || record.startTime} · {record.location}</small>
+          </div>
+          <div><span><strong>Square announcement</strong><small>Instagram and Facebook · 1080 × 1080</small></span><button className="button primary compact" onClick={() => openEditor("promo", record.id)} data-testid="button-social-square">Edit card<ArrowRight size={15} /></button></div>
+        </article>
+        <article className="social-starter portrait">
+          <div className="social-card-preview portrait-preview" style={asset ? { backgroundImage: `linear-gradient(180deg, rgba(13,13,12,.04), rgba(13,13,12,.92)), url("${asset.fileReference}")` } : undefined}>
+            <span>THIS WEEK AT SUN OAKS</span><strong>{record.name}</strong><small>{record.summary}</small>
+          </div>
+          <div><span><strong>Portrait spotlight</strong><small>Feed-first storytelling · 1080 × 1350</small></span><button className="button primary compact" onClick={() => openEditor("promo", record.id)} data-testid="button-social-portrait">Edit card<ArrowRight size={15} /></button></div>
+        </article>
+      </div>
+    </section>
+    <section className="create-next-actions">
+      <button className="create-action-card" onClick={() => openEditor("motion", record.id)}><Clapperboard size={22} /><span><strong>Build a motion story</strong><small>Start with a ready-made three-scene sequence.</small></span><ChevronRight size={18} /></button>
+      <button className="create-action-card" disabled={!pendingItem && !currentCampaign} onClick={startCampaign}><Sparkles size={22} /><span><strong>{currentCampaign ? "Open coordinated campaign" : "Generate full campaign"}</strong><small>Stills, motion, caption, email, and review.</small></span><ChevronRight size={18} /></button>
+    </section>
+  </>;
+}
+
+function CalendarView({ data, mutate, goCampaigns, goCreate }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; goCampaigns: () => void; goCreate: () => void }) {
   const [mode, setMode] = useState<"month" | "agenda">("month");
   const [selected, setSelected] = useState<CalendarItem | null>(null);
   const recordFor = (item: CalendarItem) => data.records.find((record) => record.id === item.contentRecordId)!;
@@ -213,7 +315,7 @@ function CalendarView({ data, mutate, goCampaigns }: { data: StudioData; mutate:
   return (
     <>
       <PageHeading eyebrow="OPERATING CENTER" title="September 2026" description="Plan what Sun Oaks promotes, then generate from verified facts."
-        action={<button className="button primary" onClick={() => document.querySelector<HTMLButtonElement>('[data-testid="nav-ingester"]')?.click()}><Plus size={17} />Add information</button>} />
+        action={<button className="button primary" onClick={goCreate}><Plus size={17} />Create campaign</button>} />
       <section className="calendar-toolbar" aria-label="Calendar controls">
         <div className="segmented">
           <button className={mode === "month" ? "active" : ""} onClick={() => setMode("month")} data-testid="button-month"><Grid3X3 size={16} />Month</button>
@@ -427,39 +529,112 @@ function IngesterView({ data, mutate, onPublished }: { data: StudioData; mutate:
   );
 }
 
-function LibraryView({ data }: { data: StudioData }) {
+function RecordEditDrawer({ record, onClose, mutate, refresh }: {
+  record: ContentRecord;
+  onClose: () => void;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  refresh: () => Promise<void>;
+}) {
+  const [fields, setFields] = useState({
+    name: record.name, summary: record.summary, description: record.description, date: record.date || "",
+    startTime: record.startTime || "", endTime: record.endTime || "", location: record.location || "",
+    instructor: record.instructor || "", price: record.price || "", cta: record.cta,
+  });
+  const [uploading, setUploading] = useState(false);
+  const patch = (key: keyof typeof fields, value: string) => setFields((current) => ({ ...current, [key]: value }));
+  const save = async () => {
+    const changes = Object.fromEntries(Object.entries(fields).filter(([key, value]) =>
+      value !== String(record[key as keyof ContentRecord] || ""),
+    ));
+    if (Object.keys(changes).length) await mutate({ action: "updateRecord", recordId: record.id, changes });
+    onClose();
+  };
+  const upload = async (file: File) => {
+    setUploading(true);
+    try {
+      const asset = await uploadAsset(file);
+      await mutate({ action: "setRecordAsset", recordId: record.id, assetId: asset.id });
+      await refresh();
+    } finally {
+      setUploading(false);
+    }
+  };
+  return <div className="drawer-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <aside className="drawer edit-record-drawer" role="dialog" aria-modal="true" aria-labelledby="edit-record-title">
+      <header><div><p className="eyebrow">TRUSTED RECORD · VERSION {record.version}</p><h2 id="edit-record-title">Edit campaign information</h2></div><button className="icon-button" onClick={onClose} aria-label="Close editor"><X /></button></header>
+      <div className="drawer-image-upload"><ImageIcon size={20} /><span><strong>Campaign image</strong><small>Replacing it creates a new trusted version.</small></span><label className="button secondary compact"><Upload size={15} />{uploading ? "Uploading…" : "Add / replace"}<input type="file" accept="image/jpeg,image/png,image/webp" hidden disabled={uploading} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} /></label></div>
+      <div className="form-grid edit-record-form">
+        <label className="span-2">Name<input value={fields.name} onChange={(event) => patch("name", event.target.value)} /></label>
+        <label className="span-2">Summary<textarea rows={3} value={fields.summary} onChange={(event) => patch("summary", event.target.value)} /></label>
+        <label className="span-2">Description<textarea rows={4} value={fields.description} onChange={(event) => patch("description", event.target.value)} /></label>
+        {record.recordType === "event" && <label>Date<input type="date" value={fields.date} onChange={(event) => patch("date", event.target.value)} /></label>}
+        <label>Start time<input type="time" value={fields.startTime} onChange={(event) => patch("startTime", event.target.value)} /></label>
+        <label>End time<input type="time" value={fields.endTime} onChange={(event) => patch("endTime", event.target.value)} /></label>
+        <label>Location<input value={fields.location} onChange={(event) => patch("location", event.target.value)} /></label>
+        <label>Instructor / host<input value={fields.instructor} onChange={(event) => patch("instructor", event.target.value)} /></label>
+        <label>Price<input value={fields.price} onChange={(event) => patch("price", event.target.value)} /></label>
+        <label className="span-2">Call to action<input value={fields.cta} onChange={(event) => patch("cta", event.target.value)} /></label>
+      </div>
+      <div className="drawer-save"><p><ShieldCheck size={16} />Existing campaign snapshots remain unchanged.</p><button className="button primary" onClick={save} data-testid="button-save-record"><Check size={16} />Save new version</button></div>
+    </aside>
+  </div>;
+}
+
+function LibraryView({ data, mutate, refresh, openEditor }: {
+  data: StudioData;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  refresh: () => Promise<void>;
+  openEditor: (view: "promo" | "motion", recordId: string) => void;
+}) {
   const [query, setQuery] = useState("");
+  const [editing, setEditing] = useState<ContentRecord | null>(null);
   const records = data.records.filter((record) => record.active && record.name.toLowerCase().includes(query.toLowerCase()));
   return (
     <>
       <PageHeading eyebrow="SOURCE OF TRUTH" title="Trusted Content Library" description="Verified operational records with source lineage and version history." />
       <div className="library-toolbar"><label className="search-field"><Search size={17} /><span className="sr-only">Search records</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search trusted records" data-testid="input-library-search" /></label><span>{records.length} active records</span></div>
-      <section className="table-wrap"><table><thead><tr><th>Record</th><th>Type</th><th>Schedule</th><th>Source trust</th><th>State</th></tr></thead><tbody>{records.map((record) => <tr key={record.id}>
+      <section className="table-wrap"><table><thead><tr><th>Record</th><th>Type</th><th>Schedule</th><th>Source trust</th><th>State</th><th><span className="sr-only">Actions</span></th></tr></thead><tbody>{records.map((record) => <tr key={record.id}>
         <td><div className="record-cell"><span className="asset-thumb">{record.assetId ? <ImageIcon size={18} /> : <span>SO</span>}</span><span><strong>{record.name}</strong><small>{record.summary}</small></span></div></td>
         <td>{record.recordType === "event" ? "Event" : "Recurring class"}</td>
         <td>{record.date || `${record.startTime || "Time pending"} · ${record.location || "Location pending"}`}</td>
         <td><span className="verified-line"><ShieldCheck size={16} />Verified · v{record.version}</span><small>{new Date(record.lastConfirmedAt).toLocaleDateString()}</small></td>
         <td><StatusBadge status={record.status} /></td>
+        <td><div className="row-actions"><button className="button secondary compact" onClick={() => setEditing(record)} data-testid={`button-edit-record-${record.id}`}><Pencil size={14} />Edit</button><button className="button primary compact" onClick={() => openEditor("promo", record.id)}><WandSparkles size={14} />Create</button></div></td>
       </tr>)}</tbody></table></section>
+      {editing && <RecordEditDrawer record={editing} onClose={() => setEditing(null)} mutate={mutate} refresh={refresh} />}
     </>
   );
 }
 
-function CampaignsView({ data, mutate }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>> }) {
+function CampaignsView({ data, mutate, refresh, openEditor, goCreate }: {
+  data: StudioData;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  refresh: () => Promise<void>;
+  openEditor: (view: "promo" | "motion", recordId: string) => void;
+  goCreate: () => void;
+}) {
   const [selectedId, setSelectedId] = useState(data.campaigns.at(-1)?.id || "");
   const campaign = data.campaigns.find((item) => item.id === selectedId) || data.campaigns.at(-1);
   if (!campaign) return (
     <>
       <PageHeading eyebrow="CAMPAIGNS" title="Coordinated output sets" description="Every still, motion, caption, and email shares one protected source snapshot." />
-      <section className="empty-state"><Sparkles size={40} /><h2>No campaigns yet</h2><p>Open a verified item in the calendar and complete Quick Create.</p><button className="button primary" onClick={() => document.querySelector<HTMLButtonElement>('[data-testid="nav-calendar"]')?.click()}>Open calendar</button></section>
+      <section className="empty-state"><Sparkles size={40} /><h2>No campaigns yet</h2><p>Choose a trusted record and make your first useful output.</p><button className="button primary" onClick={goCreate}>Create campaign</button></section>
     </>
   );
-  return <CampaignWorkspace key={campaign.id} campaign={campaign} data={data} mutate={mutate} onSelect={setSelectedId} />;
+  return <CampaignWorkspace key={campaign.id} campaign={campaign} data={data} mutate={mutate} refresh={refresh} openEditor={openEditor} onSelect={setSelectedId} />;
 }
 
-function CampaignWorkspace({ campaign, data, mutate, onSelect }: { campaign: Campaign; data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; onSelect: (id: string) => void }) {
+function CampaignWorkspace({ campaign, data, mutate, refresh, openEditor, onSelect }: {
+  campaign: Campaign;
+  data: StudioData;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  refresh: () => Promise<void>;
+  openEditor: (view: "promo" | "motion", recordId: string) => void;
+  onSelect: (id: string) => void;
+}) {
   const deliverables = data.deliverables.filter((item) => item.campaignId === campaign.id);
   const [activeId, setActiveId] = useState(deliverables[0]?.id);
+  const [editing, setEditing] = useState(false);
   const active = deliverables.find((item) => item.id === activeId) || deliverables[0];
   const record = data.records.find((item) => item.id === campaign.sourceSnapshot.contentRecordId);
   const asset = campaign.sourceSnapshot.asset
@@ -483,7 +658,7 @@ function CampaignWorkspace({ campaign, data, mutate, onSelect }: { campaign: Cam
   return (
     <>
       <PageHeading eyebrow="CAMPAIGN WORKSPACE" title={campaign.sourceSnapshot.facts.name} description={`${campaign.campaignPackId === "event-promo" ? "Event Promo" : "Class Spotlight"} · created ${new Date(campaign.createdAt).toLocaleDateString()}`}
-        action={<div className={`rollup rollup-${campaign.rollupStatus}`}><span />{campaign.rollupStatus === "ready" ? "Ready to export" : campaign.rollupStatus.replaceAll("_", " ")}</div>} />
+        action={<div className="campaign-heading-actions">{record && <><button className="button secondary compact" onClick={() => setEditing(true)}><Pencil size={15} />Edit info / image</button><button className="button secondary compact" onClick={() => openEditor("promo", record.id)}><WandSparkles size={15} />Social cards</button><button className="button secondary compact" onClick={() => openEditor("motion", record.id)}><Clapperboard size={15} />Motion Studio</button></>}<div className={`rollup rollup-${campaign.rollupStatus}`}><span />{campaign.rollupStatus === "ready" ? "Ready to export" : campaign.rollupStatus.replaceAll("_", " ")}</div></div>} />
       <div className="campaign-switcher"><label>Campaign<select value={campaign.id} onChange={(event) => onSelect(event.target.value)}>{data.campaigns.map((item) => <option key={item.id} value={item.id}>{item.sourceSnapshot.facts.name} · {new Date(item.createdAt).toLocaleDateString()}</option>)}</select></label>
         <div className="snapshot-lock"><ShieldCheck size={17} /><span>Source snapshot locked<strong>Record v{campaign.sourceSnapshot.recordVersion}</strong></span></div></div>
       <section className="workspace">
@@ -517,6 +692,7 @@ function CampaignWorkspace({ campaign, data, mutate, onSelect }: { campaign: Cam
           <ReviewShare campaign={campaign} deliverables={deliverables} data={data} mutate={mutate} />
         </aside>
       </section>
+      {editing && record && <RecordEditDrawer record={record} onClose={() => setEditing(false)} mutate={mutate} refresh={refresh} />}
     </>
   );
 }

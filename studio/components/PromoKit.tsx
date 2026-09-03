@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Download, Eye, Image as ImageIcon, ShieldCheck } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Download, Eye, Image as ImageIcon, ShieldCheck } from "lucide-react";
 import type { Asset, ContentRecord, StudioData } from "@/lib/client-types";
 
 const FORMATS = [
@@ -134,9 +134,14 @@ function PromoArtboard({ format, fields, record, asset, valid }: { format: Forma
   </article>;
 }
 
-export default function PromoKit({ data, mutate }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>> }) {
+export default function PromoKit({ data, mutate, initialRecordId, onBack }: {
+  data: StudioData;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  initialRecordId?: string;
+  onBack?: () => void;
+}) {
   const records = data.records.filter((record) => record.active && record.verificationStatus === "verified");
-  const [recordId, setRecordId] = useState(records[0]?.id || "");
+  const [recordId, setRecordId] = useState(initialRecordId || records[0]?.id || "");
   const record = records.find((item) => item.id === recordId) || records[0];
   const sourceFields = fieldsFor(record);
   const [fields, setFields] = useState<Fields>(() => fieldsFor(record));
@@ -174,7 +179,7 @@ export default function PromoKit({ data, mutate }: { data: StudioData; mutate: (
     }
   };
   return <>
-    <header className="page-heading"><div><p className="eyebrow">PROMO KIT</p><h1>One verified record, every still format</h1><p>Preview and download coordinated artwork without changing or inventing operational facts.</p></div><span className={`fact-integrity ${valid ? "is-valid" : "is-blocked"}`}>{valid ? <CheckCircle2 size={17} /> : <ShieldCheck size={17} />}{valid ? "Facts match verified record" : "Export blocked: restore verified values"}</span></header>
+    <header className="page-heading"><div>{onBack && <button className="editor-back" onClick={onBack}><ArrowLeft size={15} />Back</button>}<p className="eyebrow">PROMO KIT · SOCIAL CARDS</p><h1>One verified record, every still format</h1><p>Preview and download coordinated artwork without changing or inventing operational facts.</p></div><span className={`fact-integrity ${valid ? "is-valid" : "is-blocked"}`}>{valid ? <CheckCircle2 size={17} /> : <ShieldCheck size={17} />}{valid ? "Facts match verified record" : "Export blocked: restore verified values"}</span></header>
     <section className="promo-layout">
       <aside className="promo-fields">
         <p className="eyebrow">VERIFIED CONTENT</p>
