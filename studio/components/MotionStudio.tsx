@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, ChevronUp, Copy, Download, Film, ImagePlus, Pause, Play, Plus, RotateCcw, ShieldCheck, Trash2 } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, Copy, Download, Film, ImagePlus, Pause, Play, Plus, RotateCcw, ShieldCheck, Trash2 } from "lucide-react";
 import type { ContentRecord, StudioData } from "@/lib/client-types";
 import {
   MOTION_ASPECTS, downloadMotionBlob, exportMotionMp4, exportMotionPng, exportMotionWebm, makeMotionScene,
@@ -44,9 +44,14 @@ async function imageElement(src: string) {
   return image;
 }
 
-export default function MotionStudio({ data, mutate }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>> }) {
+export default function MotionStudio({ data, mutate, initialRecordId, onBack }: {
+  data: StudioData;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  initialRecordId?: string;
+  onBack?: () => void;
+}) {
   const records = data.records.filter((record) => record.active && record.verificationStatus === "verified");
-  const [recordId, setRecordId] = useState(records[0]?.id || "");
+  const [recordId, setRecordId] = useState(initialRecordId || records[0]?.id || "");
   const record = records.find((item) => item.id === recordId) || records[0];
   const approvedAsset = data.assets.find((item) => item.id === record?.assetId && item.active && item.rightsStatus === "approved");
   const libraryImageId = approvedAsset ? `library-${approvedAsset.id}` : null;
@@ -220,7 +225,7 @@ export default function MotionStudio({ data, mutate }: { data: StudioData; mutat
   if (!record) return <section className="empty-state"><Film /><h2>No verified records</h2><p>Verify content before building motion scenes.</p></section>;
 
   return <div className="motion-page">
-    <header className="motion-page-head"><div><p className="eyebrow">MOTION STUDIO</p><h1>Build a multi-scene story</h1><p>Deterministic canvas preview, editable scenes, and production exports in Sun Oaks brand.</p></div>
+    <header className="motion-page-head"><div>{onBack && <button className="editor-back" onClick={onBack}><ArrowLeft size={15} />Back</button>}<p className="eyebrow">MOTION STUDIO</p><h1>Build a multi-scene story</h1><p>Deterministic canvas preview, editable scenes, and production exports in Sun Oaks brand.</p></div>
       <label>Verified source<select value={record.id} onChange={(event) => {
         const nextRecord = records.find((item) => item.id === event.target.value);
         if (!nextRecord) return;

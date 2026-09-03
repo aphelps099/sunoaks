@@ -54,6 +54,22 @@ export const actionRequestSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("generateCampaign"), calendarItemId: z.string(), packId: z.enum(["event-promo", "class-spotlight"]) }),
   z.object({ action: z.literal("setApproval"), deliverableId: z.string(), status: z.enum(["draft", "approved", "changes_requested"]) }),
   z.object({ action: z.literal("setRecordAsset"), recordId: z.string(), assetId: z.string().nullable() }),
+  z.object({
+    action: z.literal("updateRecord"),
+    recordId: z.string(),
+    changes: z.object({
+      name: z.string().trim().min(2).optional(),
+      summary: z.string().trim().min(2).optional(),
+      description: z.string().trim().min(2).optional(),
+      date: isoDateSchema.optional(),
+      startTime: timeSchema.optional(),
+      endTime: timeSchema.optional(),
+      location: z.string().trim().min(2).optional(),
+      instructor: z.string().trim().optional(),
+      price: z.string().trim().optional(),
+      cta: z.string().trim().min(2).optional(),
+    }).refine((changes) => Object.keys(changes).length > 0, "Choose at least one field to update."),
+  }),
   z.object({ action: z.literal("authorizeExport"), calendarItemId: z.string(), deliverableId: z.string() }),
   z.object({ action: z.literal("markExported"), calendarItemId: z.string(), deliverableId: z.string() }),
   z.object({
@@ -245,6 +261,38 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
     });
     record.status = deriveRecordStatus(record, db.calendarItems);
     return { ok: true, version: record.version };
+  }
+
+  if (input.action === "updateRecord") {
+    const record = db.records.find((item) => item.id === input.recordId && item.active);
+    if (!record) throw new Error("Record not found.");
+    const next = contentRecordSchema.parse({
+      ...record,
+      ...input.changes,
+      normalizedKey: input.changes.name ? normalizedRecordKey(record.recordType, input.changes.name) : record.normalizedKey,
+      version: record.version + 1,
+      updatedAt: new Date().toISOString(),
+      lastConfirmedAt: new Date().toISOString(),
+    });
+    const duplicate = db.records.find((item) => item.id !== record.id && item.active && item.normalizedKey === next.normalizedKey);
+    if (duplicate) throw new Error("Another active trusted record already uses that name.");
+    const changedFields = Object.keys(input.changes).filter((field) =>
+      record[field as keyof typeof record] !== next[field as keyof typeof next],
+    );
+    if (!changedFields.length) return { ok: true, unchanged: true, version: record.version };
+    Object.assign(record, next);
+    const rule = db.scheduleRules.find((item) => item.contentRecordId === record.id);
+    if (rule) {
+      if (input.changes.startTime) rule.startTime = input.changes.startTime;
+      if (input.changes.endTime) rule.endTime = input.changes.endTime;
+      if (input.changes.location) rule.location = input.changes.location;
+    }
+    db.recordVersions.push({
+      id: randomUUID(), recordId: record.id, version: record.version, changedFields,
+      snapshot: structuredClone(record), createdAt: record.updatedAt,
+    });
+    record.status = deriveRecordStatus(record, db.calendarItems);
+    return { ok: true, version: record.version, changedFields };
   }
 
   if (input.action === "createReviewLink") {
