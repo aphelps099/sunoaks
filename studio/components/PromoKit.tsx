@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, CheckCircle2, Download, Eye, Image as ImageIcon, ShieldCheck } from "lucide-react";
-import type { Asset, ContentRecord, StudioData } from "@/lib/client-types";
+import { recordSchedule } from "@/lib/promotion";
+import type { Asset, ContentRecord, ScheduleRule, StudioData } from "@/lib/client-types";
 
 const FORMATS = [
   { id: "square", label: "Social 1:1", width: 1080, height: 1080 },
@@ -15,21 +16,16 @@ const FORMATS = [
 type Format = typeof FORMATS[number];
 type Fields = { headline: string; summary: string; schedule: string; location: string; cta: string };
 
-function fieldsFor(record?: ContentRecord): Fields {
+function fieldsFor(record?: ContentRecord, rules: ScheduleRule[] = []): Fields {
   return record ? {
     headline: record.name,
     summary: record.summary,
-    schedule: verifiedSchedule(record),
+    schedule: recordSchedule(record, rules),
     location: record.location || "",
     cta: record.cta,
   } : { headline: "", summary: "", schedule: "", location: "", cta: "" };
 }
 
-function verifiedSchedule(record: ContentRecord) {
-  const date = record.date ? new Date(`${record.date}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "";
-  const time = record.startTime ? new Date(`2000-01-01T${record.startTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "";
-  return [date, time].filter(Boolean).join(" · ");
-}
 
 function loadImage(asset?: Asset) {
   if (!asset) return Promise.resolve<HTMLImageElement | null>(null);
@@ -134,73 +130,77 @@ function PromoArtboard({ format, fields, record, asset, valid }: { format: Forma
   </article>;
 }
 
-export default function PromoKit({ data, mutate, initialRecordId, onBack }: {
-  data: StudioData;
-  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
-  initialRecordId?: string;
-  onBack?: () => void;
+export default function PromoKit({ data, mutate, initialRecordId, onBack, onDirtyChange }: {
+  data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  initialRecordId?: string; onBack?: () => void; onDirtyChange?: (dirty: boolean) => void;
 }) {
   const records = data.records.filter((record) => record.active && record.verificationStatus === "verified");
   const [recordId, setRecordId] = useState(initialRecordId || records[0]?.id || "");
-  const record = records.find((item) => item.id === recordId) || records[0];
-  const sourceFields = fieldsFor(record);
-  const [fields, setFields] = useState<Fields>(() => fieldsFor(record));
-  const [projectId, setProjectId] = useState(() => data.creativeProjects.find((item) => item.kind === "promo" && item.recordId === record?.id)?.id || "");
+  const record = records.find((item) => item.id === recordId);
+  const project = data.creativeProjects.find((item) => item.kind === "promo" && item.recordId === recordId);
+  const restoredCopy = (record?: ContentRecord) => {
+    const stored = data.creativeProjects.find((item) => item.kind === "promo" && item.recordId === record?.id)?.payload.fields as Partial<Fields> | undefined;
+    return { headline: stored?.headline || record?.name || "", summary: stored?.summary || record?.summary || "" };
+  };
+  const [copy, setCopy] = useState(() => restoredCopy(record));
+  const [savedCopy, setSavedCopy] = useState(() => JSON.stringify(copy));
+  const [projectId, setProjectId] = useState(project?.id || "");
   const [selectedFormats, setSelectedFormats] = useState<string[]>(FORMATS.map((format) => format.id));
+  const [activeFormat, setActiveFormat] = useState<Format["id"]>("portrait");
   const [reviewUrl, setReviewUrl] = useState("");
   const [saveStatus, setSaveStatus] = useState("");
-  if (!record) return <section className="empty-state"><ShieldCheck /><h2>No verified records</h2><p>Verify a record in the Ingester before creating artwork.</p></section>;
-  const mismatches = (Object.keys(fields) as (keyof Fields)[]).filter((key) => fields[key].trim() !== sourceFields[key].trim());
-  const valid = mismatches.length === 0;
+  const [saving, setSaving] = useState(false);
+  const dirty = JSON.stringify(copy) !== savedCopy;
+  useEffect(() => { onDirtyChange?.(dirty); return () => onDirtyChange?.(false); }, [dirty, onDirtyChange]);
+  if (!record) return <section className="empty-state"><h2>Choose a class or event</h2><p>This saved design's source is not available.</p>{onBack && <button className="button primary" onClick={onBack}>Back</button>}</section>;
+  const fields = { ...fieldsFor(record, data.scheduleRules), ...copy };
+  const valid = Boolean(copy.headline.trim() && copy.summary.trim());
   const asset = data.assets.find((item) => item.id === record.assetId && item.active && item.rightsStatus === "approved");
-  const patch = (key: keyof Fields, value: string) => setFields((current) => ({ ...current, [key]: value }));
   const saveProject = async (createReview: boolean) => {
-    if (!valid) return;
-    setSaveStatus("Rendering saved version…");
-    const loaded = await loadImage(asset);
-    const artworks = FORMATS.map((format) => {
-      const canvas = document.createElement("canvas");
-      drawPromo(canvas, format, fields, record, loaded, asset);
-      return { key: format.id, kind: "still", format: format.label, width: format.width, height: format.height, dataUrl: canvas.toDataURL("image/jpeg", .86) };
-    });
-    const saved = await mutate({
-      action: "saveCreativeProject", projectId: projectId || undefined, kind: "promo", recordId: record.id,
-      title: `${record.name} Promo Kit`, payload: { fields, artworks },
-    });
-    const id = String(saved.creativeProjectId);
-    setProjectId(id);
-    setSaveStatus(`Saved version ${saved.version}`);
-    if (createReview) {
-      const result = await mutate({ action: "createProjectReviewLink", creativeProjectId: id, selectedArtworkKeys: selectedFormats, expiresInHours: 72 });
-      const url = String(result.reviewUrl || "");
-      setReviewUrl(url);
-      if (url) await navigator.clipboard.writeText(url);
-      setSaveStatus("Saved and copied review link");
-    }
+    if (!valid || saving) return;
+    setSaving(true); setSaveStatus("Saving…");
+    try {
+      const loaded = await loadImage(asset);
+      if (asset && !loaded) throw new Error("The photo could not load. Try again before saving or sharing.");
+      await document.fonts.ready;
+      const artworks = FORMATS.map((format) => {
+        const canvas = document.createElement("canvas");
+        drawPromo(canvas, format, fields, record, loaded, asset);
+        return { key: format.id, kind: "still", format: format.label, width: format.width, height: format.height, dataUrl: canvas.toDataURL("image/jpeg", .86) };
+      });
+      const saved = await mutate({ action: "saveCreativeProject", projectId: projectId || undefined, expectedVersion: project?.version,
+        kind: "promo", recordId: record.id, title: `${record.name} Promo Kit`, payload: { fields, artworks } });
+      const id = String(saved.creativeProjectId); setProjectId(id); setSavedCopy(JSON.stringify(copy));
+      setSaveStatus("Draft saved");
+      if (createReview) {
+        const result = await mutate({ action: "createProjectReviewLink", creativeProjectId: id, selectedArtworkKeys: selectedFormats, expiresInHours: 72 });
+        const url = String(result.reviewUrl || ""); setReviewUrl(url); setSaveStatus("Saved · review link ready");
+        if (url) await navigator.clipboard.writeText(url).catch(() => undefined);
+      }
+    } catch (caught) { setSaveStatus(caught instanceof Error ? caught.message : "Could not save. Try again."); }
+    finally { setSaving(false); }
   };
   return <>
-    <header className="page-heading"><div>{onBack && <button className="editor-back" onClick={onBack}><ArrowLeft size={15} />Back</button>}<p className="eyebrow">PROMO KIT · SOCIAL CARDS</p><h1>One verified record, every still format</h1><p>Preview and download coordinated artwork without changing or inventing operational facts.</p></div><span className={`fact-integrity ${valid ? "is-valid" : "is-blocked"}`}>{valid ? <CheckCircle2 size={17} /> : <ShieldCheck size={17} />}{valid ? "Facts match verified record" : "Export blocked: restore verified values"}</span></header>
+    <header className="page-heading"><div>{onBack && <button className="editor-back" onClick={onBack}><ArrowLeft size={15} />Back</button>}<p className="eyebrow">STANDALONE DESIGN</p><h1>One message, more formats</h1><p>Edit your wording. The class or event details stay confirmed.</p></div><span className="fact-integrity is-valid"><CheckCircle2 size={17} />Details confirmed</span></header>
     <section className="promo-layout">
       <aside className="promo-fields">
-        <p className="eyebrow">VERIFIED CONTENT</p>
-        <label>Source record<select value={record.id} onChange={(event) => { const next = records.find((item) => item.id === event.target.value); setRecordId(event.target.value); setFields(fieldsFor(next)); setProjectId(data.creativeProjects.find((item) => item.kind === "promo" && item.recordId === next?.id)?.id || ""); }} data-testid="select-promo-record">{records.map((item) => <option key={item.id} value={item.id}>{item.name} · v{item.version}</option>)}</select></label>
-        <div className="verified-source"><ShieldCheck size={17} /><span>Verified record v{record.version}<small>Last confirmed {new Date(record.lastConfirmedAt).toLocaleDateString()}</small></span></div>
-        {(Object.keys(fields) as (keyof Fields)[]).map((key) => <label key={key} className={mismatches.includes(key) ? "field-mismatch" : ""}>{key[0].toUpperCase() + key.slice(1)}
-          {key === "summary" ? <textarea rows={3} value={fields[key]} onChange={(event) => patch(key, event.target.value)} /> : <input value={fields[key]} onChange={(event) => patch(key, event.target.value)} />}
-          {mismatches.includes(key) && <small>Must match: “{sourceFields[key]}”</small>}
-        </label>)}
-        <button className="button text full" disabled={valid} onClick={() => setFields(sourceFields)}>Restore verified values</button>
-        <div className="promo-image-note"><ImageIcon size={18} /><span><strong>{asset?.title || "Brand fallback"}</strong><small>{asset ? "Approved image rights" : "No image selected on record"}</small></span></div>
-        <fieldset className="promo-review-select"><legend>Include in GM review</legend>{FORMATS.map((format) => <label key={format.id}><input type="checkbox" checked={selectedFormats.includes(format.id)} onChange={() => setSelectedFormats((current) => current.includes(format.id) ? current.filter((id) => id !== format.id) : [...current, format.id])} />{format.label}</label>)}</fieldset>
-        <button className="button secondary full" disabled={!valid} onClick={() => saveProject(false)}>Save project</button>
-        <button className="button primary full" disabled={!valid || !selectedFormats.length} onClick={() => saveProject(true)} data-testid="button-promo-review"><ShieldCheck size={16} />Save & copy GM link</button>
-        {saveStatus && <p className="editor-save-status">{saveStatus}</p>}
+        <label>Class or event<select value={record.id} disabled={saving} onChange={(event) => {
+          if (dirty && !window.confirm("You have unsaved changes. Switch without saving?")) return;
+          const next = records.find((item) => item.id === event.target.value); const restored = restoredCopy(next);
+          setRecordId(event.target.value); setCopy(restored); setSavedCopy(JSON.stringify(restored));
+          setProjectId(data.creativeProjects.find((item) => item.kind === "promo" && item.recordId === next?.id)?.id || ""); setSaveStatus(""); setReviewUrl("");
+        }} data-testid="select-promo-record">{records.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+        <label>Headline<input maxLength={200} disabled={saving} value={copy.headline} onChange={(event) => setCopy((current) => ({ ...current, headline: event.target.value }))} /></label>
+        <label>Short message<textarea rows={3} maxLength={400} disabled={saving} value={copy.summary} onChange={(event) => setCopy((current) => ({ ...current, summary: event.target.value }))} /></label>
+        <details className="protected-details"><summary>Confirmed class or event details</summary><dl><dt>When</dt><dd>{fields.schedule}</dd><dt>Where</dt><dd>{fields.location}</dd><dt>Registration</dt><dd>{fields.cta}</dd></dl><p>Update these in Classes & events.</p></details>
+        <div className="promo-image-note"><ImageIcon size={18} /><span><strong>{asset?.title || "Brand design without a photo"}</strong></span></div>
+        <button className="button secondary full" disabled={!valid || saving} onClick={() => saveProject(false)}>Save draft</button>
+        <p className="editor-save-status" role="status">{saving ? "Saving…" : dirty ? "Unsaved changes" : saveStatus || "Ready to edit"}</p>
+        {saveStatus && dirty && !saving && <p role="alert" className="inline-error">{saveStatus}</p>}
+        <details className="promo-review-options"><summary>Share for review</summary><fieldset className="promo-review-select"><legend>Include these formats</legend>{FORMATS.map((format) => <label key={format.id}><input type="checkbox" checked={selectedFormats.includes(format.id)} onChange={() => setSelectedFormats((current) => current.includes(format.id) ? current.filter((id) => id !== format.id) : [...current, format.id])} />{format.label}</label>)}</fieldset><button className="button primary full" disabled={!valid || saving || !selectedFormats.length} onClick={() => saveProject(true)} data-testid="button-promo-review">Save & get review link</button></details>
         {reviewUrl && <div className="editor-review-url"><input readOnly value={reviewUrl} aria-label="Promo Kit review URL" /><button onClick={() => navigator.clipboard.writeText(reviewUrl)}>Copy</button></div>}
       </aside>
-      <div className="promo-gallery">
-        <div className="promo-gallery-head"><span><Eye size={17} />Live artboards</span><small>All five outputs use the same verified content.</small></div>
-        <div className="promo-grid">{FORMATS.map((format) => <PromoArtboard key={format.id} format={format} fields={fields} record={record} asset={asset} valid={valid} />)}</div>
-      </div>
+      <div className="promo-gallery"><div className="format-tabs" role="group" aria-label="Preview format">{FORMATS.map((format) => <button aria-pressed={activeFormat === format.id} className={activeFormat === format.id ? "active" : ""} key={format.id} onClick={() => setActiveFormat(format.id)}>{format.label}</button>)}</div><div className="promo-single-preview"><PromoArtboard key={`${record.id}-${activeFormat}`} format={FORMATS.find((format) => format.id === activeFormat)!} fields={fields} record={record} asset={asset} valid={valid} /></div><p className="capability-note">Standalone design downloads are drafts. Share a saved version for manager review.</p></div>
     </section>
   </>;
 }

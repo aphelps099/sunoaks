@@ -34,7 +34,7 @@ export async function POST(request: Request) {
   const id = randomUUID();
   const directory = uploadDirectory();
   await mkdir(directory, { recursive: true });
-  await writeFile(/* turbopackIgnore: true */ path.join(directory, `${id}.${extension}`), Buffer.from(await file.arrayBuffer()), { mode: 0o600 });
+  await writeFile(path.join(/* turbopackIgnore: true */ directory, `${id}.${extension}`), Buffer.from(await file.arrayBuffer()), { mode: 0o600 });
   const asset = assetSchema.parse({
     id,
     assetType: "image",

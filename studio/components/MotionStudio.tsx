@@ -2,7 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, Copy, Download, Film, ImagePlus, Pause, Play, Plus, RotateCcw, ShieldCheck, Trash2 } from "lucide-react";
-import type { ContentRecord, StudioData } from "@/lib/client-types";
+import { uploadAsset } from "@/lib/assets-client";
+import { recordSchedule as confirmedSchedule } from "@/lib/promotion";
+import type { ContentRecord, ScheduleRule, StudioData } from "@/lib/client-types";
 import {
   MOTION_ASPECTS, downloadMotionBlob, exportMotionMp4, exportMotionPng, exportMotionWebm, makeMotionScene,
   motionDuration, motionSceneAt, renderMotionFrame,
@@ -18,19 +20,17 @@ const TEMPLATES: { id: MotionTemplate; label: string }[] = [
 const ANIMATIONS: MotionAnimation[] = ["rise", "fade", "wipe", "scale"];
 const TRANSITIONS: MotionTransition[] = ["cut", "fade", "slide"];
 
-function recordSchedule(record: ContentRecord) {
-  const date = record.date ? new Date(`${record.date}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric" }) : "";
-  const time = record.startTime ? new Date(`2000-01-01T${record.startTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "";
-  return [date, time, record.location].filter(Boolean).join(" · ");
+function recordSchedule(record: ContentRecord, rules: ScheduleRule[]) {
+  return [confirmedSchedule(record, rules), record.location].filter(Boolean).join(" · ");
 }
 
-function defaultDocument(record: ContentRecord, imageId: string | null): MotionDocument {
+function defaultDocument(record: ContentRecord, imageId: string | null, rules: ScheduleRule[]): MotionDocument {
   return {
     aspect: "9:16",
     fps: 30,
     scenes: [
       makeMotionScene("title", { kicker: record.recordType === "event" ? "SUN OAKS EVENT" : "CLASS SPOTLIGHT", title: record.name, subtitle: record.summary }),
-      makeMotionScene("image", { kicker: record.name, title: recordSchedule(record), subtitle: record.instructor ? `With ${record.instructor}` : record.price || "", imageId, animation: "wipe" }),
+      makeMotionScene("image", { kicker: record.name, title: recordSchedule(record, rules), subtitle: record.instructor ? `With ${record.instructor}` : record.price || "", imageId, animation: "wipe" }),
       makeMotionScene("endcard", { kicker: "SUN OAKS", title: record.cta, subtitle: record.name, transition: "slide" }),
     ],
   };
@@ -44,11 +44,12 @@ async function imageElement(src: string) {
   return image;
 }
 
-export default function MotionStudio({ data, mutate, initialRecordId, onBack }: {
+export default function MotionStudio({ data, mutate, initialRecordId, onBack, onDirtyChange }: {
   data: StudioData;
   mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
   initialRecordId?: string;
   onBack?: () => void;
+  onDirtyChange?: (dirty: boolean) => void;
 }) {
   const records = data.records.filter((record) => record.active && record.verificationStatus === "verified");
   const [recordId, setRecordId] = useState(initialRecordId || records[0]?.id || "");
@@ -59,7 +60,12 @@ export default function MotionStudio({ data, mutate, initialRecordId, onBack }: 
   const imagesRef = useRef(images);
   const existingProject = data.creativeProjects.find((item) => item.kind === "motion" && item.recordId === record?.id);
   const savedDocument = existingProject?.payload.doc as MotionDocument | undefined;
-  const [doc, setDoc] = useState<MotionDocument>(() => savedDocument?.scenes?.length ? savedDocument : record ? defaultDocument(record, libraryImageId) : { aspect: "9:16", fps: 30, scenes: [] });
+  const [doc, setDoc] = useState<MotionDocument>(() => savedDocument?.scenes?.length ? savedDocument : record ? defaultDocument(record, libraryImageId, data.scheduleRules) : { aspect: "9:16", fps: 30, scenes: [] });
+  const [savedDoc, setSavedDoc] = useState(() => JSON.stringify(doc));
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const dirty = JSON.stringify(doc) !== savedDoc;
+  useEffect(() => { onDirtyChange?.(dirty); return () => onDirtyChange?.(false); }, [dirty, onDirtyChange]);
   const docRef = useRef(doc);
   const [selectedId, setSelectedId] = useState(doc.scenes[0]?.id || "");
   const selected = doc.scenes.find((scene) => scene.id === selectedId) || doc.scenes[0];
@@ -164,13 +170,16 @@ export default function MotionStudio({ data, mutate, initialRecordId, onBack }: 
     setSelectedId(next[Math.max(0, index - 1)].id);
   };
   const upload = async (file: File) => {
-    const url = URL.createObjectURL(file);
+    setUploading(true); setMessage("Uploading photo…");
     try {
-      const id = `upload-${Date.now().toString(36)}`;
-      const image = await imageElement(url);
-      setImages((current) => ({ ...current, [id]: { id, name: file.name, image } }));
+      const asset = await uploadAsset(file);
+      const id = `library-${asset.id}`;
+      const image = await imageElement(asset.fileReference);
+      setImages((current) => ({ ...current, [id]: { id, name: asset.title, image } }));
       patchScene({ imageId: id, template: "image" });
-    } catch { URL.revokeObjectURL(url); }
+      setMessage("Photo uploaded. Save your draft to keep this scene.");
+    } catch (caught) { setMessage(caught instanceof Error ? caught.message : "The photo could not be uploaded. Try again."); }
+    finally { setUploading(false); }
   };
   const scrub = (event: React.PointerEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -197,27 +206,36 @@ export default function MotionStudio({ data, mutate, initialRecordId, onBack }: 
     }
   };
   const saveProject = async (createReview: boolean) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (saving || uploading) return;
+    setSaving(true); setPlaying(false);
+    try {
+    if (doc.scenes.some((scene) => scene.imageId && !images[scene.imageId])) throw new Error("A scene photo is missing or still loading. Replace it or try saving again.");
+    await document.fonts.ready;
+    const canvas = document.createElement("canvas");
     const size = MOTION_ASPECTS[doc.aspect];
+    canvas.width = size.width; canvas.height = size.height;
+    renderMotionFrame(canvas.getContext("2d")!, doc, playheadRef.current, images);
     const artwork = {
       key: "motion-preview", kind: "motion", format: doc.aspect, width: size.width, height: size.height,
       dataUrl: canvas.toDataURL("image/jpeg", .9),
     };
     const saved = await mutate({
-      action: "saveCreativeProject", projectId: projectId || undefined, kind: "motion", recordId: record.id,
+      action: "saveCreativeProject", projectId: projectId || undefined, expectedVersion: existingProject?.version, kind: "motion", recordId: record.id,
       title: `${record.name} Motion`, payload: { doc, playhead: playheadRef.current, artworks: [artwork] },
     });
     const id = String(saved.creativeProjectId);
     setProjectId(id);
-    setMessage(`Saved motion project v${saved.version}.`);
+    setSavedDoc(JSON.stringify(doc));
+    setMessage("Draft saved.");
     if (createReview) {
       const result = await mutate({ action: "createProjectReviewLink", creativeProjectId: id, selectedArtworkKeys: ["motion-preview"], expiresInHours: 72 });
       const url = String(result.reviewUrl || "");
       setReviewUrl(url);
-      if (url) await navigator.clipboard.writeText(url);
-      setMessage("Saved exact preview and copied GM review link.");
+      if (url) await navigator.clipboard.writeText(url).catch(() => undefined);
+      setMessage("Saved. This review link shows the current still frame.");
     }
+    } catch (caught) { setMessage(caught instanceof Error ? caught.message : "Could not save. Try again."); }
+    finally { setSaving(false); }
   };
   const total = motionDuration(doc);
   const selectedIndex = doc.scenes.findIndex((scene) => scene.id === selected?.id);
@@ -225,27 +243,30 @@ export default function MotionStudio({ data, mutate, initialRecordId, onBack }: 
   if (!record) return <section className="empty-state"><Film /><h2>No verified records</h2><p>Verify content before building motion scenes.</p></section>;
 
   return <div className="motion-page">
-    <header className="motion-page-head"><div>{onBack && <button className="editor-back" onClick={onBack}><ArrowLeft size={15} />Back</button>}<p className="eyebrow">MOTION STUDIO</p><h1>Build a multi-scene story</h1><p>Deterministic canvas preview, editable scenes, and production exports in Sun Oaks brand.</p></div>
-      <label>Verified source<select value={record.id} onChange={(event) => {
+    <header className="motion-page-head"><div>{onBack && <button className="editor-back" onClick={onBack}><ArrowLeft size={15} />Back</button>}<p className="eyebrow">MOTION STUDIO</p><h1>Build a multi-scene story</h1><p>Customize a standalone animation. Save your draft before leaving.</p></div>
+      <label>Class or event<select value={record.id} disabled={saving || uploading} onChange={(event) => {
+        if (dirty && !window.confirm("You have unsaved changes. Switch without saving?")) return;
         const nextRecord = records.find((item) => item.id === event.target.value);
         if (!nextRecord) return;
         const nextAsset = data.assets.find((item) => item.id === nextRecord.assetId && item.active && item.rightsStatus === "approved");
         const saved = data.creativeProjects.find((item) => item.kind === "motion" && item.recordId === nextRecord.id);
         const restored = saved?.payload.doc as MotionDocument | undefined;
-        const next = restored?.scenes?.length ? restored : defaultDocument(nextRecord, nextAsset ? `library-${nextAsset.id}` : null);
+        const next = restored?.scenes?.length ? restored : defaultDocument(nextRecord, nextAsset ? `library-${nextAsset.id}` : null, data.scheduleRules);
         setRecordId(nextRecord.id);
         setProjectId(saved?.id || "");
         setDoc(next);
+        setSavedDoc(JSON.stringify(next)); setReviewUrl(""); setMessage("");
         setSelectedId(next.scenes[0].id);
         playheadRef.current = 0;
       }} data-testid="select-motion-record">{records.map((item) => <option key={item.id} value={item.id}>{item.name} · v{item.version}</option>)}</select></label>
       <div className="motion-export">
-        <button className="button primary compact" onClick={() => saveProject(true)} data-testid="button-motion-review"><ShieldCheck size={15} />GM link</button>
+        <button className="button primary compact" disabled={saving || uploading} onClick={() => saveProject(false)}>{saving ? "Saving…" : "Save draft"}</button><button className="button secondary compact" disabled={saving || uploading} onClick={() => saveProject(true)} data-testid="button-motion-review"><ShieldCheck size={15} />Review still frame</button>
         <button className="button secondary compact" disabled={Boolean(exporting)} onClick={() => runExport("png")}><Download size={15} />PNG</button>
         <button className="button secondary compact" disabled={Boolean(exporting)} onClick={() => runExport("webm")}><Download size={15} />WebM</button>
         <button className="button dark compact" disabled={!mp4Supported || Boolean(exporting)} title={mp4Supported ? "Export H.264 MP4" : "Requires WebCodecs in current Chrome or Edge"} onClick={() => runExport("mp4")}><Download size={15} />MP4</button>
       </div>
     </header>
+    {dirty && <p className="promotion-save-notice" role="status">Unsaved changes</p>}
     {(exporting || message) && <div className="motion-status" role="status">{exporting ? `Rendering ${exporting.toUpperCase()} · ${Math.round(progress * 100)}%` : message}{reviewUrl && <div className="motion-review-url"><input readOnly value={reviewUrl} aria-label="Motion Studio review URL" /><button onClick={() => navigator.clipboard.writeText(reviewUrl)}>Copy review link</button></div>}<span style={{ width: `${progress * 100}%` }} /></div>}
     <section className="motion-editor">
       <aside className="motion-scenes">
@@ -275,8 +296,8 @@ export default function MotionStudio({ data, mutate, initialRecordId, onBack }: 
         <label>Transition<select value={selected.transition} onChange={(event) => patchScene({ transition: event.target.value as MotionTransition })}>{TRANSITIONS.map((item) => <option key={item}>{item}</option>)}</select></label>
         <label>Duration <span>{(selected.duration / 1000).toFixed(1)}s</span><input type="range" min="1500" max="8000" step="250" value={selected.duration} onChange={(event) => patchScene({ duration: Number(event.target.value) })} /></label>
         <label>Image<select value={selected.imageId || ""} onChange={(event) => patchScene({ imageId: event.target.value || null })}><option value="">No image</option>{availableImages.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
-        <button className="button secondary full" onClick={() => fileRef.current?.click()}><ImagePlus size={16} />Upload image</button>
-        <input ref={fileRef} type="file" accept="image/*" hidden onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} />
+        <button className="button secondary full" disabled={uploading || saving} onClick={() => fileRef.current?.click()}><ImagePlus size={16} />{uploading ? "Uploading…" : "Upload image"}</button>
+        <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} />
         <div className="aspect-control"><span>DOCUMENT ASPECT</span><div>{(Object.keys(MOTION_ASPECTS) as MotionAspect[]).map((aspect) => <button key={aspect} className={doc.aspect === aspect ? "active" : ""} onClick={() => setDoc((current) => ({ ...current, aspect }))} data-testid={`motion-aspect-${aspect}`}>{aspect}</button>)}</div><small>{MOTION_ASPECTS[doc.aspect].width} × {MOTION_ASPECTS[doc.aspect].height} · {doc.fps} fps</small></div>
       </aside>}
     </section>

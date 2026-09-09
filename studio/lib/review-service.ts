@@ -30,7 +30,7 @@ export function createReviewLink(
   if (!campaign) throw new Error("Campaign not found.");
   const selected = [...new Set(input.selectedDeliverableIds)];
   const artwork = db.deliverables.filter((item) =>
-    selected.includes(item.id) && item.campaignId === campaign.id && ["still", "motion"].includes(item.deliverableType),
+    selected.includes(item.id) && item.campaignId === campaign.id,
   );
   if (!artwork.length || artwork.length !== selected.length) throw new Error("Select artwork from this campaign only.");
   const hours = input.expiresInHours ?? DEFAULT_REVIEW_TTL_HOURS;
@@ -159,7 +159,7 @@ export function mutateReviewState(
   return link;
 }
 
-export function publicReviewPayload(db: Database, link: ReviewLink) {
+export function publicReviewPayload(db: Database, link: ReviewLink, token?: string) {
   if (link.creativeProjectId) {
     const snapshot = link.projectSnapshot;
     if (!snapshot) throw new Error("Review project snapshot is unavailable.");
@@ -201,7 +201,8 @@ export function publicReviewPayload(db: Database, link: ReviewLink) {
     presentation: {
       facts: campaign.sourceSnapshot.facts,
       asset: campaign.sourceSnapshot.asset ? {
-        fileReference: campaign.sourceSnapshot.asset.fileReference,
+        fileReference: token && campaign.sourceSnapshot.asset.fileReference.startsWith("/studio/api/assets/")
+          ? `/studio/api/review/${encodeURIComponent(token)}/asset` : campaign.sourceSnapshot.asset.fileReference,
         altText: campaign.sourceSnapshot.asset.altText,
         focalPoint: campaign.sourceSnapshot.asset.focalPoint,
       } : null,

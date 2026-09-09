@@ -41,10 +41,10 @@ async function imageFor(asset?: Asset) {
 
 export function drawCreative(
   canvas: HTMLCanvasElement,
-  deliverable: Deliverable,
-  snapshot: SourceSnapshot,
+  deliverable: Pick<Deliverable, "width" | "height" | "creativeFields" | "format">,
+  snapshot: Pick<SourceSnapshot, "facts">,
   image: HTMLImageElement | null,
-  asset?: Asset,
+  asset?: Pick<Asset, "focalPoint">,
   progress = 1,
   safeZones = false,
 ) {
@@ -145,23 +145,8 @@ export function StillCanvas({ deliverable, snapshot, asset, canExport = false, a
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   useEffect(() => { imageFor(asset).then(setImage).catch(() => setImage(null)); }, [asset]);
   useEffect(() => { if (ref.current) drawCreative(ref.current, deliverable, snapshot, image, asset, 1, safeZones); }, [deliverable, snapshot, image, asset, safeZones]);
-  const download = async () => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    if (!canExport || (authorizeExport && !await authorizeExport())) return;
-    // Guides are a preview aid and must never be baked into production creative.
-    drawCreative(canvas, deliverable, snapshot, image, asset, 1, false);
-    canvas.toBlob((blob) => {
-      if (!blob) return;
-      const anchor = document.createElement("a");
-      anchor.href = URL.createObjectURL(blob);
-      anchor.download = `sun-oaks-${snapshot.facts.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${deliverable.format}-${canvas.width}x${canvas.height}.png`;
-      anchor.click();
-      URL.revokeObjectURL(anchor.href);
-      void onExported?.();
-      if (safeZones) drawCreative(canvas, deliverable, snapshot, image, asset, 1, true);
-    }, "image/png");
-  };
+  const { download, pending, message } = usePromotionDownload({ deliverable, snapshot, asset, canExport, authorizeExport, onExported });
+
   return (
     <div className="canvas-shell">
       <canvas ref={ref} className={`creative-canvas format-${deliverable.format}`} aria-label={`${deliverable.format} campaign preview`} />
@@ -169,8 +154,9 @@ export function StillCanvas({ deliverable, snapshot, asset, canExport = false, a
         <button className="button secondary compact" onClick={() => setSafeZones((value) => !value)} data-testid={`button-safe-zone-${deliverable.id}`}>
           {safeZones ? <EyeOff size={16} /> : <Eye size={16} />}{safeZones ? "Hide safe area" : "Show safe area"}
         </button>
-        <button className="button dark compact" onClick={download} disabled={!canExport} title={canExport ? "Export approved PNG" : "Approve this deliverable before export"} data-testid={`button-download-${deliverable.id}`}><Download size={16} />Export PNG</button>
+        <button className="button dark compact" onClick={download} disabled={!canExport || pending} title={canExport ? "Export approved PNG" : "Approve this deliverable before export"} data-testid={`button-download-${deliverable.id}`}><Download size={16} />{pending ? "Preparing…" : "Export PNG"}</button>
       </div>
+      {message && <p className="capability-note" role="status">{message}</p>}
     </div>
   );
 }
@@ -208,29 +194,7 @@ export function MotionCanvas({ deliverable, snapshot, asset, canExport = false, 
     return () => { if (frameRef.current) cancelAnimationFrame(frameRef.current); };
   }, [asset, deliverable, playing, snapshot]);
 
-  const exportWebM = async () => {
-    const canvas = ref.current;
-    if (!canvas || !("captureStream" in canvas) || typeof MediaRecorder === "undefined") return;
-    if (!canExport || (authorizeExport && !await authorizeExport())) return;
-    const stream = canvas.captureStream(30);
-    const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm";
-    const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8_000_000 });
-    const chunks: Blob[] = [];
-    recorder.ondataavailable = (event) => { if (event.data.size) chunks.push(event.data); };
-    const complete = new Promise<void>((resolve) => { recorder.onstop = () => resolve(); });
-    startRef.current = performance.now();
-    setPlaying(true);
-    recorder.start(250);
-    window.setTimeout(() => recorder.stop(), 6000);
-    await complete;
-    const blob = new Blob(chunks, { type: "video/webm" });
-    const anchor = document.createElement("a");
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = `sun-oaks-${snapshot.facts.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-motion.webm`;
-    anchor.click();
-    URL.revokeObjectURL(anchor.href);
-    await onExported?.();
-  };
+  const { download: exportWebM, pending, message } = usePromotionDownload({ deliverable, snapshot, asset, canExport, authorizeExport, onExported });
 
   return (
     <div className="canvas-shell">
@@ -240,9 +204,66 @@ export function MotionCanvas({ deliverable, snapshot, asset, canExport = false, 
         <button className="button secondary compact" aria-pressed={playing} onClick={() => { startRef.current = performance.now(); setPlaying((value) => !value); }} data-testid={`button-play-${deliverable.id}`}>
           <Film size={16} />{playing ? "Pause preview" : "Play preview"}
         </button>
-        <button className="button dark compact" onClick={exportWebM} disabled={!canExport} title={canExport ? "Export approved WebM" : "Approve this deliverable before export"} data-testid={`button-webm-${deliverable.id}`}><Download size={16} />Export WebM</button>
+        <button className="button dark compact" onClick={exportWebM} disabled={!canExport || pending} title={canExport ? "Export approved WebM" : "Approve this deliverable before export"} data-testid={`button-webm-${deliverable.id}`}><Download size={16} />{pending ? "Preparing…" : "Export WebM"}</button>
       </div>
-      <p className="capability-note">6-second preset · {reducedMotion ? "Preview paused for reduced motion · " : ""}WebM export works in current Chrome and Edge. MP4 awaits the production H.264 worker.</p>
+      {message && <p className="capability-note" role="status">{message}</p>}
+      <p className="capability-note">6-second preset · {reducedMotion ? "Preview paused for reduced motion · " : ""}Download a WebM video for your selected channel. Chrome or Edge is recommended.</p>
     </div>
   );
+}
+
+function usePromotionDownload({ deliverable, snapshot, asset, canExport, authorizeExport, onExported }: Props) {
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const download = async () => {
+    if (!canExport || pending) return;
+    setPending(true); setMessage("Preparing your download…");
+    try {
+      if (authorizeExport && !await authorizeExport()) throw new Error("This material changed or needs approval. Reload before downloading.");
+      const file = await renderPromotionFile(deliverable, snapshot, asset);
+      if (authorizeExport && !await authorizeExport()) throw new Error("This material changed while preparing. Reload before downloading.");
+      const url = URL.createObjectURL(file.blob);
+      const anchor = document.createElement("a"); anchor.href = url;
+      anchor.download = `sun-oaks-${snapshot.facts.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${file.name}`;
+      anchor.click(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setMessage("Download started. Recording your download…");
+      await onExported?.(); setMessage("Download started.");
+    } catch (caught) { setMessage(caught instanceof Error ? caught.message : "Could not download. Try again."); }
+    finally { setPending(false); }
+  };
+  return { download, pending, message };
+}
+
+export async function renderPromotionFile(deliverable: Deliverable, snapshot: SourceSnapshot, asset?: Asset) {
+  if (deliverable.deliverableType === "caption") return { name: "social-caption.txt", blob: new Blob([deliverable.creativeFields.caption], { type: "text/plain;charset=utf-8" }) };
+  if (deliverable.deliverableType === "emailCopy") return { name: "email-copy.txt", blob: new Blob([`Subject: ${deliverable.creativeFields.subject}\nPreview: ${deliverable.creativeFields.preview}\n\n${deliverable.creativeFields.body}`], { type: "text/plain;charset=utf-8" }) };
+  await document.fonts.ready;
+  const image = await imageFor(asset);
+  const canvas = document.createElement("canvas");
+  drawCreative(canvas, deliverable, snapshot, image, asset, 1);
+  if (deliverable.deliverableType === "still") {
+    const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Could not render this image. Try again.")), "image/png"));
+    return { name: `${deliverable.format}-${canvas.width}x${canvas.height}.png`, blob };
+  }
+  if (!canvas.captureStream || typeof MediaRecorder === "undefined") throw new Error("Animation download needs a browser with WebM recording support.");
+  const stream = canvas.captureStream(30);
+  const mimeType = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"].find((type) => MediaRecorder.isTypeSupported(type));
+  if (!mimeType) { stream.getTracks().forEach((track) => track.stop()); throw new Error("This browser cannot export WebM. Try current Chrome or Edge."); }
+  let frame = 0;
+  let timer = 0;
+  try {
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8_000_000 });
+      const chunks: Blob[] = [];
+      recorder.ondataavailable = (event) => { if (event.data.size) chunks.push(event.data); };
+      recorder.onerror = () => reject(new Error("Animation recording failed. Try again."));
+      recorder.onstop = () => chunks.length ? resolve(new Blob(chunks, { type: "video/webm" })) : reject(new Error("The animation was empty. Try again."));
+      const start = performance.now();
+      const draw = (now: number) => { drawCreative(canvas, deliverable, snapshot, image, asset, Math.min(1, (now - start) / 1300)); frame = requestAnimationFrame(draw); };
+      drawCreative(canvas, deliverable, snapshot, image, asset, 0);
+      recorder.start(250); frame = requestAnimationFrame(draw);
+      timer = window.setTimeout(() => { if (recorder.state !== "inactive") recorder.stop(); }, 6000);
+    });
+    return { name: "animated-story.webm", blob };
+  } finally { cancelAnimationFrame(frame); window.clearTimeout(timer); stream.getTracks().forEach((track) => track.stop()); }
 }

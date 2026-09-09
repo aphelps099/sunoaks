@@ -20,7 +20,7 @@ export async function GET(_request: Request, context: { params: Promise<{ assetI
   }
   for (const [extension, type] of Object.entries(TYPES)) {
     try {
-      const body = await readFile(/* turbopackIgnore: true */ path.join(uploadDirectory(), `${assetId}.${extension}`));
+      const body = await readFile(path.join(/* turbopackIgnore: true */ uploadDirectory(), `${assetId}.${extension}`));
       return new NextResponse(body, { headers: { "Content-Type": type, "Cache-Control": "private, max-age=31536000, immutable" } });
     } catch {}
   }

@@ -12,7 +12,7 @@ export async function GET(_request: Request, context: Context) {
   const db = await repository.read();
   const link = findReviewLink(db, token);
   if (!link) return NextResponse.json({ error: "This review link is invalid, expired, or revoked." }, { status: 404 });
-  return NextResponse.json(publicReviewPayload(db, link), {
+  return NextResponse.json(publicReviewPayload(db, link, token), {
     headers: { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" },
   });
 }
@@ -42,7 +42,7 @@ export async function POST(request: Request, context: Context) {
       const link = findReviewLink(db, token);
       if (!link) throw new Error("This review link is invalid, expired, or revoked.");
       mutateReviewState(db, link, parsed.data);
-      payload = publicReviewPayload(db, link);
+      payload = publicReviewPayload(db, link, token);
     });
     return NextResponse.json(payload, { headers: { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" } });
   } catch (error) {

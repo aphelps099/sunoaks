@@ -1,3 +1,4 @@
+import { OUTPUT_IDS, recordSchedule } from "./promotion";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import {
@@ -51,8 +52,11 @@ export const publishCandidateInputSchema = z.object({
 export const actionRequestSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("previewSource"), rawText: z.string().min(2).max(50_000), sourceType: z.enum(["plain_text", "guided"]), guidedType: z.enum(["event", "recurring_class"]).optional() }),
   publishCandidateInputSchema,
-  z.object({ action: z.literal("generateCampaign"), calendarItemId: z.string(), packId: z.enum(["event-promo", "class-spotlight"]) }),
-  z.object({ action: z.literal("setApproval"), deliverableId: z.string(), status: z.enum(["draft", "approved", "changes_requested"]) }),
+  z.object({ action: z.literal("generateCampaign"), calendarItemId: z.string(), packId: z.enum(["event-promo", "class-spotlight"]), formats: z.array(z.enum(OUTPUT_IDS)).min(1).optional() }),
+  z.object({ action: z.literal("createPromotion"), recordId: z.string(), calendarItemId: z.string().optional(), marketingDate: isoDateSchema, formats: z.array(z.enum(OUTPUT_IDS)).min(1) }),
+  z.object({ action: z.literal("updateCampaignCopy"), campaignId: z.string(), expectedVersions: z.record(z.string(), z.number()), headline: z.string().trim().min(1).max(200), hook: z.string().trim().min(1).max(400) }),
+  z.object({ action: z.literal("approveCampaign"), campaignId: z.string(), expectedVersions: z.record(z.string(), z.number()) }),
+  z.object({ action: z.literal("setApproval"), deliverableId: z.string(), expectedVersion: z.number().int().positive().optional(), status: z.enum(["draft", "approved", "changes_requested"]) }),
   z.object({ action: z.literal("setRecordAsset"), recordId: z.string(), assetId: z.string().nullable() }),
   z.object({
     action: z.literal("updateRecord"),
@@ -70,8 +74,8 @@ export const actionRequestSchema = z.discriminatedUnion("action", [
       cta: z.string().trim().min(2).optional(),
     }).refine((changes) => Object.keys(changes).length > 0, "Choose at least one field to update."),
   }),
-  z.object({ action: z.literal("authorizeExport"), calendarItemId: z.string(), deliverableId: z.string() }),
-  z.object({ action: z.literal("markExported"), calendarItemId: z.string(), deliverableId: z.string() }),
+  z.object({ action: z.literal("authorizeExport"), calendarItemId: z.string(), deliverableId: z.string(), expectedVersion: z.number().optional() }),
+  z.object({ action: z.literal("markExported"), calendarItemId: z.string(), deliverableId: z.string(), expectedVersion: z.number().optional() }),
   z.object({
     action: z.literal("createReviewLink"),
     campaignId: z.string(),
@@ -83,6 +87,7 @@ export const actionRequestSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("saveCreativeProject"),
     projectId: z.string().optional(),
+    expectedVersion: z.number().int().positive().optional(),
     kind: z.enum(["promo", "motion"]),
     recordId: z.string(),
     title: z.string().trim().min(1).max(160),
@@ -203,6 +208,50 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
     return { ok: true, recordId: record.id, calendarItemId: calendarItem.id };
   }
 
+  if (input.action === "createPromotion") {
+    const record = db.records.find((entry) => entry.id === input.recordId && entry.active && entry.verificationStatus === "verified");
+    if (!record) throw new Error("Confirm the class or event details first.");
+    let item = input.calendarItemId ? db.calendarItems.find((entry) => entry.id === input.calendarItemId) : undefined;
+    if (input.calendarItemId && (!item || item.contentRecordId !== record.id || item.campaignId)) throw new Error("This planned promotion is no longer available. Refresh and try again.");
+    const rule = db.scheduleRules.find((entry) => entry.contentRecordId === record.id);
+    if (record.recordType === "recurring_class" && !rule) throw new Error("Confirm the recurring days first.");
+    if (!item) {
+      item = calendarItemSchema.parse({ id: randomUUID(), contentRecordId: record.id,
+        targetType: rule ? "scheduleRule" : "contentRecord", targetId: rule?.id || record.id,
+        marketingDate: input.marketingDate, objective: record.recordType === "event" ? "launch" : "spotlight", status: "verified", campaignId: null });
+      db.calendarItems.push(item);
+    }
+    item.marketingDate = input.marketingDate;
+    return applyAction({ action: "generateCampaign", calendarItemId: item.id, packId: packForRecord(record.recordType), formats: input.formats }, db);
+  }
+
+  if (input.action === "updateCampaignCopy") {
+    const campaign = db.campaigns.find((entry) => entry.id === input.campaignId);
+    if (!campaign) throw new Error("Promotion not found.");
+    const outputs = db.deliverables.filter((entry) => entry.campaignId === campaign.id);
+    if (outputs.some((entry) => input.expectedVersions[entry.id] !== entry.version)) throw new Error("This promotion changed in another window. Reload to use the latest version.");
+    const now = new Date().toISOString();
+    const generated = buildDeliverables(campaign.id, campaign.sourceSnapshot, campaign.campaignPackId, now, { headline: input.headline, hook: input.hook });
+    const changedIds = new Set<string>();
+    for (const output of outputs) {
+      const next = generated.find((entry) => entry.format === output.format)!;
+      if (JSON.stringify(output.creativeFields) === JSON.stringify(next.creativeFields)) continue;
+      output.creativeFields = next.creativeFields;
+      output.validationResults = next.validationResults;
+      output.version += 1;
+      output.editedAt = now;
+      output.approvalStatus = "draft";
+      output.approvedAt = null;
+      output.renderedFileReference = null;
+      changedIds.add(output.id);
+    }
+    db.exportEvents = db.exportEvents.filter((event) => !changedIds.has(event.deliverableId));
+    // Old campaign links resolve live deliverables, so revoke them before accepting edits.
+    for (const link of db.reviewLinks) if (link.campaignId === campaign.id && link.selectedDeliverableIds.some((id) => changedIds.has(id))) link.revokedAt ||= now;
+    recomputeCampaignCompletion(db, campaign.id);
+    return { ok: true, changed: changedIds.size };
+  }
+
   if (input.action === "generateCampaign") {
     const item = db.calendarItems.find((entry) => entry.id === input.calendarItemId);
     if (!item) throw new Error("Calendar item not found.");
@@ -219,16 +268,26 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
       sourceSnapshot: createSourceSnapshot(record, item, db), createdAt: new Date().toISOString(),
     };
     db.campaigns.push(campaign);
-    db.deliverables.push(...buildDeliverables(campaign.id, campaign.sourceSnapshot, input.packId));
+    db.deliverables.push(...buildDeliverables(campaign.id, campaign.sourceSnapshot, input.packId).filter((output) => !input.formats || input.formats.includes(output.format as typeof input.formats[number])));
     item.campaignId = campaign.id;
     item.status = "campaign_generated";
     record.status = deriveRecordStatus(record, db.calendarItems);
     return { ok: true, campaignId: campaign.id };
   }
 
+  if (input.action === "approveCampaign") {
+    const outputs = db.deliverables.filter((entry) => entry.campaignId === input.campaignId);
+    if (!outputs.length) throw new Error("Promotion not found.");
+    if (outputs.some((entry) => input.expectedVersions[entry.id] !== entry.version)) throw new Error("The materials have changed. Reload before approving.");
+    if (outputs.some((entry) => entry.validationResults.some((result) => result.severity === "error"))) throw new Error("Resolve the flagged text before approving.");
+    for (const output of outputs) applyAction({ action: "setApproval", deliverableId: output.id, status: "approved" }, db);
+    return { ok: true };
+  }
+
   if (input.action === "setApproval") {
     const deliverable = db.deliverables.find((item) => item.id === input.deliverableId);
     if (!deliverable) throw new Error("Deliverable not found.");
+    if (input.expectedVersion !== undefined && input.expectedVersion !== deliverable.version) throw new Error("This material changed. Reload before reviewing the current version.");
     if (input.status === "approved" && deliverable.validationResults.some((item) => item.severity === "error")) {
       throw new Error("Resolve validation errors before approval.");
     }
@@ -318,16 +377,14 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
     if (!Array.isArray(input.payload.artworks) || input.payload.artworks.length === 0) throw new Error("Project must include rendered artwork.");
     if (input.kind === "promo") {
       const fields = input.payload.fields as Record<string, unknown> | undefined;
-      const schedule = [
-        record.date ? new Date(`${record.date}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "",
-        record.startTime ? new Date(`2000-01-01T${record.startTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "",
-      ].filter(Boolean).join(" · ");
-      const expected = { headline: record.name, summary: record.summary, schedule, location: record.location || "", cta: record.cta };
-      if (!fields || Object.entries(expected).some(([key, value]) => fields[key] !== value)) throw new Error("Promo project facts must exactly match the verified record.");
+      const expected = { schedule: recordSchedule(record, db.scheduleRules), location: record.location || "", cta: record.cta };
+      if (!fields || Object.entries(expected).some(([key, value]) => fields[key] !== value)) throw new Error("The schedule, location and registration instructions must match the confirmed details.");
+      if (![fields.headline, fields.summary].every((value) => typeof value === "string" && value.trim().length > 0 && value.length <= 400)) throw new Error("Add a short headline and message before saving.");
     }
     const now = new Date().toISOString();
     const existing = input.projectId ? db.creativeProjects.find((item) => item.id === input.projectId) : undefined;
     if (input.projectId && !existing) throw new Error("Creative project not found.");
+    if (existing && input.expectedVersion !== undefined && existing.version !== input.expectedVersion) throw new Error("This design changed in another window. Reload before saving again.");
     if (existing && (existing.kind !== input.kind || existing.recordId !== input.recordId)) throw new Error("A project cannot change its type or verified source.");
     if (existing) {
       existing.title = input.title;
@@ -356,6 +413,7 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
   if (!campaign) throw new Error("The current campaign could not be resolved.");
   const deliverable = db.deliverables.find((entry) => entry.id === input.deliverableId && entry.campaignId === campaign.id);
   if (!deliverable) throw new Error("That deliverable does not belong to the current campaign.");
+  if (input.expectedVersion !== undefined && input.expectedVersion !== deliverable.version) throw new Error("This material changed. Reload before downloading the current version.");
   if (deliverable.approvalStatus !== "approved") throw new Error("Approve this deliverable before export.");
   if (deliverable.validationResults.some((result) => result.severity === "error")) throw new Error("Resolve validation errors before export.");
   if (input.action === "authorizeExport") return { ok: true, authorized: true };
