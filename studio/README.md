@@ -7,11 +7,13 @@ Production-oriented vertical pilot for turning verified Sun Oaks information int
 1. Add an event or recurring class with plain text or the guided route.
 2. Review source excerpts, warnings, possible duplicates, and every operational fact.
 3. Verify and publish a canonical versioned record plus a typed marketing-calendar target.
-4. Open a ready calendar item, select the deterministic Event Promo or Class Spotlight pack, and generate.
-5. Review and approve each still, motion, caption, and email-copy deliverable.
-6. Use Promo Kit for verified 1:1, 4:5, 9:16, email 2:1, and lobby 16:9 PNG artboards.
-7. Build multi-scene motion in 16:9, 1:1, 9:16, or 4:5 and export PNG, WebM, or browser-supported H.264 MP4.
-8. Create an expiring GM link for selected campaign artwork; revoke or regenerate it at any time.
+4. From Home or Calendar, choose a class or event, a marketing date, and the materials needed. A social post and caption are selected by default; square, story, email copy, and a six-second animated story are optional.
+5. Edit the promotion's headline and introduction, then choose **Save message**. Verified event details stay attached to the promotion's source snapshot.
+6. Approve the selected materials together, or create an expiring manager review link for artwork, animation, and copy.
+7. Download individual materials or **Download all** as one ZIP. Completion depends only on the chosen materials.
+8. Resume the exact promotion from Home, Promotions, or the monthly Calendar. Navigation URLs preserve context through refresh and browser Back.
+
+Saving wording changes clears affected approvals and downloads, retires outdated review links, and returns the materials to draft. Version checks reject stale saves and exports. Editing a class or event preserves existing promotions; their workspace offers **Create updated promotion** to use the new details.
 
 Only four lifecycle states are shown for records and calendar items: Needs information, Verified, Campaign generated, and Exported or done. Deliverable approval is separate; campaign readiness is derived.
 An export is authorized only for a valid, approved deliverable belonging to the calendar item’s current campaign. Each completed browser download/copy is recorded separately; the calendar item becomes done only after every required deliverable is approved and exported. Returning an exported deliverable to draft or changes requested invalidates its export event and immediately returns the item and owning record to Campaign generated.
@@ -20,15 +22,17 @@ A trusted record’s visible lifecycle is the least-complete state across every 
 
 ## Studio v2 creation tools
 
-- **Promo Kit** reads active, human-verified records and approved library images. Editable fields are continuously compared with the record; any changed fact blocks download until the verified value is restored.
-- **Motion Studio** provides a scene list, deterministic canvas stage, inspector, scrub timeline, title, statement, stat, list, quote, photo, details, calendar, presenter, disclaimer, and end-card templates, transitions, text animations, approved-library and local image support, and four aspect ratios.
+- The **Classes & events** list provides **More formats** and **Animation** for standalone design work. Saved designs also appear in Promotions.
+- **Promo Kit** reads active, human-verified records and approved library images. Headline and introduction are editable; schedule, location, and CTA remain sourced from the record. One artboard is shown at a time, with tabs for 1:1, 4:5, 9:16, email 2:1, and lobby 16:9. Downloads from this tool are labeled drafts.
+- **Motion Studio** provides a scene list, deterministic canvas stage, inspector, scrub timeline, title, statement, stat, list, quote, photo, details, calendar, presenter, disclaimer, and end-card templates, transitions, text animations, durable image uploads, and four aspect ratios. Recurring class details include weekdays and the complete time range.
+- Both standalone tools have explicit **Save draft** actions, saved/unsaved feedback, version conflict checks, and a warning before leaving unsaved work. Sharing saves an immutable review snapshot. Multi-scene Motion review is explicitly labeled **Review still frame**; full playback review is available for the six-second campaign animation only.
 - MP4 export uses WebCodecs H.264 and is enabled only when the browser exposes a compatible encoder. WebM is the fallback; PNG exports the current motion frame.
 
 ## Secure GM review
 
-Authenticated editors select still/motion deliverables in a campaign and create a short review URL. Tokens use 256 bits of cryptographic randomness; only their SHA-256 hashes are stored. Links expire, can be revoked, and regeneration revokes the prior link in the same serialized repository update. The public `/studio/review/[token]` page returns only the title, version, review state, selected artwork presentation data, and reviewer comment. Repository, campaign, deliverable, and review-link identifiers are not returned.
+Authenticated editors select campaign materials and create a short review URL. Tokens use 256 bits of cryptographic randomness; only their SHA-256 hashes are stored. Links expire, can be revoked, and regeneration revokes the prior link in the same serialized repository update. The public `/studio/review/[token]` page returns only the title, version, review state, selected materials, and reviewer comment. Repository, campaign, deliverable, and review-link identifiers are not returned. Uploaded campaign photographs are served through a token-scoped route that permits only the linked snapshot image. Campaign artwork and six-second motion use the same renderer as exports; text outputs show their actual copy.
 
-Requesting changes requires a comment and marks only selected deliverables as changes requested. Approval is refused when selected artwork has validation errors.
+Requesting changes requires a comment and marks only selected deliverables as changes requested. Approval is refused when selected artwork has validation errors, and the review page disables approval until its previews load successfully.
 
 Promo Kit and Motion Studio can save the project currently being edited and create the GM link directly from that editor. The server versions the project and stores rendered review snapshots in the same atomic JSON update; the token then points to that immutable saved version, so later canvas edits do not change what the reviewer sees.
 

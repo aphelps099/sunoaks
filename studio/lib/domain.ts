@@ -543,7 +543,7 @@ export function deriveCampaignRollup(deliverables: Deliverable[]) {
   return "in_review" as const;
 }
 
-export function buildDeliverables(campaignId: string, snapshot: SourceSnapshot, packId: "event-promo" | "class-spotlight", now = new Date().toISOString()): Deliverable[] {
+export function buildDeliverables(campaignId: string, snapshot: SourceSnapshot, packId: "event-promo" | "class-spotlight", now = new Date().toISOString(), copy?: { headline: string; hook: string }): Deliverable[] {
   const { facts } = snapshot;
   const schedule = snapshot.target.type === "scheduleRule"
     ? `${formatDays(snapshot.target.daysOfWeek)} · ${snapshot.target.startTime}`
@@ -552,8 +552,8 @@ export function buildDeliverables(campaignId: string, snapshot: SourceSnapshot, 
       : facts.recordType === "event"
     ? [facts.date, facts.startTime].filter(Boolean).join(" · ")
     : facts.startTime || "See class schedule";
-  const hook = packId === "event-promo" ? "Make room for something memorable." : "Your strongest hour starts here.";
-  const baseCreative = { headline: facts.name, hook, schedule, location: facts.location || "Sun Oaks", cta: facts.cta };
+  const hook = copy?.hook || (packId === "event-promo" ? "Join us at Sun Oaks." : "Make time for your next class.");
+  const baseCreative = { headline: copy?.headline || facts.name, hook, schedule, location: facts.location || "Sun Oaks", cta: facts.cta };
   const overflowResults = creativeOverflowResults(baseCreative);
   const stills = Object.entries(EXPORT_FORMATS).map(([format, dimensions]) => ({
     id: randomUUID(),
@@ -576,7 +576,8 @@ export function buildDeliverables(campaignId: string, snapshot: SourceSnapshot, 
   }));
   const caption = [
     hook,
-    facts.name,
+    baseCreative.headline,
+    baseCreative.headline !== facts.name ? facts.name : undefined,
     schedule,
     facts.location,
     facts.instructor ? `With ${facts.instructor}` : undefined,
@@ -604,14 +605,15 @@ export function buildDeliverables(campaignId: string, snapshot: SourceSnapshot, 
     },
     {
       id: randomUUID(), campaignId, deliverableType: "caption", format: "instagram-caption", width: null, height: null,
-      templateReference: `${packId}/caption-v1`, creativeFields: { caption }, renderedFileReference: null, required: true,
+      templateReference: `${packId}/caption-v1`, creativeFields: { caption, headline: baseCreative.headline, hook }, renderedFileReference: null, required: true,
       validationResults: [{ code: "protected-facts", severity: "info", message: "Operational facts are sourced from the campaign snapshot." }],
       approvalStatus: "draft", version: 1, editedAt: now, approvedAt: null,
     },
     {
       id: randomUUID(), campaignId, deliverableType: "emailCopy", format: "structured-email-copy", width: null, height: null,
       templateReference: `${packId}/email-v1`, creativeFields: {
-        subject: `${facts.name} at Sun Oaks`,
+        headline: baseCreative.headline, hook,
+        subject: `${baseCreative.headline} at Sun Oaks`,
         preview: `${schedule}${facts.location ? ` at ${facts.location}` : ""}`,
         body: emailBody,
       }, renderedFileReference: null, required: true,

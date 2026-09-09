@@ -1,6 +1,9 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { drawCreative } from "./CreativeCanvas";
+import type { SourceSnapshot } from "@/lib/client-types";
+import { outputLabel } from "@/lib/promotion";
 import { Check, MessageSquareText, ShieldCheck } from "lucide-react";
 
 type ReviewData = {
@@ -11,7 +14,7 @@ type ReviewData = {
   expiresAt: string;
   artwork: {
     key: string;
-    kind: "still" | "motion";
+    kind: "still" | "motion" | "caption" | "emailCopy";
     format: string;
     width: number | null;
     height: number | null;
@@ -20,7 +23,7 @@ type ReviewData = {
   }[];
   presentation: {
     projectKind?: "promo" | "motion";
-    facts?: { recordType: "event" | "recurring_class"; name: string; date?: string; startTime?: string; location?: string; cta: string };
+    facts?: SourceSnapshot["facts"];
     asset: { fileReference: string; altText: string; focalPoint: { x: number; y: number } } | null;
   };
 };
@@ -29,79 +32,45 @@ function BrandMark() {
   return <div className="public-brand"><span className="public-sun" />SUN OAKS <small>GM REVIEW</small></div>;
 }
 
-function Preview({ data, artwork }: { data: ReviewData; artwork: ReviewData["artwork"][number] }) {
+function Preview({ data, artwork, onReady }: { data: ReviewData; artwork: ReviewData["artwork"][number]; onReady: (key: string, ready: boolean) => void }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const savedImageRef = useRef<HTMLImageElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [error, setError] = useState("");
+  const copy = artwork.kind === "caption" || artwork.kind === "emailCopy";
   useEffect(() => {
-    if (artwork.dataUrl) return;
-    let active = true;
+    onReady(artwork.key, false);
+    if (copy) { onReady(artwork.key, true); return; }
+    if (artwork.dataUrl) { if (savedImageRef.current?.complete && savedImageRef.current.naturalWidth > 0) onReady(artwork.key, true); return; }
+    let live = true; let frame = 0;
     const render = async () => {
-      const canvas = ref.current;
-      if (!canvas) return;
-      const width = artwork.width || 1080;
-      const height = artwork.height || 1080;
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      ctx.fillStyle = "#FAF9F7";
-      ctx.fillRect(0, 0, width, height);
-      const photoHeight = height * .56;
-      if (data.presentation.asset) {
-        const image = new Image();
-        image.crossOrigin = "anonymous";
-        image.src = data.presentation.asset.fileReference;
-        await image.decode().catch(() => undefined);
-        if (!active || !image.naturalWidth) return;
-        const scale = Math.max(width / image.naturalWidth, photoHeight / image.naturalHeight);
-        const sw = width / scale;
-        const sh = photoHeight / scale;
-        const sx = Math.max(0, Math.min(image.naturalWidth - sw, image.naturalWidth * data.presentation.asset.focalPoint.x - sw / 2));
-        const sy = Math.max(0, Math.min(image.naturalHeight - sh, image.naturalHeight * data.presentation.asset.focalPoint.y - sh / 2));
-        ctx.drawImage(image, sx, sy, sw, sh, 0, 0, width, photoHeight);
-        const gradient = ctx.createLinearGradient(0, 0, 0, photoHeight);
-        gradient.addColorStop(.45, "transparent");
-        gradient.addColorStop(1, "rgba(13,13,12,.6)");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, photoHeight);
-      } else {
-        ctx.fillStyle = "#0D0D0C";
-        ctx.fillRect(0, 0, width, photoHeight);
-        ctx.fillStyle = "#F7B500";
-        ctx.beginPath();
-        ctx.arc(width * .78, photoHeight * .26, width * .11, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.fillStyle = "#F7B500";
-      ctx.fillRect(0, photoHeight, width, Math.max(12, height * .012));
-      const pad = width * .075;
-      ctx.fillStyle = "#0891A8";
-      ctx.font = `600 ${Math.max(20, width * .024)}px Jost, sans-serif`;
       const facts = data.presentation.facts;
-      if (!facts) return;
-      ctx.fillText(facts.recordType === "event" ? "SUN OAKS EVENT" : "CLASS SPOTLIGHT", pad, photoHeight + height * .085);
-      ctx.fillStyle = "#0D0D0C";
-      ctx.font = `600 ${Math.max(42, width * .067)}px Jost, sans-serif`;
-      const title = artwork.creativeFields.headline || facts.name;
-      ctx.fillText(title.slice(0, 36), pad, photoHeight + height * .17, width - pad * 2);
-      ctx.font = `500 ${Math.max(24, width * .031)}px Newsreader, serif`;
-      ctx.fillText((artwork.creativeFields.schedule || facts.date || facts.startTime || "").slice(0, 60), pad, photoHeight + height * .245, width - pad * 2);
-      ctx.font = `500 ${Math.max(20, width * .025)}px Jost, sans-serif`;
-      ctx.fillText((artwork.creativeFields.location || facts.location || "").slice(0, 65), pad, photoHeight + height * .3, width - pad * 2);
-      ctx.font = `600 ${Math.max(18, width * .022)}px Jost, sans-serif`;
-      ctx.fillText(facts.cta.slice(0, 65), pad, photoHeight + height * .36, width - pad * 2);
-      ctx.textAlign = "right";
-      ctx.fillText("SUN OAKS", width - pad, height - pad * .55);
+      if (!facts) throw new Error("The preview details are unavailable.");
+      await document.fonts.ready;
+      let image: HTMLImageElement | null = null;
+      if (data.presentation.asset) { image = new Image(); image.crossOrigin = "anonymous"; image.src = data.presentation.asset.fileReference; await image.decode(); }
+      if (!live || !ref.current) return;
+      const snapshot = { facts };
+      const start = performance.now();
+      const draw = (time: number) => {
+        if (!live || !ref.current) return;
+        const progress = playing && artwork.kind === "motion" ? Math.min(1, ((time - start) % 6000) / 1300) : 1;
+        drawCreative(ref.current, artwork, snapshot, image, data.presentation.asset || undefined, progress);
+        if (playing && artwork.kind === "motion") frame = requestAnimationFrame(draw);
+      };
+      draw(start); setError(""); onReady(artwork.key, true);
     };
-    void render();
-    return () => { active = false; };
-  }, [artwork, data]);
+    void render().catch(() => { if (live) { setError("This preview could not load. Reload the page before approving."); onReady(artwork.key, false); } });
+    return () => { live = false; cancelAnimationFrame(frame); };
+  }, [artwork, copy, data, onReady, playing]);
   return <figure className="public-artwork">
-    {artwork.dataUrl
-      // Data URLs are immutable, server-saved review snapshots and cannot use Next's optimizer.
+    {copy ? <div className="public-copy-preview">{artwork.kind === "caption" ? <pre>{artwork.creativeFields.caption}</pre> : <><strong>Subject</strong><p>{artwork.creativeFields.subject}</p><strong>Preview text</strong><p>{artwork.creativeFields.preview}</p><pre>{artwork.creativeFields.body}</pre></>}</div> : artwork.dataUrl
       // eslint-disable-next-line @next/next/no-img-element
-      ? <img src={artwork.dataUrl} alt={`${artwork.format} saved review artwork`} />
+      ? <img ref={savedImageRef} src={artwork.dataUrl} alt={`${artwork.format} saved review artwork`} onLoad={() => onReady(artwork.key, true)} onError={() => { setError("This saved preview could not load."); onReady(artwork.key, false); }} />
       : <canvas ref={ref} aria-label={`${artwork.format} review artwork`} />}
-    <figcaption>{artwork.format.replaceAll("-", " ")} · {artwork.kind}</figcaption>
+    {artwork.kind === "motion" && !artwork.dataUrl && <button className="button secondary compact" onClick={() => setPlaying((value) => !value)}>{playing ? "Pause animation" : "Play 6-second preview"}</button>}
+    {error && <p className="inline-error" role="alert">{error}</p>}
+    <figcaption>{outputLabel(artwork.format)}{artwork.kind === "motion" && artwork.dataUrl ? " · still-frame review only" : ""}</figcaption>
   </figure>;
 }
 
@@ -110,6 +79,8 @@ export default function ReviewPage({ token }: { token: string }) {
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [ready, setReady] = useState<Record<string, boolean>>({});
+  const markReady = useCallback((key: string, value: boolean) => setReady((current) => current[key] === value ? current : { ...current, [key]: value }), []);
   useEffect(() => {
     fetch(`/studio/api/review/${encodeURIComponent(token)}`, { cache: "no-store", referrerPolicy: "no-referrer" })
       .then(async (response) => {
@@ -148,15 +119,15 @@ export default function ReviewPage({ token }: { token: string }) {
     <main className="public-review">
       <header><BrandMark /><span className={`public-state state-${data.approvalState}`}>{data.approvalState.replaceAll("_", " ")}</span></header>
       <section className="public-review-head">
-        <p className="eyebrow">SELECTED ARTWORK ONLY</p>
+        <p className="eyebrow">PROMOTION REVIEW</p>
         <h1>{data.title}</h1>
         <p>Version {data.version} · Link expires {new Date(data.expiresAt).toLocaleString()}</p>
       </section>
-      <section className="public-gallery">{data.artwork.map((artwork) => <Preview key={artwork.key} data={data} artwork={artwork} />)}</section>
+      <section className="public-gallery">{data.artwork.map((artwork) => <Preview key={artwork.key} data={data} artwork={artwork} onReady={markReady} />)}</section>
       <section className="public-decision">
-        <div><p className="eyebrow">GM REVIEW</p><h2>{data.approvalState === "pending" ? "Ready for your decision?" : `Review marked ${data.approvalState.replaceAll("_", " ")}`}</h2><p>Your response applies only to the artwork shown above.</p></div>
+        <div><p className="eyebrow">GM REVIEW</p><h2>{data.approvalState === "pending" ? "Ready for your decision?" : `Review marked ${data.approvalState.replaceAll("_", " ")}`}</h2><p>Your response applies to the materials shown above.</p></div>
         {data.approvalState === "pending" ? <div className="public-actions">
-            <button className="button primary" disabled={pending} onClick={() => decide("approve")}><Check size={17} />Approve selected artwork</button>
+            <button className="button primary" disabled={pending || !data.artwork.every((item) => ready[item.key])} onClick={() => decide("approve")}><Check size={17} />Approve these materials</button>
             <form onSubmit={(event) => decide("request_changes", event)}>
               <label htmlFor="review-comment">Changes needed <span>required</span></label>
               <textarea id="review-comment" value={comment} onChange={(event) => setComment(event.target.value)} rows={3} placeholder="Describe the exact change needed…" required />

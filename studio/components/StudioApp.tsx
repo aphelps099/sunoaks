@@ -1,25 +1,29 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import {
   Archive, ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, ChevronRight, Clipboard,
   Download, FileCheck2, FileText, Grid3X3, Image as ImageIcon, ScanLine, Library, List, LogOut,
   Menu, Moon, Plus, Search, ShieldCheck, Sparkles, Sun, Video, X, WandSparkles, Clapperboard, Link2, RefreshCw, Ban,
-  PanelLeftClose, PanelLeftOpen, Pencil, Upload,
+  PanelLeftClose, PanelLeftOpen, Pencil, Upload, Home, ChevronLeft,
 } from "lucide-react";
-import { MotionCanvas, StillCanvas } from "./CreativeCanvas";
+import { createZip } from "@/lib/zip";
+import { MotionCanvas, StillCanvas, renderPromotionFile } from "./CreativeCanvas";
 import type { Asset, CalendarItem, Campaign, Candidate, ContentRecord, Deliverable, StudioData } from "@/lib/client-types";
 import { isDateInMonth } from "@/lib/calendar";
+import { calendarDays, clubDate, DEFAULT_OUTPUTS, outputLabel, PROMOTION_OUTPUTS, recordSchedule, type PromotionOutput } from "@/lib/promotion";
+import { parseStudioRoute, studioSearch, type StudioRoute, type StudioView } from "@/lib/studio-navigation";
+import { uploadAsset } from "@/lib/assets-client";
 import PromoKit from "./PromoKit";
 import MotionStudio from "./MotionStudio";
 
 const API = "/studio/api";
-type View = "create" | "calendar" | "promo" | "motion" | "ingester" | "library" | "campaigns";
+type View = StudioView;
 const STATUS: Record<string, { label: string; tone: string }> = {
   needs_information: { label: "Needs information", tone: "neutral" },
   verified: { label: "Verified", tone: "teal" },
-  campaign_generated: { label: "Campaign generated", tone: "yellow" },
-  done: { label: "Exported or done", tone: "dark" },
+  campaign_generated: { label: "In progress", tone: "yellow" },
+  done: { label: "Downloaded", tone: "dark" },
 };
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -34,20 +38,6 @@ async function api<T>(path: string, options?: RequestInit): Promise<T> {
   return body;
 }
 
-async function uploadAsset(file: File) {
-  const bitmap = await createImageBitmap(file);
-  const form = new FormData();
-  form.set("file", file);
-  form.set("width", String(bitmap.width));
-  form.set("height", String(bitmap.height));
-  form.set("title", file.name.replace(/\.[^.]+$/, ""));
-  form.set("altText", `Sun Oaks campaign image: ${file.name.replace(/\.[^.]+$/, "")}`);
-  bitmap.close();
-  const response = await fetch(`${API}/assets/upload`, { method: "POST", body: form });
-  const body = await response.json();
-  if (!response.ok) throw new Error(body.error || "The image could not be uploaded.");
-  return body.asset as Asset;
-}
 
 function StatusBadge({ status }: { status: string }) {
   const value = STATUS[status] || STATUS.needs_information;
@@ -115,12 +105,16 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
 export default function StudioApp() {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [data, setData] = useState<StudioData | null>(null);
-  const [view, setView] = useState<View>("create");
+  const [route, setRoute] = useState<StudioRoute>({ view: "create" });
+  const routeRef = useRef(route);
+  const dirtyRef = useRef(false);
+  const markDirty = useCallback((dirty: boolean) => { dirtyRef.current = dirty; }, []);
+  const view = route.view;
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [mobileNav, setMobileNav] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [editorRecordId, setEditorRecordId] = useState("");
-  const [editorOrigin, setEditorOrigin] = useState<"create" | "campaigns" | "library">("create");
+  const editorRecordId = route.recordId || "";
+  const editorOrigin = route.origin || "create";
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const load = async () => {
@@ -142,6 +136,24 @@ export default function StudioApp() {
     return () => window.clearTimeout(timer);
   }, []);
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
+  useEffect(() => {
+    const change = () => {
+      if (dirtyRef.current && !window.confirm("You have unsaved changes. Leave without saving?")) {
+        window.history.pushState(null, "", window.location.pathname + studioSearch(routeRef.current));
+        return;
+      }
+      dirtyRef.current = false;
+      const next = parseStudioRoute(window.location.search);
+      routeRef.current = next;
+      setRoute(next);
+    };
+    const timer = window.setTimeout(change, 0);
+    const beforeUnload = (event: BeforeUnloadEvent) => { if (dirtyRef.current) { event.preventDefault(); event.returnValue = ""; } };
+    window.addEventListener("popstate", change);
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => { window.clearTimeout(timer); window.removeEventListener("popstate", change); window.removeEventListener("beforeunload", beforeUnload); };
+  }, []);
+
   const mutate = async (payload: Record<string, unknown>) => {
     setError("");
     setLoading(true);
@@ -161,17 +173,22 @@ export default function StudioApp() {
   if (!data) return <main className="boot-screen"><BrandMark /><div className="skeleton-line" /></main>;
 
   const nav = [
-    { id: "create" as const, label: "Create", icon: Plus },
-    { id: "campaigns" as const, label: "Campaigns", icon: Sparkles },
-    { id: "library" as const, label: "Trusted Library", icon: Library },
+    { id: "create" as const, label: "Home", icon: Home },
+    { id: "campaigns" as const, label: "Promotions", icon: Sparkles },
+    { id: "library" as const, label: "Classes & events", icon: Library },
     { id: "calendar" as const, label: "Calendar", icon: CalendarDays },
   ];
-  const go = (next: View) => { setView(next); setMobileNav(false); };
-  const openEditor = (next: "promo" | "motion", recordId: string, origin: typeof editorOrigin) => {
-    setEditorRecordId(recordId);
-    setEditorOrigin(origin);
-    go(next);
+  const go = (next: View, details: Omit<StudioRoute, "view"> = {}) => {
+    if (dirtyRef.current && !window.confirm("You have unsaved changes. Leave without saving?")) return;
+    dirtyRef.current = false;
+    const nextRoute = { view: next, ...details };
+    window.history.pushState(null, "", window.location.pathname + studioSearch(nextRoute));
+    routeRef.current = nextRoute;
+    setRoute(nextRoute);
+    setMobileNav(false);
   };
+  const openCampaign = (campaignId: string) => go("campaigns", { campaignId });
+  const openEditor = (next: "promo" | "motion", recordId: string, origin: typeof editorOrigin) => go(next, { recordId, origin, campaignId: route.campaignId });
   const activePrimary = view === "promo" || view === "motion" || view === "ingester" ? editorOrigin : view;
   return (
     <div className={`app-shell ${sidebarCollapsed ? "sidebar-is-collapsed" : ""}`}>
@@ -199,28 +216,25 @@ export default function StudioApp() {
           <button className="icon-button desktop-only" onClick={() => setSidebarCollapsed((value) => !value)} aria-label={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} title={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} data-testid="button-collapse-nav">
             {sidebarCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
           </button>
-          <div className="topbar-context"><span className="sync-dot" />Durable pilot storage · synced now</div>
+          <div className="topbar-context"><span className="sync-dot" />Sun Oaks Studio</div>
           <button className="icon-button" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} data-testid="button-theme">
             {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
           </button>
         </header>
         {error && <div className="global-error" role="alert">{error}<button onClick={() => setError("")} aria-label="Dismiss error"><X size={16} /></button></div>}
         <main id="main-content" className="content">
-          {view === "create" && <CreateView data={data} mutate={mutate} refresh={load} openEditor={(next, id) => openEditor(next, id, "create")} openImport={() => { setEditorOrigin("create"); go("ingester"); }} goCampaigns={() => go("campaigns")} />}
-          {view === "calendar" && <CalendarView data={data} mutate={mutate} goCampaigns={() => go("campaigns")} goCreate={() => go("create")} />}
-          {view === "promo" && <PromoKit key={`promo-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onBack={() => go(editorOrigin)} />}
-          {view === "motion" && <MotionStudio key={`motion-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onBack={() => go(editorOrigin)} />}
-          {view === "ingester" && <IngesterView data={data} mutate={mutate} onPublished={() => go("create")} />}
+          {view === "create" && <CreateView key={route.itemId || route.recordId || "home"} data={data} mutate={mutate} initialRecordId={route.recordId} initialItemId={route.itemId} openImport={() => go("ingester")} openCampaign={openCampaign} />}
+          {view === "calendar" && <CalendarView data={data} mutate={mutate} openCampaign={openCampaign} goCreate={() => go("create")} />}
+          {view === "promo" && <PromoKit key={`promo-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onDirtyChange={markDirty} onBack={() => go(editorOrigin, { campaignId: route.campaignId })} />}
+          {view === "motion" && <MotionStudio key={`motion-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onDirtyChange={markDirty} onBack={() => go(editorOrigin, { campaignId: route.campaignId })} />}
+          {view === "ingester" && <IngesterView data={data} mutate={mutate} onPublished={(recordId, itemId) => go("create", { recordId, itemId })} />}
           {view === "library" && <LibraryView data={data} mutate={mutate} refresh={load} openEditor={(next, id) => openEditor(next, id, "library")} />}
-          {view === "campaigns" && <CampaignsView data={data} mutate={mutate} refresh={load} openEditor={(next, id) => openEditor(next, id, "campaigns")} goCreate={() => go("create")} />}
+          {view === "campaigns" && <CampaignsView key={route.campaignId || "promotions"} data={data} campaignId={route.campaignId} mutate={mutate} refresh={load} onDirtyChange={markDirty} openCampaign={openCampaign} openEditor={(next, id) => openEditor(next, id, "campaigns")} goCreate={(recordId) => go("create", { recordId })} />}
+
         </main>
         {loading && <div className="saving-indicator" role="status">Saving to Studio…</div>}
       </div>
-      <div className="small-screen-gate">
-        <BrandMark />
-        <h1>Review on this screen. Create on desktop.</h1>
-        <p>The Studio’s creation canvas is designed for a window at least 900px wide. Campaign downloads remain available on a larger tablet or computer.</p>
-      </div>
+
     </div>
   );
 }
@@ -229,140 +243,75 @@ function PageHeading({ eyebrow, title, description, action }: { eyebrow: string;
   return <header className="page-heading"><div><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></div>{action}</header>;
 }
 
-function CreateView({ data, mutate, refresh, openEditor, openImport, goCampaigns }: {
-  data: StudioData;
-  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
-  refresh: () => Promise<void>;
-  openEditor: (view: "promo" | "motion", recordId: string) => void;
-  openImport: () => void;
-  goCampaigns: () => void;
+function CreateView({ data, mutate, initialRecordId, initialItemId, openImport, openCampaign }: {
+  data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  initialRecordId?: string; initialItemId?: string; openImport: () => void; openCampaign: (id: string) => void;
 }) {
   const records = data.records.filter((record) => record.active && record.verificationStatus === "verified");
-  const [recordId, setRecordId] = useState(records[0]?.id || "");
-  const [uploading, setUploading] = useState(false);
-  const record = records.find((item) => item.id === recordId) || records[0];
-  const asset = data.assets.find((item) => item.id === record?.assetId);
-  const pendingItem = data.calendarItems.find((item) => item.contentRecordId === record?.id && !item.campaignId);
-  const currentCampaign = data.campaigns.find((campaign) => campaign.sourceSnapshot.contentRecordId === record?.id);
-  const attachImage = async (file: File) => {
-    if (!record) return;
-    setUploading(true);
-    try {
-      const uploaded = await uploadAsset(file);
-      await mutate({ action: "setRecordAsset", recordId: record.id, assetId: uploaded.id });
-      await refresh();
-    } finally {
-      setUploading(false);
-    }
-  };
-  const startCampaign = async () => {
-    if (currentCampaign) return goCampaigns();
-    if (!pendingItem || !record) return;
-    await mutate({
-      action: "generateCampaign",
-      calendarItemId: pendingItem.id,
-      packId: record.recordType === "event" ? "event-promo" : "class-spotlight",
-    });
-    goCampaigns();
-  };
-  if (!record) return <section className="empty-state"><Sparkles size={40} /><h2>Add your first campaign source</h2><p>Import an announcement, verify the facts, then create social and motion output.</p><button className="button primary" onClick={openImport}>Add information</button></section>;
+  const [recordId, setRecordId] = useState(initialRecordId || records[0]?.id || "");
+  const [creating, setCreating] = useState(Boolean(initialRecordId));
+  const [chosenItemId, setChosenItemId] = useState(initialItemId);
+  const record = records.find((item) => item.id === recordId);
+  const pendingItem = data.calendarItems.find((item) => item.contentRecordId === recordId && !item.campaignId && (!chosenItemId || item.id === chosenItemId));
+  const recent = [...data.campaigns].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 6);
+  const upcoming = [...data.calendarItems].filter((item) => item.marketingDate >= clubDate() && !item.campaignId).sort((a, b) => a.marketingDate.localeCompare(b.marketingDate)).slice(0, 4);
+  return <div className="promotion-home">
+    <PageHeading eyebrow="SUN OAKS STUDIO" title="What are we promoting?" description="Start with a class or event. Make the materials you need." action={<button className="button secondary" onClick={openImport}><Plus size={17} />Add a class or event</button>} />
+    <section className="promotion-start">
+      <div><label htmlFor="promotion-source">Class or event</label><select id="promotion-source" value={recordId} onChange={(event) => { setRecordId(event.target.value); setChosenItemId(undefined); }}><option value="" disabled>Choose a class or event</option>{records.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select>{record && <p>{recordSchedule(record, data.scheduleRules)}{record.location ? ` · ${record.location}` : ""}</p>}</div>
+      <button className="button primary" disabled={!record} onClick={() => setCreating(true)}>Create promotion<ArrowRight size={17} /></button>
+    </section>
+    {!records.length && <section className="empty-state"><h2>Start with your next class or event</h2><p>Add its details once, then use them across your promotional materials.</p><button className="button primary" onClick={openImport}>Add details</button></section>}
+    <section className="promotion-section"><header><h2>Recent promotions</h2><span>{recent.length ? "Pick up where you left off" : "Your work will appear here"}</span></header>
+      {recent.length ? <div className="promotion-grid">{recent.map((campaign) => <PromotionCard key={campaign.id} campaign={campaign} data={data} open={() => openCampaign(campaign.id)} />)}</div> : <div className="promotion-empty"><ImageIcon size={25} /><p>Create your first promotion above. Your images, copy, and review status will stay together.</p></div>}
+    </section>
+    {upcoming.length > 0 && <section className="promotion-section"><header><h2>Coming up</h2><span>Planned promotions</span></header><div className="upcoming-list">{upcoming.map((item) => {
+      const source = records.find((entry) => entry.id === item.contentRecordId);
+      return source && <button key={item.id} onClick={() => { setRecordId(source.id); setChosenItemId(item.id); setCreating(true); }}><time>{new Date(`${item.marketingDate}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</time><strong>{source.name}</strong><span>Create materials<ArrowRight size={16} /></span></button>;
+    })}</div></section>}
+    {creating && record && <QuickCreate record={record} item={pendingItem} data={data} mutate={mutate} onClose={() => setCreating(false)} onGenerated={openCampaign} />}
+  </div>;
+}
+
+function PromotionCard({ campaign, data, open }: { campaign: Campaign; data: StudioData; open: () => void }) {
+  const outputs = data.deliverables.filter((item) => item.campaignId === campaign.id);
+  const downloaded = data.calendarItems.find((item) => item.id === campaign.calendarItemId)?.status === "done";
+  const label = downloaded ? "Downloaded" : campaign.rollupStatus === "ready" ? "Ready to download" : campaign.rollupStatus === "changes_requested" ? "Changes requested" : campaign.rollupStatus === "blocked" ? "Needs attention" : "Draft";
+  return <button className="promotion-card" onClick={open}>
+    <div className="promotion-card-photo" style={campaign.sourceSnapshot.asset ? { backgroundImage: `url("${campaign.sourceSnapshot.asset.fileReference}")` } : undefined}><span>{campaign.sourceSnapshot.facts.recordType === "event" ? "EVENT" : "CLASS"}</span></div>
+    <div className="promotion-card-body"><span className="promotion-card-status">{label}</span><h3>{campaign.sourceSnapshot.facts.name}</h3><p>{outputs.length} {outputs.length === 1 ? "material" : "materials"} · {new Date(campaign.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</p><span className="promotion-card-action">{downloaded || campaign.rollupStatus === "ready" ? "Open materials" : "Continue editing"}<ArrowRight size={16} /></span></div>
+  </button>;
+}
+
+function CalendarView({ data, mutate, openCampaign, goCreate }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; openCampaign: (id: string) => void; goCreate: () => void }) {
+  const today = clubDate();
+  const [month, setMonth] = useState(() => today.slice(0, 7));
+  const [year, monthNumber] = month.split("-").map(Number);
+  const [mode, setMode] = useState<"month" | "agenda">("agenda");
+  const [selected, setSelected] = useState<CalendarItem | null>(null);
+  const title = new Date(year, monthNumber - 1, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const items = [...data.calendarItems].filter((item) => isDateInMonth(item.marketingDate, year, monthNumber)).sort((a, b) => a.marketingDate.localeCompare(b.marketingDate));
+  const moveMonth = (amount: number) => { const next = new Date(year, monthNumber - 1 + amount, 1); setMonth(`${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`); };
+  const open = (item: CalendarItem) => item.campaignId ? openCampaign(item.campaignId) : setSelected(item);
+  const record = selected && data.records.find((item) => item.id === selected.contentRecordId);
   return <>
-    <PageHeading eyebrow="CREATE" title="Make something useful now" description="Choose a trusted record, add its campaign image, then open a ready-made social card or motion story."
-      action={<button className="button secondary" onClick={openImport}><ScanLine size={17} />Import new information</button>} />
-    <section className="create-source">
-      <div>
-        <label>Campaign source<select value={record.id} onChange={(event) => setRecordId(event.target.value)} data-testid="select-create-record">{records.map((item) => <option key={item.id} value={item.id}>{item.name} · v{item.version}</option>)}</select></label>
-        <span className="verified-line"><ShieldCheck size={16} />Verified source record</span>
-      </div>
-      <div className="create-source-image">
-        <span className="asset-thumb">{asset ? <ImageIcon size={18} /> : <span>SO</span>}</span>
-        <span><strong>{asset?.title || "Add a campaign image"}</strong><small>{asset ? "Approved for campaign use" : "JPEG, PNG, or WebP · up to 10 MB"}</small></span>
-        <label className="button secondary compact"><Upload size={15} />{uploading ? "Uploading…" : asset ? "Replace image" : "Add image"}<input type="file" accept="image/jpeg,image/png,image/webp" hidden disabled={uploading} onChange={(event) => { const file = event.target.files?.[0]; if (file) void attachImage(file); event.target.value = ""; }} /></label>
-      </div>
-    </section>
-    <section className="social-starters">
-      <header><div><p className="eyebrow">SOCIAL SHARE CARDS</p><h2>Two useful starting points</h2></div><p>Both open as editable Promo Kit artboards and download as production-size PNGs.</p></header>
-      <div className="social-card-grid">
-        <article className="social-starter square">
-          <div className="social-card-preview" style={asset ? { backgroundImage: `linear-gradient(180deg, transparent 24%, rgba(13,13,12,.9) 84%), url("${asset.fileReference}")` } : undefined}>
-            <span>{record.recordType === "event" ? "SUN OAKS EVENT" : "CLASS SPOTLIGHT"}</span><strong>{record.name}</strong><small>{record.date || record.startTime} · {record.location}</small>
-          </div>
-          <div><span><strong>Square announcement</strong><small>Instagram and Facebook · 1080 × 1080</small></span><button className="button primary compact" onClick={() => openEditor("promo", record.id)} data-testid="button-social-square">Edit card<ArrowRight size={15} /></button></div>
-        </article>
-        <article className="social-starter portrait">
-          <div className="social-card-preview portrait-preview" style={asset ? { backgroundImage: `linear-gradient(180deg, rgba(13,13,12,.04), rgba(13,13,12,.92)), url("${asset.fileReference}")` } : undefined}>
-            <span>THIS WEEK AT SUN OAKS</span><strong>{record.name}</strong><small>{record.summary}</small>
-          </div>
-          <div><span><strong>Portrait spotlight</strong><small>Feed-first storytelling · 1080 × 1350</small></span><button className="button primary compact" onClick={() => openEditor("promo", record.id)} data-testid="button-social-portrait">Edit card<ArrowRight size={15} /></button></div>
-        </article>
-      </div>
-    </section>
-    <section className="create-next-actions">
-      <button className="create-action-card" onClick={() => openEditor("motion", record.id)}><Clapperboard size={22} /><span><strong>Build a motion story</strong><small>Start with a ready-made three-scene sequence.</small></span><ChevronRight size={18} /></button>
-      <button className="create-action-card" disabled={!pendingItem && !currentCampaign} onClick={startCampaign}><Sparkles size={22} /><span><strong>{currentCampaign ? "Open coordinated campaign" : "Generate full campaign"}</strong><small>Stills, motion, caption, email, and review.</small></span><ChevronRight size={18} /></button>
-    </section>
+    <PageHeading eyebrow="PROMOTION CALENDAR" title={title} description="When you plan to share each promotion." action={<button className="button primary" onClick={goCreate}><Plus size={17} />Create promotion</button>} />
+    <section className="calendar-toolbar" aria-label="Calendar controls"><div className="month-navigation"><button className="icon-button" onClick={() => moveMonth(-1)} aria-label="Previous month"><ChevronLeft size={18} /></button><button className="button secondary compact" onClick={() => setMonth(today.slice(0, 7))}>This month</button><button className="icon-button" onClick={() => moveMonth(1)} aria-label="Next month"><ChevronRight size={18} /></button></div><div className="segmented"><button className={mode === "agenda" ? "active" : ""} onClick={() => setMode("agenda")}>List</button><button className={mode === "month" ? "active" : ""} onClick={() => setMode("month")}>Month</button></div></section>
+    {mode === "month" ? <section className="month-grid" aria-label={`${title} promotion calendar`}>{WEEKDAYS.map((day) => <div className="weekday" key={day}>{day}</div>)}{calendarDays(year, monthNumber).map((day, index) => <div key={index} className={`calendar-day ${day && `${month}-${String(day).padStart(2, "0")}` === today ? "today" : ""} ${day === null ? "outside" : ""}`}>
+      {day && <span className="day-number">{day}</span>}{day && items.filter((item) => Number(item.marketingDate.slice(-2)) === day).map((item) => <button className="calendar-card" key={item.id} onClick={() => open(item)}><strong>{data.records.find((source) => source.id === item.contentRecordId)?.name}</strong><span>{item.campaignId ? "Open promotion" : "Create materials"}</span></button>)}
+    </div>)}</section> : items.length ? <section className="agenda-list">{items.map((item) => <article className="agenda-row" key={item.id}><time>{new Date(`${item.marketingDate}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</time><div><h2>{data.records.find((source) => source.id === item.contentRecordId)?.name}</h2></div><StatusBadge status={item.status} /><button className="button secondary compact" onClick={() => open(item)}>Open<ChevronRight size={16} /></button></article>)}</section> : <section className="empty-state"><CalendarDays size={32} /><h2>No promotions planned this month</h2><button className="button primary" onClick={goCreate}>Create promotion</button></section>}
+    {selected && record && <QuickCreate item={selected} record={record} data={data} onClose={() => setSelected(null)} mutate={mutate} onGenerated={openCampaign} />}
   </>;
 }
 
-function CalendarView({ data, mutate, goCampaigns, goCreate }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; goCampaigns: () => void; goCreate: () => void }) {
-  const [mode, setMode] = useState<"month" | "agenda">("month");
-  const [selected, setSelected] = useState<CalendarItem | null>(null);
-  const recordFor = (item: CalendarItem) => data.records.find((record) => record.id === item.contentRecordId)!;
-  const calendarDays = Array.from({ length: 35 }, (_, index) => {
-    const day = index - 1;
-    return day > 0 && day <= 30 ? day : null;
-  });
-  return (
-    <>
-      <PageHeading eyebrow="OPERATING CENTER" title="September 2026" description="Plan what Sun Oaks promotes, then generate from verified facts."
-        action={<button className="button primary" onClick={goCreate}><Plus size={17} />Create campaign</button>} />
-      <section className="calendar-toolbar" aria-label="Calendar controls">
-        <div className="segmented">
-          <button className={mode === "month" ? "active" : ""} onClick={() => setMode("month")} data-testid="button-month"><Grid3X3 size={16} />Month</button>
-          <button className={mode === "agenda" ? "active" : ""} onClick={() => setMode("agenda")} data-testid="button-agenda"><List size={16} />Agenda</button>
-        </div>
-        <div className="legend"><span><i className="dot operational" />Club occurrence</span><span><i className="dot marketing" />Marketing action</span></div>
-      </section>
-      {mode === "month" ? (
-        <section className="month-grid" aria-label="September 2026 marketing calendar">
-          {WEEKDAYS.map((day) => <div key={day} className="weekday">{day}</div>)}
-          {calendarDays.map((day, index) => (
-            <div key={index} className={`calendar-day ${day === 2 ? "today" : ""} ${day === null ? "outside" : ""}`}>
-              {day && <span className="day-number">{day}</span>}
-              {day && data.calendarItems.filter((item) => isDateInMonth(item.marketingDate, 2026, 9) && Number(item.marketingDate.slice(-2)) === day).map((item) => {
-                const record = recordFor(item);
-                return <button key={item.id} className={`calendar-card state-${item.status}`} onClick={() => item.campaignId ? goCampaigns() : setSelected(item)} data-testid={`calendar-item-${item.id}`}>
-                  <span className="card-kind">MARKETING · {item.targetType === "scheduleRule" ? "SERIES" : "RECORD"}</span>
-                  <strong>{record.name}</strong>
-                  <span>{item.objective === "launch" ? "Event Promo" : "Class Spotlight"}</span>
-                </button>;
-              })}
-              {day === 8 && <div className="occurrence-card"><span>6:00 AM</span><strong>Sunrise Strength</strong></div>}
-            </div>
-          ))}
-        </section>
-      ) : (
-        <section className="agenda-list">
-          {data.calendarItems.sort((a, b) => a.marketingDate.localeCompare(b.marketingDate)).map((item) => {
-            const record = recordFor(item);
-            return <article key={item.id} className="agenda-row"><time>{new Date(`${item.marketingDate}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</time>
-              <div><span className="card-kind">MARKETING ACTION · {item.targetType.replace(/([A-Z])/g, " $1")}</span><h2>{record.name}</h2><p>{record.summary}</p></div>
-              <StatusBadge status={item.status} /><button className="button secondary compact" onClick={() => item.campaignId ? goCampaigns() : setSelected(item)}>Open<ChevronRight size={16} /></button></article>;
-          })}
-        </section>
-      )}
-      {selected && <QuickCreate item={selected} record={recordFor(selected)} onClose={() => setSelected(null)} mutate={mutate} onGenerated={() => { setSelected(null); goCampaigns(); }} />}
-    </>
-  );
-}
-
-function QuickCreate({ item, record, onClose, mutate, onGenerated }: {
-  item: CalendarItem; record: ContentRecord; onClose: () => void;
-  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; onGenerated: () => void;
+function QuickCreate({ item, record, data, onClose, mutate, onGenerated }: {
+  item?: CalendarItem; record: ContentRecord; data: StudioData; onClose: () => void;
+  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; onGenerated: (id: string) => void;
 }) {
-  const pack = record.recordType === "event" ? "event-promo" : "class-spotlight";
-  const packName = pack === "event-promo" ? "Event Promo" : "Class Spotlight";
-  const [confirmed, setConfirmed] = useState(false);
+  const [formats, setFormats] = useState<PromotionOutput[]>([...DEFAULT_OUTPUTS]);
+  const [marketingDate, setMarketingDate] = useState(item?.marketingDate || clubDate());
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
   const dialogRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -397,34 +346,31 @@ function QuickCreate({ item, record, onClose, mutate, onGenerated }: {
   return (
     <div className="drawer-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <aside ref={dialogRef} className="drawer" role="dialog" aria-modal="true" aria-labelledby="quick-title">
-        <header><div><p className="eyebrow">QUICK CREATE · 3 CLICKS</p><h2 id="quick-title">{record.name}</h2></div><button className="icon-button" onClick={onClose} aria-label="Close Quick Create"><X /></button></header>
-        <ol className="step-list">
-          <li className="complete"><span>1</span><div><strong>Subject selected</strong><p>{item.targetType === "scheduleRule" ? "Recurring schedule rule" : "Trusted content record"} · version {record.version}</p></div><Check size={18} /></li>
-          <li className={confirmed ? "complete" : "active"}><span>2</span><div><strong>Choose campaign pack</strong><p>Recommended deterministically for {record.recordType === "event" ? "events" : "recurring classes"}.</p></div></li>
-        </ol>
-        <button className={`pack-choice ${confirmed ? "selected" : ""}`} onClick={() => setConfirmed(true)} data-testid="button-select-pack">
-          <span className="pack-art"><Sparkles size={26} /></span><span><small>RECOMMENDED</small><strong>{packName}</strong><span>3 stills · motion · caption · email</span></span><span className="radio">{confirmed && <Check size={15} />}</span>
-        </button>
-        <div className="fact-check">
-          <span><ShieldCheck size={18} />Protected facts</span>
-          <dl><div><dt>Schedule</dt><dd>{record.date || record.startTime || "Recurring schedule"}</dd></div><div><dt>Location</dt><dd>{record.location || "Needs confirmation"}</dd></div><div><dt>Source</dt><dd>Verified record v{record.version}</dd></div></dl>
-        </div>
-        <button className="button primary full generate" disabled={!confirmed} onClick={async () => { await mutate({ action: "generateCampaign", calendarItemId: item.id, packId: pack }); onGenerated(); }} data-testid="button-generate-campaign">
-          <Sparkles size={18} />Generate campaign<span>Click 3</span>
-        </button>
-        <p className="drawer-footnote">Campaign outputs keep this source snapshot even if the trusted record changes later.</p>
+        <header><div><p className="eyebrow">NEW PROMOTION</p><h2 id="quick-title">{record.name}</h2></div><button className="icon-button" onClick={onClose} aria-label="Close new promotion"><X /></button></header>
+        <div className="confirmed-details"><ShieldCheck size={18} /><div><strong>Confirmed details</strong><p>{recordSchedule(record, data.scheduleRules)}</p><p>{record.location}</p><p>{record.price} {record.instructor ? ` · ${record.instructor}` : ""}</p><p>{record.cta}</p></div></div>
+        <fieldset className="output-picker"><legend>What do you need?</legend>{PROMOTION_OUTPUTS.map((output) => <label key={output.id} className={formats.includes(output.id) ? "selected" : ""}><input type="checkbox" checked={formats.includes(output.id)} onChange={() => setFormats((current) => current.includes(output.id) ? current.filter((id) => id !== output.id) : [...current, output.id])} /><span><strong>{output.label}</strong><small>{output.detail}</small></span></label>)}</fieldset>
+        <label className="promotion-date">Plan to share on<input type="date" value={marketingDate} onChange={(event) => setMarketingDate(event.target.value)} required /></label>
+        {error && <p className="inline-error" role="alert">{error}</p>}
+        <button className="button primary full generate" disabled={pending || !formats.length || !marketingDate} onClick={async () => {
+          setPending(true); setError("");
+          try { const result = await mutate({ action: "createPromotion", recordId: record.id, calendarItemId: item?.id, marketingDate, formats }); onGenerated(String(result.campaignId)); }
+          catch (caught) { setError(caught instanceof Error ? caught.message : "Could not create your promotion. Try again."); }
+          finally { setPending(false); }
+        }} data-testid="button-generate-campaign">{pending ? "Creating your materials…" : `Create ${formats.length} ${formats.length === 1 ? "material" : "materials"}`}<ArrowRight size={17} /></button>
+        <p className="drawer-footnote">Nothing is posted or sent. Review your materials before downloading.</p>
+
       </aside>
     </div>
   );
 }
 
-function IngesterView({ data, mutate, onPublished }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; onPublished: () => void }) {
+function IngesterView({ data, mutate, onPublished }: { data: StudioData; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>; onPublished: (recordId: string, itemId: string) => void }) {
   const [mode, setMode] = useState<"plain_text" | "guided">("plain_text");
   const [rawText, setRawText] = useState("");
   const [guidedType, setGuidedType] = useState<"event" | "recurring_class">("event");
   const [guided, setGuided] = useState({ name: "", date: "", days: "", startTime: "", endTime: "", location: "", instructor: "", price: "" });
   const [preview, setPreview] = useState<{ source: { id: string }; candidate: Candidate; duplicate: { kind: string; record?: ContentRecord } | null } | null>(null);
-  const [marketingDate, setMarketingDate] = useState("2026-09-15");
+  const [marketingDate, setMarketingDate] = useState(clubDate);
   const [duplicateDecision, setDuplicateDecision] = useState<"create" | "update">("create");
   useEffect(() => {
     try {
@@ -460,7 +406,7 @@ function IngesterView({ data, mutate, onPublished }: { data: StudioData; mutate:
   const edit = (field: keyof Candidate, value: string | number[]) => setPreview((current) => current ? { ...current, candidate: { ...current.candidate, [field]: value } } : current);
   return (
     <>
-      <PageHeading eyebrow="INGESTER" title={preview ? "Review extracted facts" : "Add trusted information"} description={preview ? "Human verification is required before anything reaches the library." : "Paste an announcement or use a guided route. Nothing publishes automatically."} />
+      <PageHeading eyebrow="ADD A CLASS OR EVENT" title={preview ? "Check the details" : "What’s happening at Sun Oaks?"} description={preview ? "Confirm the details your promotional materials will use." : "Paste an announcement or fill in the details."} />
       {!preview ? (
         <section className="ingest-layout">
           <div className="ingest-panel">
@@ -484,9 +430,9 @@ function IngesterView({ data, mutate, onPublished }: { data: StudioData; mutate:
               <textarea id="source-text" rows={12} value={rawText} onChange={(event) => setRawText(event.target.value)} placeholder={"Example:\nPoolside Family Night\nSeptember 18, 2026 at 6:30 PM\nOutdoor Pool\nMembers and guests welcome."} data-testid="textarea-source" />
               <div className="draft-row"><span><CheckCircle2 size={15} />Draft autosaved on this browser only</span><span>{rawText.length} characters</span></div>
             </>}
-            <button className="button primary" disabled={sourceText.trim().length < 2} onClick={parse} data-testid="button-extract">Extract for review<ArrowRight size={17} /></button>
+            <button className="button primary" disabled={sourceText.trim().length < 2} onClick={parse} data-testid="button-extract">Continue<ArrowRight size={17} /></button>
           </div>
-          <aside className="process-note"><p className="eyebrow">CONTROLLED PIPELINE</p><ol><li><span>01</span>Source saved with fingerprint</li><li><span>02</span>Facts extracted locally</li><li><span>03</span>You verify every field</li><li><span>04</span>Record and calendar target publish</li></ol><p><ShieldCheck size={17} />Dates, prices, names, and locations are never invented.</p></aside>
+          <aside className="process-note"><h2>A little detail goes a long way</h2><p>Include the name, date or recurring days, time, location, and how to register. You can check and correct everything before creating materials.</p></aside>
         </section>
       ) : (
         <section className="review-layout">
@@ -511,14 +457,14 @@ function IngesterView({ data, mutate, onPublished }: { data: StudioData; mutate:
             <div className="verify-bar"><div><FileCheck2 size={20} /><span><strong>Human verification</strong><small>Publishing confirms these operational facts.</small></span></div>
               <button className="button primary" onClick={async () => {
                 const extra = preview.candidate as Candidate & { cta?: string; assetId?: string | null };
-                await mutate({
+                const published = await mutate({
                   action: "publishCandidate", sourceId: preview.source.id,
                   candidate: { ...preview.candidate, cta: extra.cta || (preview.candidate.recordType === "event" ? "RSVP at the front desk" : "Reserve in the Sun Oaks app"), assetId: extra.assetId || null },
                   duplicateDecision, duplicateRecordId: preview.duplicate?.record?.id, marketingDate,
                 });
                 try { window.localStorage.removeItem("sunoaks-ingester-draft"); } catch {}
-                onPublished();
-              }} data-testid="button-verify-publish"><Check size={17} />Verify & publish</button>
+                onPublished(String(published.recordId), String(published.calendarItemId));
+              }} data-testid="button-verify-publish"><Check size={17} />Confirm details & continue</button>
             </div>
           </div>
           <aside className="review-evidence"><h2>Source evidence</h2>{Object.entries(preview.candidate.sourceExcerpts).map(([key, excerpt]) => <div key={key}><span>{key}</span><blockquote>{excerpt || "No supporting excerpt found"}</blockquote></div>)}
@@ -591,87 +537,143 @@ function LibraryView({ data, mutate, refresh, openEditor }: {
   const records = data.records.filter((record) => record.active && record.name.toLowerCase().includes(query.toLowerCase()));
   return (
     <>
-      <PageHeading eyebrow="SOURCE OF TRUTH" title="Trusted Content Library" description="Verified operational records with source lineage and version history." />
-      <div className="library-toolbar"><label className="search-field"><Search size={17} /><span className="sr-only">Search records</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search trusted records" data-testid="input-library-search" /></label><span>{records.length} active records</span></div>
+      <PageHeading eyebrow="CLUB INFORMATION" title="Classes & events" description="Keep the details and photos your promotions use up to date." />
+      <div className="library-toolbar"><label className="search-field"><Search size={17} /><span className="sr-only">Search records</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search classes and events" data-testid="input-library-search" /></label><span>{records.length} active records</span></div>
       <section className="table-wrap"><table><thead><tr><th>Record</th><th>Type</th><th>Schedule</th><th>Source trust</th><th>State</th><th><span className="sr-only">Actions</span></th></tr></thead><tbody>{records.map((record) => <tr key={record.id}>
         <td><div className="record-cell"><span className="asset-thumb">{record.assetId ? <ImageIcon size={18} /> : <span>SO</span>}</span><span><strong>{record.name}</strong><small>{record.summary}</small></span></div></td>
         <td>{record.recordType === "event" ? "Event" : "Recurring class"}</td>
         <td>{record.date || `${record.startTime || "Time pending"} · ${record.location || "Location pending"}`}</td>
         <td><span className="verified-line"><ShieldCheck size={16} />Verified · v{record.version}</span><small>{new Date(record.lastConfirmedAt).toLocaleDateString()}</small></td>
         <td><StatusBadge status={record.status} /></td>
-        <td><div className="row-actions"><button className="button secondary compact" onClick={() => setEditing(record)} data-testid={`button-edit-record-${record.id}`}><Pencil size={14} />Edit</button><button className="button primary compact" onClick={() => openEditor("promo", record.id)}><WandSparkles size={14} />Create</button></div></td>
+        <td><div className="row-actions"><button className="button secondary compact" onClick={() => setEditing(record)} data-testid={`button-edit-record-${record.id}`}><Pencil size={14} />Edit</button><button className="button primary compact" onClick={() => openEditor("promo", record.id)}><WandSparkles size={14} />More formats</button><button className="button secondary compact" onClick={() => openEditor("motion", record.id)}><Clapperboard size={14} />Animation</button></div></td>
       </tr>)}</tbody></table></section>
       {editing && <RecordEditDrawer record={editing} onClose={() => setEditing(null)} mutate={mutate} refresh={refresh} />}
     </>
   );
 }
 
-function CampaignsView({ data, mutate, refresh, openEditor, goCreate }: {
-  data: StudioData;
-  mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
-  refresh: () => Promise<void>;
-  openEditor: (view: "promo" | "motion", recordId: string) => void;
-  goCreate: () => void;
+function CampaignsView({ data, campaignId, mutate, refresh, openEditor, openCampaign, goCreate, onDirtyChange }: {
+  data: StudioData; campaignId?: string; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  refresh: () => Promise<void>; openEditor: (view: "promo" | "motion", recordId: string) => void;
+  openCampaign: (id: string) => void; goCreate: (recordId?: string) => void; onDirtyChange: (dirty: boolean) => void;
 }) {
-  const [selectedId, setSelectedId] = useState(data.campaigns.at(-1)?.id || "");
-  const campaign = data.campaigns.find((item) => item.id === selectedId) || data.campaigns.at(-1);
-  if (!campaign) return (
-    <>
-      <PageHeading eyebrow="CAMPAIGNS" title="Coordinated output sets" description="Every still, motion, caption, and email shares one protected source snapshot." />
-      <section className="empty-state"><Sparkles size={40} /><h2>No campaigns yet</h2><p>Choose a trusted record and make your first useful output.</p><button className="button primary" onClick={goCreate}>Create campaign</button></section>
-    </>
-  );
-  return <CampaignWorkspace key={campaign.id} campaign={campaign} data={data} mutate={mutate} refresh={refresh} openEditor={openEditor} onSelect={setSelectedId} />;
+  const campaign = data.campaigns.find((item) => item.id === campaignId);
+  if (campaignId && !campaign) return <section className="empty-state"><h2>Promotion not found</h2><p>It may have been removed or this link may be out of date.</p><button className="button primary" onClick={() => goCreate()}>Return home</button></section>;
+  if (campaign) return <CampaignWorkspace key={campaign.id} campaign={campaign} data={data} mutate={mutate} refresh={refresh} onSelect={openCampaign} goCreate={goCreate} onDirtyChange={onDirtyChange} />;
+  return <>
+    <PageHeading eyebrow="YOUR WORK" title="Promotions" description="Your materials, messages, and review status in one place." action={<button className="button primary" onClick={() => goCreate()}><Plus size={17} />Create promotion</button>} />
+    {data.campaigns.length ? <div className="promotion-grid">{[...data.campaigns].reverse().map((item) => <PromotionCard key={item.id} campaign={item} data={data} open={() => openCampaign(item.id)} />)}</div> : <section className="empty-state"><h2>No promotions yet</h2><p>Start with a class or event and choose the materials you need.</p><button className="button primary" onClick={() => goCreate()}>Create promotion</button></section>}
+    {data.creativeProjects.length > 0 && <section className="promotion-section"><header><h2>Standalone designs</h2><span>Saved in the additional design tools</span></header><div className="upcoming-list">{data.creativeProjects.map((project) => <button key={project.id} onClick={() => openEditor(project.kind, project.recordId)}><strong>{project.title}</strong><span>Open {project.kind === "motion" ? "animation" : "design"}<ArrowRight size={16} /></span></button>)}</div></section>}
+  </>;
 }
 
-function CampaignWorkspace({ campaign, data, mutate, refresh, openEditor, onSelect }: {
+function CampaignMessageEditor({ campaign, deliverables, mutate, onDirtyChange }: {
+  campaign: Campaign; deliverables: Deliverable[]; mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  onDirtyChange: (dirty: boolean) => void;
+}) {
+  const original = { headline: deliverables[0]?.creativeFields.headline || campaign.sourceSnapshot.facts.name, hook: deliverables[0]?.creativeFields.hook || "Join us at Sun Oaks." };
+  const [fields, setFields] = useState(original);
+  const [saved, setSaved] = useState(JSON.stringify(original));
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const dirty = JSON.stringify(fields) !== saved;
+  useEffect(() => { onDirtyChange(dirty); return () => onDirtyChange(false); }, [dirty, onDirtyChange]);
+  return <section className="campaign-message-editor"><div><p className="eyebrow">YOUR MESSAGE</p><h2>Make it sound like Sun Oaks</h2><p>Save your wording across these materials. Dates, times, and registration details stay confirmed.</p></div><div className="message-fields">
+    <label>Headline<input value={fields.headline} maxLength={200} disabled={pending} onChange={(event) => setFields((current) => ({ ...current, headline: event.target.value }))} /></label>
+    <label>Short message<textarea rows={2} value={fields.hook} maxLength={400} disabled={pending} onChange={(event) => setFields((current) => ({ ...current, hook: event.target.value }))} /></label>
+    <div className="message-save"><span role="status">{pending ? "Saving…" : dirty ? "Unsaved changes" : message || "Saved"}</span><button className="button secondary compact" disabled={!dirty || pending || !fields.headline.trim() || !fields.hook.trim()} onClick={async () => {
+      setPending(true); setMessage("");
+      try { await mutate({ action: "updateCampaignCopy", campaignId: campaign.id, expectedVersions: Object.fromEntries(deliverables.map((item) => [item.id, item.version])), ...fields }); setSaved(JSON.stringify(fields)); setMessage("Message saved · materials ready to review"); }
+      catch (caught) { setMessage(caught instanceof Error ? caught.message : "Could not save. Try again."); }
+      finally { setPending(false); }
+    }}>Save message</button></div>{message && dirty && <p className="inline-error" role="alert">{message}</p>}
+  </div></section>;
+}
+
+function CampaignWorkspace({ campaign, data, mutate, refresh, onSelect, goCreate, onDirtyChange }: {
   campaign: Campaign;
   data: StudioData;
   mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
   refresh: () => Promise<void>;
-  openEditor: (view: "promo" | "motion", recordId: string) => void;
   onSelect: (id: string) => void;
+  goCreate: (recordId?: string) => void;
+  onDirtyChange: (dirty: boolean) => void;
 }) {
   const deliverables = data.deliverables.filter((item) => item.campaignId === campaign.id);
   const [activeId, setActiveId] = useState(deliverables[0]?.id);
   const [editing, setEditing] = useState(false);
+  const [copyDirty, setCopyDirty] = useState(false);
+  const [packageBusy, setPackageBusy] = useState(false);
+  const [packageMessage, setPackageMessage] = useState("");
+  const markCopyDirty = useCallback((dirty: boolean) => { setCopyDirty(dirty); onDirtyChange(dirty); }, [onDirtyChange]);
   const active = deliverables.find((item) => item.id === activeId) || deliverables[0];
   const record = data.records.find((item) => item.id === campaign.sourceSnapshot.contentRecordId);
   const asset = campaign.sourceSnapshot.asset
     ? { ...campaign.sourceSnapshot.asset, usageTags: [], active: true } as Asset
     : undefined;
   const exportedIds = new Set(data.exportEvents.filter((event) => event.campaignId === campaign.id).map((event) => event.deliverableId));
-  const kindLabel = (deliverable: Deliverable) => deliverable.deliverableType === "emailCopy" ? "Email copy" : deliverable.deliverableType[0].toUpperCase() + deliverable.deliverableType.slice(1);
-  const approve = (deliverable: Deliverable, status: Deliverable["approvalStatus"]) => mutate({ action: "setApproval", deliverableId: deliverable.id, status });
+  const kindLabel = (deliverable: Deliverable) => outputLabel(deliverable.format);
+  const approve = async (deliverable: Deliverable, status: Deliverable["approvalStatus"]) => {
+    try { await mutate({ action: "setApproval", deliverableId: deliverable.id, expectedVersion: deliverable.version, status }); }
+    catch (caught) { setPackageMessage(caught instanceof Error ? caught.message : "Could not save the review. Try again."); }
+  };
   const copied = async (text: string) => { await navigator.clipboard.writeText(text); };
   const authorizeExport = async (deliverableId: string) => {
     try {
-      await mutate({ action: "authorizeExport", calendarItemId: campaign.calendarItemId, deliverableId });
+      await mutate({ action: "authorizeExport", calendarItemId: campaign.calendarItemId, deliverableId, expectedVersion: deliverables.find((item) => item.id === deliverableId)?.version });
       return true;
     } catch {
       return false;
     }
   };
   const recordExport = async (deliverableId: string) => {
-    await mutate({ action: "markExported", calendarItemId: campaign.calendarItemId, deliverableId });
+    await mutate({ action: "markExported", calendarItemId: campaign.calendarItemId, deliverableId, expectedVersion: deliverables.find((item) => item.id === deliverableId)?.version });
+  };
+  const downloadPackage = async () => {
+    setPackageBusy(true); setPackageMessage("Preparing your files…");
+    try {
+      const files = [];
+      for (const output of deliverables) {
+        if (!await authorizeExport(output.id)) throw new Error("A material has changed or still needs approval. Reload and review it.");
+        setPackageMessage(`Preparing ${outputLabel(output.format).toLowerCase()}…`);
+        files.push(await renderPromotionFile(output, campaign.sourceSnapshot, asset));
+      }
+      const zip = await createZip(files);
+      for (const output of deliverables) if (!await authorizeExport(output.id)) throw new Error("The promotion changed during download preparation. Reload and try again.");
+      const url = URL.createObjectURL(zip); const anchor = document.createElement("a"); anchor.href = url;
+      anchor.download = `sun-oaks-${campaign.sourceSnapshot.facts.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.zip`; anchor.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setPackageMessage("Download started. Recording your download…");
+      for (const output of deliverables) await recordExport(output.id);
+      setPackageMessage("Download started · your materials are together in one ZIP file.");
+    } catch (caught) { setPackageMessage(caught instanceof Error ? caught.message : "Could not prepare the download. Try again."); }
+    finally { setPackageBusy(false); }
   };
   return (
     <>
-      <PageHeading eyebrow="CAMPAIGN WORKSPACE" title={campaign.sourceSnapshot.facts.name} description={`${campaign.campaignPackId === "event-promo" ? "Event Promo" : "Class Spotlight"} · created ${new Date(campaign.createdAt).toLocaleDateString()}`}
-        action={<div className="campaign-heading-actions">{record && <><button className="button secondary compact" onClick={() => setEditing(true)}><Pencil size={15} />Edit info / image</button><button className="button secondary compact" onClick={() => openEditor("promo", record.id)}><WandSparkles size={15} />Social cards</button><button className="button secondary compact" onClick={() => openEditor("motion", record.id)}><Clapperboard size={15} />Motion Studio</button></>}<div className={`rollup rollup-${campaign.rollupStatus}`}><span />{campaign.rollupStatus === "ready" ? "Ready to export" : campaign.rollupStatus.replaceAll("_", " ")}</div></div>} />
-      <div className="campaign-switcher"><label>Campaign<select value={campaign.id} onChange={(event) => onSelect(event.target.value)}>{data.campaigns.map((item) => <option key={item.id} value={item.id}>{item.sourceSnapshot.facts.name} · {new Date(item.createdAt).toLocaleDateString()}</option>)}</select></label>
-        <div className="snapshot-lock"><ShieldCheck size={17} /><span>Source snapshot locked<strong>Record v{campaign.sourceSnapshot.recordVersion}</strong></span></div></div>
+      <PageHeading eyebrow="PROMOTION" title={campaign.sourceSnapshot.facts.name} description={`${deliverables.length} selected materials · created ${new Date(campaign.createdAt).toLocaleDateString()}`}
+        action={<div className="campaign-heading-actions">{record && <button className="button secondary compact" onClick={() => setEditing(true)}><Pencil size={15} />Edit event details</button>}<div className={`rollup rollup-${campaign.rollupStatus}`}>{campaign.rollupStatus === "ready" ? "Ready to download" : campaign.rollupStatus === "in_review" ? "Ready for review" : campaign.rollupStatus.replaceAll("_", " ")}</div></div>} />
+      {record && record.version !== campaign.sourceSnapshot.recordVersion && <div className="promotion-update-note"><div><strong>The class or event details have changed.</strong><p>These materials use the earlier confirmed details. Create an updated promotion to use the latest information and photo.</p></div><button className="button secondary compact" onClick={() => goCreate(record.id)}>Create updated promotion</button></div>}
+      <div className="campaign-switcher"><label>Promotion<select value={campaign.id} onChange={(event) => onSelect(event.target.value)}>{data.campaigns.map((item) => <option key={item.id} value={item.id}>{item.sourceSnapshot.facts.name} · {new Date(item.createdAt).toLocaleDateString()}</option>)}</select></label><span className="verified-line"><ShieldCheck size={16} />Details confirmed</span></div>
+      <CampaignMessageEditor campaign={campaign} deliverables={deliverables} mutate={mutate} onDirtyChange={markCopyDirty} />
+      {copyDirty && <p className="promotion-save-notice">Save your message before reviewing or downloading the updated materials.</p>}
+      <section className="promotion-package"><div><strong>Review your selected materials</strong><p>Check each preview below, then approve and download the set.</p>{packageMessage && <p role="status">{packageMessage}</p>}</div><div className="package-actions"><button className="button secondary compact" disabled={copyDirty || packageBusy || campaign.rollupStatus === "ready" || campaign.rollupStatus === "blocked"} onClick={async () => {
+        setPackageBusy(true); setPackageMessage("");
+        try { await mutate({ action: "approveCampaign", campaignId: campaign.id, expectedVersions: Object.fromEntries(deliverables.map((item) => [item.id, item.version])) }); setPackageMessage("Materials approved"); }
+        catch (caught) { setPackageMessage(caught instanceof Error ? caught.message : "Could not approve. Try again."); }
+        finally { setPackageBusy(false); }
+      }}>Approve this set</button><button className="button primary compact" disabled={copyDirty || packageBusy || campaign.rollupStatus !== "ready"} onClick={downloadPackage}><Download size={16} />{packageBusy ? "Please wait…" : "Download all"}</button></div></section>
       <section className="workspace">
-        <aside className="deliverable-list"><p className="eyebrow">DELIVERABLES</p>{deliverables.map((deliverable) => <button key={deliverable.id} className={deliverable.id === active.id ? "active" : ""} onClick={() => setActiveId(deliverable.id)} data-testid={`deliverable-${deliverable.id}`}>
+        <aside className="deliverable-list"><p className="eyebrow">YOUR MATERIALS</p>{deliverables.map((deliverable) => <button key={deliverable.id} className={deliverable.id === active.id ? "active" : ""} onClick={() => setActiveId(deliverable.id)} data-testid={`deliverable-${deliverable.id}`}>
           {deliverable.deliverableType === "still" ? <ImageIcon size={18} /> : deliverable.deliverableType === "motion" ? <Video size={18} /> : <FileText size={18} />}
           <span><strong>{kindLabel(deliverable)}</strong><small>{exportedIds.has(deliverable.id) ? "Exported" : deliverable.format.replaceAll("-", " ")}</small></span><i className={`approval-dot ${exportedIds.has(deliverable.id) ? "exported" : deliverable.approvalStatus}`} />
         </button>)}</aside>
         <div className="deliverable-stage">
           <header><div><p className="eyebrow">{active.format.replaceAll("-", " ")}</p><h2>{kindLabel(active)}</h2></div><StatusBadge status={record?.status || "campaign_generated"} /></header>
-          {active.deliverableType === "still" && <StillCanvas deliverable={active} snapshot={campaign.sourceSnapshot} asset={asset} canExport={active.approvalStatus === "approved" && !active.validationResults.some((result) => result.severity === "error")} authorizeExport={() => authorizeExport(active.id)} onExported={() => recordExport(active.id)} />}
-          {active.deliverableType === "motion" && <MotionCanvas deliverable={active} snapshot={campaign.sourceSnapshot} asset={asset} canExport={active.approvalStatus === "approved" && !active.validationResults.some((result) => result.severity === "error")} authorizeExport={() => authorizeExport(active.id)} onExported={() => recordExport(active.id)} />}
-          {active.deliverableType === "caption" && <div className="copy-deliverable"><div className="copy-meta"><span>Instagram caption</span><span>{active.creativeFields.caption.length} characters</span></div><pre>{active.creativeFields.caption}</pre><button className="button dark" disabled={active.approvalStatus !== "approved"} title={active.approvalStatus === "approved" ? "Copy approved caption" : "Approve this deliverable before export"} onClick={async () => { if (!await authorizeExport(active.id)) return; try { await copied(active.creativeFields.caption); await recordExport(active.id); } catch {} }}><Clipboard size={17} />Copy caption</button></div>}
-          {active.deliverableType === "emailCopy" && <div className="email-deliverable"><dl><div><dt>Subject</dt><dd>{active.creativeFields.subject}</dd></div><div><dt>Preview text</dt><dd>{active.creativeFields.preview}</dd></div></dl><div className="email-body"><span>Body</span>{active.creativeFields.body.split("\n").map((line, index) => <p key={index}>{line || "\u00a0"}</p>)}</div><div className="email-actions"><button className="button secondary" disabled={active.approvalStatus !== "approved"} onClick={async () => { if (!await authorizeExport(active.id)) return; try { await copied(`${active.creativeFields.subject}\n${active.creativeFields.preview}\n\n${active.creativeFields.body}`); await recordExport(active.id); } catch {} }}><Clipboard size={17} />Copy all</button><button className="button dark" disabled={active.approvalStatus !== "approved"} onClick={async () => {
+          {active.deliverableType === "still" && <StillCanvas deliverable={active} snapshot={campaign.sourceSnapshot} asset={asset} canExport={!copyDirty && active.approvalStatus === "approved" && !active.validationResults.some((result) => result.severity === "error")} authorizeExport={() => authorizeExport(active.id)} onExported={() => recordExport(active.id)} />}
+          {active.deliverableType === "motion" && <MotionCanvas deliverable={active} snapshot={campaign.sourceSnapshot} asset={asset} canExport={!copyDirty && active.approvalStatus === "approved" && !active.validationResults.some((result) => result.severity === "error")} authorizeExport={() => authorizeExport(active.id)} onExported={() => recordExport(active.id)} />}
+          {active.deliverableType === "caption" && <div className="copy-deliverable"><div className="copy-meta"><span>Instagram caption</span><span>{active.creativeFields.caption.length} characters</span></div><pre>{active.creativeFields.caption}</pre><button className="button dark" disabled={copyDirty || active.approvalStatus !== "approved"} title={active.approvalStatus === "approved" ? "Copy approved caption" : "Approve this deliverable before export"} onClick={async () => { if (!await authorizeExport(active.id)) return; try { await copied(active.creativeFields.caption); await recordExport(active.id); } catch {} }}><Clipboard size={17} />Copy caption</button></div>}
+          {active.deliverableType === "emailCopy" && <div className="email-deliverable"><dl><div><dt>Subject</dt><dd>{active.creativeFields.subject}</dd></div><div><dt>Preview text</dt><dd>{active.creativeFields.preview}</dd></div></dl><div className="email-body"><span>Body</span>{active.creativeFields.body.split("\n").map((line, index) => <p key={index}>{line || "\u00a0"}</p>)}</div><div className="email-actions"><button className="button secondary" disabled={copyDirty || active.approvalStatus !== "approved"} onClick={async () => { if (!await authorizeExport(active.id)) return; try { await copied(`${active.creativeFields.subject}\n${active.creativeFields.preview}\n\n${active.creativeFields.body}`); await recordExport(active.id); } catch {} }}><Clipboard size={17} />Copy all</button><button className="button dark" disabled={copyDirty || active.approvalStatus !== "approved"} onClick={async () => {
             if (!await authorizeExport(active.id)) return;
             const blob = new Blob([`Subject: ${active.creativeFields.subject}\nPreview: ${active.creativeFields.preview}\n\n${active.creativeFields.body}`], { type: "text/plain" });
             const anchor = document.createElement("a"); anchor.href = URL.createObjectURL(blob); anchor.download = "sun-oaks-email-copy.txt"; anchor.click(); URL.revokeObjectURL(anchor.href);
@@ -679,17 +681,17 @@ function CampaignWorkspace({ campaign, data, mutate, refresh, openEditor, onSele
           }}><Download size={17} />Download .txt</button></div></div>}
         </div>
         <aside className="inspector">
-          <section><p className="eyebrow">APPROVAL</p><div className="approval-state"><span className={`approval-icon ${active.approvalStatus}`}><Check size={18} /></span><div><strong>{active.approvalStatus === "approved" ? "Approved" : active.approvalStatus === "changes_requested" ? "Changes requested" : "Awaiting review"}</strong><p>Approval applies only to this deliverable.</p></div></div>
-            <button className="button primary full" disabled={active.approvalStatus === "approved"} onClick={() => approve(active, "approved")} data-testid={`button-approve-${active.id}`}><Check size={17} />Approve deliverable</button>
+          <section><p className="eyebrow">APPROVAL</p><div className="approval-state"><span className={`approval-icon ${active.approvalStatus}`}><Check size={18} /></span><div><strong>{active.approvalStatus === "approved" ? "Approved" : active.approvalStatus === "changes_requested" ? "Changes requested" : "Awaiting review"}</strong><p>Approve after checking the preview.</p></div></div>
+            <button className="button primary full" disabled={copyDirty || active.approvalStatus === "approved" || active.validationResults.some((result) => result.severity === "error") } onClick={() => approve(active, "approved")} data-testid={`button-approve-${active.id}`}><Check size={17} />Approve material</button>
             <button className="button text full" onClick={() => approve(active, active.approvalStatus === "changes_requested" ? "draft" : "changes_requested")}>{active.approvalStatus === "changes_requested" ? "Return to review" : "Request changes"}</button>
           </section>
           <section><p className="eyebrow">VALIDATION</p>{active.validationResults.map((result) => <div className="validation" key={result.code}><CheckCircle2 size={17} /><span><strong>{result.code.replaceAll("-", " ")}</strong>{result.message}</span></div>)}</section>
-          <section><p className="eyebrow">SOURCE FACTS</p><dl className="source-facts">{Object.entries(campaign.sourceSnapshot.facts).filter(([, value]) => value).map(([key, value]) => <div key={key}><dt>{key.replace(/([A-Z])/g, " $1")}</dt><dd>{value}</dd></div>)}
+          <section><details><summary>Confirmed details</summary><dl className="source-facts">{Object.entries(campaign.sourceSnapshot.facts).filter(([, value]) => value).map(([key, value]) => <div key={key}><dt>{key.replace(/([A-Z])/g, " $1")}</dt><dd>{value}</dd></div>)}
             {campaign.sourceSnapshot.target.type === "scheduleRule" && <div><dt>Target</dt><dd>{campaign.sourceSnapshot.target.daysOfWeek.map((day) => DAY_NAMES[day]).join(" & ")} · {campaign.sourceSnapshot.target.startTime} · {campaign.sourceSnapshot.target.timezone}</dd></div>}
             {campaign.sourceSnapshot.target.type === "occurrence" && <div><dt>Target</dt><dd>{new Date(campaign.sourceSnapshot.target.startsAt).toLocaleString()}</dd></div>}
-          </dl></section>
-          <section><p className="eyebrow">CAMPAIGN IMAGE SNAPSHOT</p><div className="snapshot-asset"><ImageIcon size={17} /><span><strong>{campaign.sourceSnapshot.asset?.title || "No-photo brand fallback"}</strong><small>Locked when this campaign was generated</small></span></div></section>
-          <ReviewShare campaign={campaign} deliverables={deliverables} data={data} mutate={mutate} />
+          </dl></details></section>
+          <section><p className="eyebrow">PHOTO</p><div className="snapshot-asset"><ImageIcon size={17} /><span><strong>{campaign.sourceSnapshot.asset?.title || "No-photo brand fallback"}</strong><small>Locked when this campaign was generated</small></span></div></section>
+          {!copyDirty && <ReviewShare campaign={campaign} deliverables={deliverables} data={data} mutate={mutate} />}
         </aside>
       </section>
       {editing && record && <RecordEditDrawer record={record} onClose={() => setEditing(false)} mutate={mutate} refresh={refresh} />}
@@ -701,7 +703,7 @@ function ReviewShare({ campaign, deliverables, data, mutate }: {
   campaign: Campaign; deliverables: Deliverable[]; data: StudioData;
   mutate: (value: Record<string, unknown>) => Promise<Record<string, unknown>>;
 }) {
-  const artwork = deliverables.filter((item) => item.deliverableType === "still" || item.deliverableType === "motion");
+  const artwork = deliverables;
   const [selected, setSelected] = useState(() => artwork.map((item) => item.id));
   const [expiresInHours, setExpiresInHours] = useState(72);
   const [latestUrl, setLatestUrl] = useState("");
@@ -717,8 +719,8 @@ function ReviewShare({ campaign, deliverables, data, mutate }: {
   };
   return <section className="review-share">
     <p className="eyebrow">GM REVIEW LINK</p>
-    <p className="review-share-copy">Share only selected artwork through an expiring, revocable link.</p>
-    <fieldset><legend>Artwork</legend>{artwork.map((item) => <label key={item.id}><input type="checkbox" checked={selected.includes(item.id)} onChange={() => setSelected((current) => current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id])} />{item.format.replaceAll("-", " ")}</label>)}</fieldset>
+    <p className="review-share-copy">Choose the materials your manager should review.</p>
+    <fieldset><legend>Materials</legend>{artwork.map((item) => <label key={item.id}><input type="checkbox" checked={selected.includes(item.id)} onChange={() => setSelected((current) => current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id])} />{outputLabel(item.format)}</label>)}</fieldset>
     <label className="review-expiry">Expires<select value={expiresInHours} onChange={(event) => setExpiresInHours(Number(event.target.value))}><option value={24}>24 hours</option><option value={72}>3 days</option><option value={168}>7 days</option><option value={720}>30 days</option></select></label>
     <button className="button primary full" disabled={!selected.length} onClick={create} data-testid="button-create-review"><Link2 size={16} />Create & copy link</button>
     {latestUrl && <div className="review-url"><input readOnly value={latestUrl} aria-label="Latest review URL" /><button className="icon-button" onClick={() => copy(latestUrl)} aria-label="Copy review URL"><Clipboard size={15} /></button></div>}

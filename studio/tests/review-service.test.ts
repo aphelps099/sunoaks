@@ -95,7 +95,7 @@ describe("editor project review integration", () => {
       fields: {
         headline: "Poolside Family Night",
         summary: "Swimming and music.",
-        schedule: "September 18, 2026 · 6:30 PM",
+        schedule: "September 18, 2026 · 6:30 PM–8:30 PM",
         location: "Outdoor Pool",
         cta: "RSVP at the front desk",
       },
