@@ -16,6 +16,7 @@ import { parseStudioRoute, studioSearch, type StudioRoute, type StudioView } fro
 import { uploadAsset } from "@/lib/assets-client";
 import PromoKit from "./PromoKit";
 import MotionStudio from "./MotionStudio";
+import CanvasStudio from "./CanvasStudio";
 
 const API = "/studio/api";
 type View = StudioView;
@@ -173,7 +174,7 @@ export default function StudioApp() {
   if (!data) return <main className="boot-screen"><BrandMark /><div className="skeleton-line" /></main>;
 
   const nav = [
-    { id: "create" as const, label: "Home", icon: Home },
+    { id: "create" as const, label: "Studio", icon: Home },
     { id: "campaigns" as const, label: "Promotions", icon: Sparkles },
     { id: "library" as const, label: "Classes & events", icon: Library },
     { id: "calendar" as const, label: "Calendar", icon: CalendarDays },
@@ -189,7 +190,10 @@ export default function StudioApp() {
   };
   const openCampaign = (campaignId: string) => go("campaigns", { campaignId });
   const openEditor = (next: "promo" | "motion", recordId: string, origin: typeof editorOrigin) => go(next, { recordId, origin, campaignId: route.campaignId });
-  const activePrimary = view === "promo" || view === "motion" || view === "ingester" ? editorOrigin : view;
+  if (view === "create" || view === "motion") return <CanvasStudio key={route.projectId || route.recordId || "canvas"} data={data} mutate={mutate} initialProjectId={route.projectId} initialRecordId={route.recordId} onDirtyChange={markDirty}
+    onProject={(id) => { const next: StudioRoute = { view: "create", projectId: id || undefined }; routeRef.current = next; window.history.replaceState(null, "", window.location.pathname + studioSearch(next)); }}
+    onLegacy={() => go("campaigns")} onImport={() => go("ingester")} onLogout={async () => { await api("/auth/logout", { method: "POST" }); setAuthenticated(false); }} />;
+  const activePrimary = view === "promo" || view === "ingester" ? editorOrigin : view;
   return (
     <div className={`app-shell ${sidebarCollapsed ? "sidebar-is-collapsed" : ""}`}>
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -223,10 +227,8 @@ export default function StudioApp() {
         </header>
         {error && <div className="global-error" role="alert">{error}<button onClick={() => setError("")} aria-label="Dismiss error"><X size={16} /></button></div>}
         <main id="main-content" className="content">
-          {view === "create" && <CreateView key={route.itemId || route.recordId || "home"} data={data} mutate={mutate} initialRecordId={route.recordId} initialItemId={route.itemId} openImport={() => go("ingester")} openCampaign={openCampaign} />}
           {view === "calendar" && <CalendarView data={data} mutate={mutate} openCampaign={openCampaign} goCreate={() => go("create")} />}
           {view === "promo" && <PromoKit key={`promo-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onDirtyChange={markDirty} onBack={() => go(editorOrigin, { campaignId: route.campaignId })} />}
-          {view === "motion" && <MotionStudio key={`motion-${editorRecordId}`} data={data} mutate={mutate} initialRecordId={editorRecordId} onDirtyChange={markDirty} onBack={() => go(editorOrigin, { campaignId: route.campaignId })} />}
           {view === "ingester" && <IngesterView data={data} mutate={mutate} onPublished={(recordId, itemId) => go("create", { recordId, itemId })} />}
           {view === "library" && <LibraryView data={data} mutate={mutate} refresh={load} openEditor={(next, id) => openEditor(next, id, "library")} />}
           {view === "campaigns" && <CampaignsView key={route.campaignId || "promotions"} data={data} campaignId={route.campaignId} mutate={mutate} refresh={load} onDirtyChange={markDirty} openCampaign={openCampaign} openEditor={(next, id) => openEditor(next, id, "campaigns")} goCreate={(recordId) => go("create", { recordId })} />}
@@ -563,7 +565,7 @@ function CampaignsView({ data, campaignId, mutate, refresh, openEditor, openCamp
   return <>
     <PageHeading eyebrow="YOUR WORK" title="Promotions" description="Your materials, messages, and review status in one place." action={<button className="button primary" onClick={() => goCreate()}><Plus size={17} />Create promotion</button>} />
     {data.campaigns.length ? <div className="promotion-grid">{[...data.campaigns].reverse().map((item) => <PromotionCard key={item.id} campaign={item} data={data} open={() => openCampaign(item.id)} />)}</div> : <section className="empty-state"><h2>No promotions yet</h2><p>Start with a class or event and choose the materials you need.</p><button className="button primary" onClick={() => goCreate()}>Create promotion</button></section>}
-    {data.creativeProjects.length > 0 && <section className="promotion-section"><header><h2>Standalone designs</h2><span>Saved in the additional design tools</span></header><div className="upcoming-list">{data.creativeProjects.map((project) => <button key={project.id} onClick={() => openEditor(project.kind, project.recordId)}><strong>{project.title}</strong><span>Open {project.kind === "motion" ? "animation" : "design"}<ArrowRight size={16} /></span></button>)}</div></section>}
+    {data.creativeProjects.length > 0 && <section className="promotion-section"><header><h2>Standalone designs</h2><span>Saved in the additional design tools</span></header><div className="upcoming-list">{data.creativeProjects.map((project) => <button key={project.id} onClick={() => openEditor(project.kind, project.recordId || "")}><strong>{project.title}</strong><span>Open {project.kind === "motion" ? "animation" : "design"}<ArrowRight size={16} /></span></button>)}</div></section>}
   </>;
 }
 

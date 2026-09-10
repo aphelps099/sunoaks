@@ -1,3 +1,4 @@
+import { canvasEditorDocumentSchema } from "./canvas-document";
 import { OUTPUT_IDS, recordSchedule } from "./promotion";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -89,7 +90,7 @@ export const actionRequestSchema = z.discriminatedUnion("action", [
     projectId: z.string().optional(),
     expectedVersion: z.number().int().positive().optional(),
     kind: z.enum(["promo", "motion"]),
-    recordId: z.string(),
+    recordId: z.string().nullable(),
     title: z.string().trim().min(1).max(160),
     payload: z.record(z.string(), z.unknown()),
   }),
@@ -371,11 +372,26 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
 
   if (input.action === "saveCreativeProject") {
     const record = db.records.find((item) => item.id === input.recordId && item.active && item.verificationStatus === "verified");
-    if (!record) throw new Error("Creative projects require an active verified source record.");
+    if (!record && (input.recordId !== null || input.kind === "promo")) throw new Error("Select an active verified source record.");
+    if (!record && input.payload.editor !== "canvas-v2") throw new Error("A source-free design must use the canvas editor.");
+    if (input.payload.editor === "canvas-v2") {
+      if (input.kind !== "motion") throw new Error("Canvas designs must use the motion document format.");
+      const doc = input.payload.doc as Record<string, unknown> | undefined;
+      if (!doc) throw new Error("Add a canvas document before saving.");
+      {
+        const parsed = canvasEditorDocumentSchema.parse(doc);
+        if (new Set(parsed.scenes.map((scene) => scene.id)).size !== parsed.scenes.length) throw new Error("Scene IDs must be unique.");
+        for (const scene of parsed.scenes) {
+          if (scene.imageId && !db.assets.some((asset) => `library-${asset.id}` === scene.imageId && asset.active && asset.rightsStatus === "approved")) throw new Error("Select an available Studio photo.");
+        }
+      }
+      if (input.payload.plannedDate != null) isoDateSchema.parse(input.payload.plannedDate);
+      if (!["graphic", "video"].includes(String(input.payload.mode))) throw new Error("Select a graphic or video design.");
+    }
     const serialized = JSON.stringify(input.payload);
     if (serialized.length > 8_000_000) throw new Error("Project snapshot is too large. Use approved library images or fewer artboards.");
     if (!Array.isArray(input.payload.artworks) || input.payload.artworks.length === 0) throw new Error("Project must include rendered artwork.");
-    if (input.kind === "promo") {
+    if (input.kind === "promo" && record) {
       const fields = input.payload.fields as Record<string, unknown> | undefined;
       const expected = { schedule: recordSchedule(record, db.scheduleRules), location: record.location || "", cta: record.cta };
       if (!fields || Object.entries(expected).some(([key, value]) => fields[key] !== value)) throw new Error("The schedule, location and registration instructions must match the confirmed details.");
@@ -389,14 +405,14 @@ export function applyAction(input: ActionInput, db: Database): Record<string, un
     if (existing) {
       existing.title = input.title;
       existing.version += 1;
-      existing.sourceRecordVersion = record.version;
+      if (input.payload.editor !== "canvas-v2") existing.sourceRecordVersion = record?.version ?? null;
       existing.payload = structuredClone(input.payload);
       existing.updatedAt = now;
       return { ok: true, creativeProjectId: existing.id, version: existing.version };
     }
     const project = {
-      id: randomUUID(), kind: input.kind, recordId: record.id, title: input.title, version: 1,
-      sourceRecordVersion: record.version, payload: structuredClone(input.payload), createdAt: now, updatedAt: now,
+      id: randomUUID(), kind: input.kind, recordId: record?.id ?? null, title: input.title, version: 1,
+      sourceRecordVersion: record?.version ?? null, payload: structuredClone(input.payload), createdAt: now, updatedAt: now,
     };
     db.creativeProjects.push(project);
     return { ok: true, creativeProjectId: project.id, version: project.version };

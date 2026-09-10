@@ -8,6 +8,7 @@ import { fixtureDatabase } from "./fixtures";
 
 // These tests exercise workflow/navigation; pixel and codec rendering is a separate browser gate.
 vi.mock("../components/CreativeCanvas", () => ({ StillCanvas: () => <div>Image preview</div>, MotionCanvas: () => <div>Animation preview</div>, renderPromotionFile: vi.fn() }));
+vi.mock("../components/CanvasStudio", () => ({ default: () => <h1>Sun Oaks live canvas</h1> }));
 let db: ReturnType<typeof fixtureDatabase>;
 const data = () => ({ ...structuredClone(db), campaigns: db.campaigns.map((campaign) => ({ ...campaign, rollupStatus: deriveCampaignRollup(db.deliverables.filter((item) => item.campaignId === campaign.id)) })) });
 
@@ -41,16 +42,10 @@ describe("staff promotion workflow", () => {
     expect((screen.getByLabelText("Promotion") as HTMLSelectElement).value).toBe(older);
   });
 
-  it("creates only the selected outputs and lands in that promotion", async () => {
+  it("opens directly in the canvas instead of a promotion setup flow", async () => {
     render(<StudioApp />);
-    await screen.findByRole("heading", { name: "What are we promoting?" });
-    fireEvent.change(screen.getByLabelText("Class or event"), { target: { value: "record-class" } });
-    fireEvent.click(screen.getByRole("button", { name: "Create promotion" }));
-    await screen.findByRole("dialog", { name: "Sunrise Strength" });
-    fireEvent.click(screen.getByRole("button", { name: "Create 2 materials" }));
-    await screen.findByRole("heading", { name: "Sunrise Strength" });
-    expect(db.deliverables.map((item) => item.format)).toEqual(["portrait", "instagram-caption"]);
-    expect(window.location.search).toContain(`campaign=${db.campaigns[0].id}`);
+    await screen.findByRole("heading", { name: "Sun Oaks live canvas" });
+    expect(screen.queryByRole("button", { name: "Create promotion" })).toBeNull();
   });
 
   it("protects an unsaved message, then saves it across materials", async () => {
@@ -60,14 +55,14 @@ describe("staff promotion workflow", () => {
     render(<StudioApp />);
     await screen.findByLabelText("Headline");
     fireEvent.change(screen.getByLabelText("Headline"), { target: { value: "Meet us by the pool" } });
-    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    fireEvent.click(screen.getByRole("button", { name: "Studio" }));
     expect(confirm).toHaveBeenCalled();
     expect(screen.getByRole("heading", { name: "Poolside Family Night" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Save message" }));
     await waitFor(() => expect(db.deliverables[0].creativeFields.headline).toBe("Meet us by the pool"));
     await screen.findByText("Message saved · materials ready to review");
-    fireEvent.click(screen.getByRole("button", { name: "Home" }));
-    await screen.findByRole("heading", { name: "What are we promoting?" });
+    fireEvent.click(screen.getByRole("button", { name: "Studio" }));
+    await screen.findByRole("heading", { name: "Sun Oaks live canvas" });
     expect(confirm).toHaveBeenCalledTimes(1);
   });
 });

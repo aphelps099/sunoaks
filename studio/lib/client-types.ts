@@ -44,8 +44,8 @@ export type StudioData = {
     createdAt: string; expiresAt: string; revokedAt: string | null; reviewedAt: string | null;
   }[];
   creativeProjects: {
-    id: string; kind: "promo" | "motion"; recordId: string; title: string; version: number;
-    sourceRecordVersion: number; payload: Record<string, unknown>; createdAt: string; updatedAt: string;
+    id: string; kind: "promo" | "motion"; recordId: string | null; title: string; version: number;
+    sourceRecordVersion: number | null; payload: Record<string, unknown>; createdAt: string; updatedAt: string;
   }[];
 };
 export type Candidate = {
