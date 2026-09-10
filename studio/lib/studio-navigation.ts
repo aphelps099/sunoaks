@@ -1,5 +1,5 @@
 export type StudioView = "create" | "calendar" | "promo" | "motion" | "ingester" | "library" | "campaigns";
-export type StudioRoute = { view: StudioView; campaignId?: string; recordId?: string; itemId?: string; origin?: "create" | "campaigns" | "library" };
+export type StudioRoute = { view: StudioView; campaignId?: string; projectId?: string; recordId?: string; itemId?: string; origin?: "create" | "campaigns" | "library" };
 const VIEWS: StudioView[] = ["create", "calendar", "promo", "motion", "ingester", "library", "campaigns"];
 export function parseStudioRoute(search: string): StudioRoute {
   const params = new URLSearchParams(search);
@@ -8,6 +8,7 @@ export function parseStudioRoute(search: string): StudioRoute {
   return {
     view: VIEWS.includes(view) ? view : "create",
     campaignId: params.get("campaign") || undefined,
+    projectId: params.get("project") || undefined,
     recordId: params.get("record") || undefined,
     itemId: params.get("item") || undefined,
     origin: origin === "campaigns" || origin === "library" ? origin : "create",
@@ -16,6 +17,7 @@ export function parseStudioRoute(search: string): StudioRoute {
 export function studioSearch(route: StudioRoute) {
   const params = new URLSearchParams();
   if (route.view !== "create") params.set("view", route.view);
+  if (route.projectId) params.set("project", route.projectId);
   if (route.campaignId) params.set("campaign", route.campaignId);
   if (route.recordId) params.set("record", route.recordId);
   if (route.itemId) params.set("item", route.itemId);

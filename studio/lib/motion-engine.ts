@@ -1,3 +1,5 @@
+import { drawPhotoComposition } from "./photo-composition";
+
 export const MOTION_ASPECTS = {
   "16:9": { width: 1920, height: 1080 },
   "1:1": { width: 1080, height: 1080 },
@@ -7,7 +9,7 @@ export const MOTION_ASPECTS = {
 
 export type MotionAspect = keyof typeof MOTION_ASPECTS;
 export type MotionTemplate = "title" | "statement" | "stat" | "list" | "quote" | "image" | "details" | "calendar" | "presenter" | "disclaimer" | "endcard";
-export type MotionAnimation = "rise" | "fade" | "wipe" | "scale";
+export type MotionAnimation = "rise" | "fade" | "wipe" | "scale" | "stagger";
 export type MotionTransition = "cut" | "fade" | "slide";
 export type MotionImage = { id: string; name: string; image: HTMLImageElement };
 export type MotionScene = {
@@ -20,8 +22,10 @@ export type MotionScene = {
   animation: MotionAnimation;
   transition: MotionTransition;
   imageId: string | null;
+  position?: "top-left" | "center-left" | "bottom-left" | "center" | "bottom-center" | "bottom-right";
+  shade?: number; zoom?: boolean; focalX?: number; focalY?: number;
 };
-export type MotionDocument = { aspect: MotionAspect; fps: number; scenes: MotionScene[] };
+export type MotionDocument = { designVersion?: 2; aspect: MotionAspect; fps: number; scenes: MotionScene[] };
 
 let sceneNumber = 0;
 export function makeMotionScene(template: MotionTemplate, values: Partial<MotionScene> = {}): MotionScene {
@@ -127,6 +131,19 @@ export function renderMotionFrame(
   const loopTime = Math.max(0, time % total);
   const { scene, local, index } = motionSceneAt(doc, loopTime);
   if (!scene) return;
+  if (doc.designVersion === 2) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
+    if (index > 0 && scene.transition !== "cut" && local < 550) {
+      const previous = doc.scenes[index - 1];
+      drawPhotoComposition(ctx, previous, W, H, previous.duration - 1, images);
+      ctx.save();
+      const p = ease(local / 550);
+      if (scene.transition === "fade") ctx.globalAlpha = p;
+      else { ctx.beginPath(); ctx.rect(0, 0, W * p, H); ctx.clip(); }
+      drawPhotoComposition(ctx, scene, W, H, local, images); ctx.restore();
+    } else drawPhotoComposition(ctx, scene, W, H, local, images);
+    return;
+  }
   const sceneProgress = Math.max(0, Math.min(1, local / scene.duration));
   const enter = Math.min(1, local / 720);
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -190,6 +207,7 @@ export async function exportMotionWebm(
   doc: MotionDocument,
   images: Record<string, MotionImage>,
   onProgress: (value: number) => void,
+  signal?: AbortSignal,
 ) {
   const size = MOTION_ASPECTS[doc.aspect];
   const canvas = document.createElement("canvas");
@@ -199,37 +217,55 @@ export async function exportMotionWebm(
   if (!ctx || typeof MediaRecorder === "undefined") throw new Error("WebM export is unavailable in this browser.");
   const stream = canvas.captureStream(doc.fps);
   const mime = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"].find((value) => MediaRecorder.isTypeSupported(value)) || "video/webm";
-  const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: Math.round(size.width * size.height * doc.fps * .11) });
-  const chunks: BlobPart[] = [];
-  recorder.ondataavailable = (event) => { if (event.data.size) chunks.push(event.data); };
-  const duration = motionDuration(doc);
-  return new Promise<Blob>((resolve, reject) => {
-    recorder.onerror = () => reject(new Error("WebM recording failed."));
-    recorder.onstop = () => resolve(new Blob(chunks, { type: "video/webm" }));
-    recorder.start(200);
-    const start = performance.now();
-    const tick = (now: number) => {
-      const elapsed = Math.min(duration, now - start);
-      renderMotionFrame(ctx, doc, elapsed, images);
-      onProgress(elapsed / duration);
-      if (elapsed >= duration) recorder.stop();
-      else requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  });
+  let frame = 0;
+  let recorder: MediaRecorder | undefined;
+  let abort: (() => void) | undefined;
+  try {
+    recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: Math.round(size.width * size.height * doc.fps * .11) });
+    const chunks: BlobPart[] = [];
+    const duration = motionDuration(doc);
+    return await new Promise<Blob>((resolve, reject) => {
+      const active = recorder!;
+      active.ondataavailable = (event) => { if (event.data.size) chunks.push(event.data); };
+      abort = () => { if (active.state !== "inactive") active.stop(); reject(new DOMException("Export cancelled", "AbortError")); };
+      if (signal?.aborted) { abort(); return; }
+      signal?.addEventListener("abort", abort, { once: true });
+      active.onerror = () => reject(new Error("WebM recording failed."));
+      active.onstop = () => chunks.length ? resolve(new Blob(chunks, { type: "video/webm" })) : reject(new Error("No video frames were recorded."));
+      renderMotionFrame(ctx, doc, 0, images);
+      active.start(200);
+      const start = performance.now();
+      const tick = (now: number) => {
+        if (signal?.aborted || active.state === "inactive") return;
+        const elapsed = Math.min(duration, now - start);
+        renderMotionFrame(ctx, doc, Math.min(elapsed, duration - 1), images);
+        onProgress(elapsed / duration);
+        if (elapsed >= duration) active.stop();
+        else frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+    });
+  } finally {
+    cancelAnimationFrame(frame);
+    if (abort) signal?.removeEventListener("abort", abort);
+    if (recorder && recorder.state !== "inactive") recorder.stop();
+    stream.getTracks().forEach((track) => track.stop());
+  }
+
 }
 
 export async function exportMotionMp4(
   doc: MotionDocument,
   images: Record<string, MotionImage>,
   onProgress: (value: number) => void,
+  signal?: AbortSignal,
 ) {
   if (!("VideoEncoder" in window) || !("VideoFrame" in window)) throw new Error("H.264 MP4 requires WebCodecs in current Chrome or Edge.");
   const { Muxer, ArrayBufferTarget } = await import("mp4-muxer");
   const size = MOTION_ASPECTS[doc.aspect];
   const VideoEncoderClass = window.VideoEncoder;
   const VideoFrameClass = window.VideoFrame;
-  const codecs = ["avc1.64002a", "avc1.4d402a", "avc1.42002a"];
+  const codecs = ["avc1.64002a", "avc1.4d402a", "avc1.42002a", "avc1.640028", "avc1.4d0028"];
   let codec = "";
   const bitrate = Math.round(size.width * size.height * doc.fps * .14);
   for (const candidate of codecs) {
@@ -255,12 +291,17 @@ export async function exportMotionMp4(
   const frames = Math.max(1, Math.round(motionDuration(doc) / 1000 * doc.fps));
   try {
     for (let index = 0; index < frames; index += 1) {
+      if (signal?.aborted) throw new DOMException("Export cancelled", "AbortError");
       if (encodeError) throw encodeError;
       renderMotionFrame(ctx, doc, index / doc.fps * 1000, images);
       const frame = new VideoFrameClass(canvas, { timestamp: Math.round(index * 1_000_000 / doc.fps), duration: Math.round(1_000_000 / doc.fps) });
       encoder.encode(frame, { keyFrame: index % (doc.fps * 2) === 0 });
       frame.close();
-      if (encoder.encodeQueueSize > 8) while (encoder.encodeQueueSize > 2) await new Promise((resolve) => window.setTimeout(resolve, 0));
+      if (encoder.encodeQueueSize > 8) while (encoder.encodeQueueSize > 2) {
+        if (signal?.aborted) throw new DOMException("Export cancelled", "AbortError");
+        if (encodeError) throw encodeError;
+        await new Promise((resolve) => window.setTimeout(resolve, 0));
+      }
       if (index % 3 === 0) {
         onProgress((index + 1) / frames);
         await new Promise((resolve) => window.setTimeout(resolve, 0));

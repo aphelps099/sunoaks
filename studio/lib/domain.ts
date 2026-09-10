@@ -214,10 +214,10 @@ export const reviewLinkSchema = z.object({
 export const creativeProjectSchema = z.object({
   id: z.string(),
   kind: z.enum(["promo", "motion"]),
-  recordId: z.string(),
+  recordId: z.string().nullable(),
   title: z.string().min(1).max(160),
   version: z.number().int().positive(),
-  sourceRecordVersion: z.number().int().positive(),
+  sourceRecordVersion: z.number().int().positive().nullable(),
   payload: z.record(z.string(), z.unknown()),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
@@ -445,8 +445,9 @@ export function validateDatabaseIntegrity(db: Database) {
     }
   }
   for (const project of db.creativeProjects) {
+    if (project.recordId === null && project.sourceRecordVersion !== null) throw new Error(`Creative project ${project.id} has a source version without a source.`);
     const record = db.records.find((item) => item.id === project.recordId && item.verificationStatus === "verified");
-    if (!record) throw new Error(`Creative project ${project.id} has no verified source record.`);
+    if ((!record && project.recordId !== null) || (!record && project.kind === "promo")) throw new Error(`Creative project ${project.id} has no verified source record.`);
   }
   return db;
 }

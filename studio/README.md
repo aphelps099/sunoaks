@@ -2,7 +2,22 @@
 
 Production-oriented vertical pilot for turning verified Sun Oaks information into coordinated marketing campaigns. The existing static Brand House remains at the repository root; this Node application is isolated in `/studio` and is served at the `/studio` URL base path.
 
-## Pilot workflow
+## Canvas Studio
+
+The Studio now opens directly on a live canvas. This editor takes its interaction direction from the MySBDC Tech Futures Pro editor: scene thumbnails, a large preview, adjacent controls, and direct export.
+
+- Type a headline and small supporting line, choose or upload a photograph, and adjust text placement beside the preview. New designs use full-bleed photography, subtle shading, and the supplied Sun Oaks logo. Type-only and logo compositions are available too.
+- Switch between **Graphic** and **Video** without leaving the editor. Graphic exports a settled PNG of the selected artboard. Video exports the whole timeline as H.264 MP4; WebM remains a fallback. Aspect ratios: 4:5, 9:16, 1:1, 16:9.
+- Add, duplicate, reorder, or remove scenes; add a logo ending; use text reveals, fades, rises, gradual photo movement, and crossfade/reveal transitions. Undo/redo preserve document edits.
+- Edits autosave to the existing server repository after a short pause. There is no required source-record, campaign, approval, or format-selection workflow for new canvas designs. **Use class / event** fills a design from verified information when useful.
+- **Saved** and **Calendar** open as panels while keeping the editor mounted. Assign a planned date to the current design and reopen it from that date. Planning is a team reminder, not automatic social publishing.
+- Project URLs identify the exact saved design. Autosave uses optimistic version checks and preserves local edits on errors. Exports wait for the required media, logo, fonts, and save; video export supports cancellation.
+
+Browser MP4 support is checked for the selected dimensions. The output uses the same canvas renderer as preview and PNG. Actual codec availability is browser/device dependent; live rendering and download QA remain necessary before release. Still-preview review links do not play the full video.
+
+New canvas documents use `designVersion: 2`. Earlier motion documents retain their renderer until a photo/type/logo composition is chosen. Existing campaigns, approvals, source data, and other design tools remain available under **Saved → Previous campaigns & other formats**. Canvas projects may have a null source record and source version; older project records remain compatible. Planned dates live with the saved design.
+
+## Earlier campaign workflow
 
 1. Add an event or recurring class with plain text or the guided route.
 2. Review source excerpts, warnings, possible duplicates, and every operational fact.
