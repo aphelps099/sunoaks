@@ -6,7 +6,9 @@ Production-oriented vertical pilot for turning verified Sun Oaks information int
 
 The Studio now opens directly on a live canvas. This editor takes its interaction direction from the MySBDC Tech Futures Pro editor: scene thumbnails, a large preview, adjacent controls, and direct export.
 
-- Type a headline and small supporting line, choose or upload a photograph, and adjust text placement beside the preview. New designs use full-bleed photography, subtle shading, and the supplied Sun Oaks logo. Type-only and logo compositions are available too.
+- Start with a three-scene example, then click any of eight ready-made scenes in the visible gallery to insert it after the selected scene. Templates include photo openers, class spotlights, poolside moments, and oak sign-offs. Hover a thumbnail to preview its animation; reduced-motion preferences are respected.
+- Click a headline, supporting line, or small label directly on the paused canvas to edit it. Escape or clicking outside finishes the edit; the adjacent fields remain available. Choose or upload a photograph and adjust placement without leaving the editor.
+- Choose from eight color styles for one scene, or **Apply to all**. Solid scenes use the full palette; photographs receive a subtle color wash with readable overlay text. Choose either the oversized, cropped oak emblem or a smaller complete wordmark. Both use supplied Sun Oaks artwork.
 - Switch between **Graphic** and **Video** without leaving the editor. Graphic exports a settled PNG of the selected artboard. Video exports the whole timeline as H.264 MP4; WebM remains a fallback. Aspect ratios: 4:5, 9:16, 1:1, 16:9.
 - Add, duplicate, reorder, or remove scenes; add a logo ending; use text reveals, fades, rises, gradual photo movement, and crossfade/reveal transitions. Undo/redo preserve document edits.
 - Edits autosave to the existing server repository after a short pause. There is no required source-record, campaign, approval, or format-selection workflow for new canvas designs. **Use class / event** fills a design from verified information when useful.
@@ -15,7 +17,7 @@ The Studio now opens directly on a live canvas. This editor takes its interactio
 
 Browser MP4 support is checked for the selected dimensions. The output uses the same canvas renderer as preview and PNG. Actual codec availability is browser/device dependent; live rendering and download QA remain necessary before release. Still-preview review links do not play the full video.
 
-New canvas documents use `designVersion: 2`. Earlier motion documents retain their renderer until a photo/type/logo composition is chosen. Existing campaigns, approvals, source data, and other design tools remain available under **Saved → Previous campaigns & other formats**. Canvas projects may have a null source record and source version; older project records remain compatible. Planned dates live with the saved design.
+New canvas documents use `designVersion: 2`. Earlier motion documents retain their renderer until a composition, color style, logo treatment, or ready-made scene is chosen. Existing campaigns, approvals, source data, and other design tools remain available under **Saved → Previous campaigns & other formats**. Canvas projects may have a null source record and source version; older project records remain compatible. Planned dates live with the saved design.
 
 ## Earlier campaign workflow
 

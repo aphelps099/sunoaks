@@ -7,7 +7,7 @@ import { databaseSchema, validateDatabaseIntegrity } from "../lib/domain";
 import { newCanvasDocument, stillDocument } from "../lib/canvas-document";
 import { fixtureDatabase } from "./fixtures";
 
-vi.mock("../lib/photo-composition", () => ({ SUN_OAKS_LOGO: "/logo.png", loadCanvasBrand: async () => ({}) }));
+vi.mock("../lib/photo-composition", async (original) => ({ ...await original<typeof import("../lib/photo-composition")>(), SUN_OAKS_LOGO: "/logo.png", loadCanvasBrand: async () => ({}) }));
 vi.mock("../lib/motion-engine", async (original) => ({ ...await original<typeof import("../lib/motion-engine")>(), renderMotionFrame: vi.fn(), exportMotionMp4: vi.fn(async () => new Blob(["video"], { type: "video/mp4" })), downloadMotionBlob: vi.fn() }));
 let db: ReturnType<typeof fixtureDatabase>;
 const mutate = vi.fn(async (input: Record<string, unknown>) => applyAction(actionRequestSchema.parse(input), db));
@@ -19,7 +19,7 @@ beforeEach(() => {
   vi.stubGlobal("VideoFrame", class {});
   vi.stubGlobal("VideoEncoder", class { static async isConfigSupported() { return { supported: true }; } });
   vi.stubGlobal("matchMedia", () => ({ matches: true }));
-  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({ drawImage: vi.fn(), measureText: (text: string) => ({ width: text.length * 15 }) } as unknown as CanvasRenderingContext2D);
   vi.spyOn(HTMLCanvasElement.prototype, "toDataURL").mockReturnValue("data:image/jpeg;base64,preview");
   HTMLDialogElement.prototype.showModal = function () { this.setAttribute("open", ""); };
   HTMLDialogElement.prototype.close = function () { this.removeAttribute("open"); };
@@ -55,6 +55,40 @@ describe("canvas workspace", () => {
     await screen.findByText("MP4 download started.");
     const { exportMotionMp4 } = await import("../lib/motion-engine");
     expect(exportMotionMp4).toHaveBeenCalledWith(expect.objectContaining({ designVersion: 2 }), expect.any(Object), expect.any(Function), expect.any(AbortSignal));
+  });
+
+  it("adds a finished scene in place and saves canvas text, colors, and logo choices through export", async () => {
+    render(<CanvasStudio {...props()} />);
+    const canvas = screen.getByLabelText("Sun Oaks live canvas");
+    const headlineBefore = (screen.getByLabelText("Headline") as HTMLTextAreaElement).value;
+    fireEvent.click(screen.getByRole("button", { name: "Add Take a breath scene" }));
+    expect(screen.getByLabelText("Sun Oaks live canvas")).toBe(canvas);
+    expect((screen.getByLabelText("Headline") as HTMLTextAreaElement).value).toBe("Breathe in.\nFind your pace.");
+    fireEvent.click(await screen.findByRole("button", { name: "Edit headline on canvas" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Edit headline on canvas" }), { target: { value: "Make this moment yours." } });
+    fireEvent.keyDown(screen.getByRole("textbox", { name: "Edit headline on canvas" }), { key: "Escape" });
+    expect((screen.getByLabelText("Headline") as HTMLTextAreaElement).value).toBe("Make this moment yours.");
+    fireEvent.click(screen.getByRole("button", { name: "Color style: Pool blue" }));
+    fireEvent.click(screen.getByRole("button", { name: /Small wordmark/ }));
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    const saved = db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>;
+    expect(saved.scenes).toHaveLength(4);
+    expect(saved.scenes[0].title).toBe(headlineBefore);
+    expect(saved.scenes[1]).toMatchObject({ title: "Make this moment yours.", styleId: "pool", logoStyle: "wordmark", animation: "fade", duration: 4500, imageId: null });
+    fireEvent.click(screen.getByRole("button", { name: "Export MP4" }));
+    await screen.findByText("MP4 download started.");
+    const { exportMotionMp4 } = await import("../lib/motion-engine");
+    expect(exportMotionMp4).toHaveBeenLastCalledWith(expect.objectContaining({ scenes: expect.arrayContaining([expect.objectContaining({ title: "Make this moment yours.", styleId: "pool", logoStyle: "wordmark" })]) }), expect.any(Object), expect.any(Function), expect.any(AbortSignal));
+  });
+
+  it("applies a palette to the whole sequence and can undo that action", async () => {
+    render(<CanvasStudio {...props()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Color style: Terracotta" }));
+    fireEvent.click(screen.getByRole("button", { name: "Apply to all" }));
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    expect((db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).scenes.every((scene) => scene.styleId === "clay")).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "Undo" }));
+    await waitFor(() => expect((db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).scenes[1].styleId).toBe("sun"), { timeout: 2500 });
   });
 
   it("preserves the draft and surfaces a save conflict", async () => {

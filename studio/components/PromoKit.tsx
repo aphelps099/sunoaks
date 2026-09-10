@@ -152,7 +152,7 @@ export default function PromoKit({ data, mutate, initialRecordId, onBack, onDirt
   const [saving, setSaving] = useState(false);
   const dirty = JSON.stringify(copy) !== savedCopy;
   useEffect(() => { onDirtyChange?.(dirty); return () => onDirtyChange?.(false); }, [dirty, onDirtyChange]);
-  if (!record) return <section className="empty-state"><h2>Choose a class or event</h2><p>This saved design's source is not available.</p>{onBack && <button className="button primary" onClick={onBack}>Back</button>}</section>;
+  if (!record) return <section className="empty-state"><h2>Choose a class or event</h2><p>The source for this saved design is not available.</p>{onBack && <button className="button primary" onClick={onBack}>Back</button>}</section>;
   const fields = { ...fieldsFor(record, data.scheduleRules), ...copy };
   const valid = Boolean(copy.headline.trim() && copy.summary.trim());
   const asset = data.assets.find((item) => item.id === record.assetId && item.active && item.rightsStatus === "approved");
