@@ -1,4 +1,5 @@
 import { drawPhotoComposition } from "./photo-composition";
+import type { LogoStyle, SceneStyleId } from "./scene-styles";
 
 export const MOTION_ASPECTS = {
   "16:9": { width: 1920, height: 1080 },
@@ -24,6 +25,8 @@ export type MotionScene = {
   imageId: string | null;
   position?: "top-left" | "center-left" | "bottom-left" | "center" | "bottom-center" | "bottom-right";
   shade?: number; zoom?: boolean; focalX?: number; focalY?: number;
+  styleId?: SceneStyleId;
+  logoStyle?: LogoStyle;
 };
 export type MotionDocument = { designVersion?: 2; aspect: MotionAspect; fps: number; scenes: MotionScene[] };
 
