@@ -91,6 +91,21 @@ describe("canvas workspace", () => {
     await waitFor(() => expect((db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).scenes[1].styleId).toBe("sun"), { timeout: 2500 });
   });
 
+  it("saves motion, photo movement, transition, and grain choices from the inspector", async () => {
+    render(<CanvasStudio {...props()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Letters" }));
+    fireEvent.change(screen.getByLabelText("Between scenes"), { target: { value: "wipe" } });
+    fireEvent.click(screen.getByLabelText("Film grain"));
+    fireEvent.click(screen.getByRole("button", { name: "Add Poolside moment scene" }));
+    fireEvent.change(screen.getByLabelText("Photo movement"), { target: { value: "pan-left" } });
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    await waitFor(() => expect((db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).scenes[1].kenBurns).toBe("pan-left"), { timeout: 2500 });
+    const saved = db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>;
+    expect(saved.grain).toBe(false);
+    expect(saved.scenes[0]).toMatchObject({ animation: "letters", transition: "wipe" });
+    expect(saved.scenes[1]).toMatchObject({ kenBurns: "pan-left", zoom: true });
+  });
+
   it("preserves the draft and surfaces a save conflict", async () => {
     const doc = newCanvasDocument(undefined, "library-asset-approved");
     applyAction(actionRequestSchema.parse({ action: "saveCreativeProject", kind: "motion", recordId: null, title: "My design", payload: { editor: "canvas-v2", mode: "video", plannedDate: null, doc, artworks: [{ key: "canvas-preview", dataUrl: "data:image/jpeg;base64,preview" }] } }), db);

@@ -861,7 +861,8 @@ td small { display: block; color: var(--muted); font-size: 12px; }
 .cs-logo-choices .cs-emblem-sample img { position:absolute; width:95px; height:95px; right:-13px; top:-22px; }
 .cs-logo-choices strong, .cs-logo-choices small { display:block; font-size:12px; font-weight:500; margin-top:5px; }
 .cs-logo-choices small { font-size:11px; color:var(--cs-muted); font-weight:400; margin-top:0; }
-.cs-motion-options button { padding:7px 5px; font-size:12px; }
+.cs-motion-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:3px; }
+.cs-motion-options button { padding:8px 4px; font-size:12px; flex:none; }
 @media(max-width:1050px) { .cs-gallery-heading { align-items:flex-start; flex-direction:column; gap:0; } }
 @media(max-width:760px) {
   .cs-center { max-height:none; overflow:visible; }
