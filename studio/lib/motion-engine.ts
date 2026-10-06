@@ -1,5 +1,7 @@
-import { drawPhotoComposition } from "./photo-composition";
-import type { LogoStyle, SceneStyleId } from "./scene-styles";
+import { drawPhotoComposition, drawGrain } from "./photo-composition";
+export { sceneKenBurns } from "./photo-composition";
+import { easeInOutCubic } from "./easings";
+import { sceneStyle, type LogoStyle, type SceneStyleId } from "./scene-styles";
 
 export const MOTION_ASPECTS = {
   "16:9": { width: 1920, height: 1080 },
@@ -10,8 +12,14 @@ export const MOTION_ASPECTS = {
 
 export type MotionAspect = keyof typeof MOTION_ASPECTS;
 export type MotionTemplate = "title" | "statement" | "stat" | "list" | "quote" | "image" | "details" | "calendar" | "presenter" | "disclaimer" | "endcard";
-export type MotionAnimation = "rise" | "fade" | "wipe" | "scale" | "stagger";
-export type MotionTransition = "cut" | "fade" | "slide";
+export const MOTION_ANIMATIONS = ["stagger", "rise", "fade", "scale", "wipe", "words", "letters", "typewriter", "blur"] as const;
+export type MotionAnimation = typeof MOTION_ANIMATIONS[number];
+export const MOTION_TRANSITIONS = ["cut", "fade", "slide", "wipe"] as const;
+export type MotionTransition = typeof MOTION_TRANSITIONS[number];
+export const KEN_BURNS = ["zoom-in", "zoom-out", "pan-left", "pan-right", "none"] as const;
+export type KenBurns = typeof KEN_BURNS[number];
+/** Scenes cross into each other over this window. */
+export const TRANSITION_MS = 600;
 export type MotionImage = { id: string; name: string; image: HTMLImageElement };
 export type MotionScene = {
   id: string;
@@ -25,10 +33,18 @@ export type MotionScene = {
   imageId: string | null;
   position?: "top-left" | "center-left" | "bottom-left" | "center" | "bottom-center" | "bottom-right";
   shade?: number; zoom?: boolean; focalX?: number; focalY?: number;
+  /** Photo movement. `zoom: false` turns it off; otherwise defaults to a slow push in. */
+  kenBurns?: KenBurns;
   styleId?: SceneStyleId;
   logoStyle?: LogoStyle;
 };
-export type MotionDocument = { designVersion?: 2; aspect: MotionAspect; fps: number; scenes: MotionScene[] };
+export type MotionDocument = { designVersion?: 2; aspect: MotionAspect; fps: number; scenes: MotionScene[]; grain?: boolean };
+
+/** Content exits only before a hard cut or at the loop end, so crossfades never double-move. */
+export function motionExitEnabled(doc: MotionDocument, index: number) {
+  const next = doc.scenes[index + 1];
+  return !next || next.transition === "cut";
+}
 
 let sceneNumber = 0;
 export function makeMotionScene(template: MotionTemplate, values: Partial<MotionScene> = {}): MotionScene {
@@ -136,15 +152,24 @@ export function renderMotionFrame(
   if (!scene) return;
   if (doc.designVersion === 2) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
-    if (index > 0 && scene.transition !== "cut" && local < 550) {
+    const exit = motionExitEnabled(doc, index);
+    if (index > 0 && scene.transition !== "cut" && local < TRANSITION_MS) {
       const previous = doc.scenes[index - 1];
-      drawPhotoComposition(ctx, previous, W, H, previous.duration - 1, images);
+      drawPhotoComposition(ctx, previous, W, H, previous.duration, images, { exit: false });
       ctx.save();
-      const p = ease(local / 550);
+      const p = easeInOutCubic(local / TRANSITION_MS);
       if (scene.transition === "fade") ctx.globalAlpha = p;
+      else if (scene.transition === "slide") ctx.translate((1 - p) * W, 0);
       else { ctx.beginPath(); ctx.rect(0, 0, W * p, H); ctx.clip(); }
-      drawPhotoComposition(ctx, scene, W, H, local, images); ctx.restore();
-    } else drawPhotoComposition(ctx, scene, W, H, local, images);
+      drawPhotoComposition(ctx, scene, W, H, local, images, { exit }); ctx.restore();
+      if (scene.transition === "wipe" && p < 1) {
+        // A thin accent bar rides the leading edge of the wipe.
+        const style = sceneStyle(scene.styleId, scene.template === "endcard");
+        ctx.save(); ctx.fillStyle = scene.imageId && images[scene.imageId] ? style.photoAccent : style.accent;
+        ctx.globalAlpha = .9 * (1 - Math.abs(p * 2 - 1)); ctx.fillRect(W * p - 3, 0, 6, H); ctx.restore();
+      }
+    } else drawPhotoComposition(ctx, scene, W, H, local, images, { exit });
+    if (doc.grain) drawGrain(ctx, W, H, loopTime);
     return;
   }
   const sceneProgress = Math.max(0, Math.min(1, local / scene.duration));
