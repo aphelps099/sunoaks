@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { ContentRecord, ScheduleRule } from "./client-types";
 import { KEN_BURNS, MOTION_ANIMATIONS, MOTION_TRANSITIONS, type MotionDocument } from "./motion-engine";
-import { recordSchedule } from "./promotion";
+import { formatTime, recordSchedule } from "./promotion";
 import { sceneFromPreset } from "./scene-presets";
 
 export const canvasDocumentSchema = z.object({
@@ -17,6 +17,9 @@ export const canvasDocumentSchema = z.object({
     focalX: z.number().min(0).max(1).optional(), focalY: z.number().min(0).max(1).optional(),
     styleId: z.enum(["oak", "sun", "pool", "mint", "cream", "clay", "night", "white"]).optional(),
     logoStyle: z.enum(["emblem", "wordmark"]).optional(),
+    body: z.string().max(600).optional(),
+    statValue: z.number().finite().min(0).max(999_999_999).optional(), statPrefix: z.string().max(8).optional(), statSuffix: z.string().max(8).optional(),
+    eventDate: z.string().regex(/^(\d{4}-\d{2}-\d{2})?$/, "Use a YYYY-MM-DD date.").optional(),
   })).min(1).max(30),
   grain: z.boolean().optional(),
 });
@@ -27,7 +30,15 @@ export function newCanvasDocument(record?: ContentRecord, imageId: string | null
   if (record) { opener.title = record.name; opener.subtitle = recordSchedule(record, rules); opener.duration = 6000; }
   const ending = sceneFromPreset("ending");
   if (record?.cta) ending.subtitle = record.cta;
-  return { designVersion: 2, aspect: "4:5", fps: 30, grain: true, scenes: record ? [opener, ending] : [opener, sceneFromPreset("energy"), ending] };
+  const scenes = record ? [opener, ending] : [opener, sceneFromPreset("energy"), ending];
+  if (record?.date) {
+    // A dated event gets a Save the Date beat drawn from the verified record, never typed by hand.
+    const date = sceneFromPreset("date");
+    date.title = record.name; date.eventDate = record.date;
+    date.subtitle = [[formatTime(record.startTime), record.endTime && record.endTime !== record.startTime ? formatTime(record.endTime) : ""].filter(Boolean).join("–"), record.location].filter(Boolean).join(" · ");
+    scenes.splice(1, 0, date);
+  }
+  return { designVersion: 2, aspect: "4:5", fps: 30, grain: true, scenes };
 }
 
 export function canvasSignature(doc: MotionDocument, title: string, mode: "graphic" | "video", plannedDate: string) {

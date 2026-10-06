@@ -21,8 +21,8 @@ describe("ready-made scene rendering", () => {
     const doc = newCanvasDocument();
     expect(doc.scenes).toHaveLength(3);
     doc.scenes = SCENE_PRESETS.map((preset) => sceneFromPreset(preset.id, "library-approved"));
-    expect(canvasDocumentSchema.parse(doc).scenes).toHaveLength(8);
-    expect(new Set(doc.scenes.map((scene) => scene.id)).size).toBe(8);
+    expect(canvasDocumentSchema.parse(doc).scenes).toHaveLength(SCENE_PRESETS.length);
+    expect(new Set(doc.scenes.map((scene) => scene.id)).size).toBe(SCENE_PRESETS.length);
     expect(sceneFromPreset("hello").id).not.toBe(sceneFromPreset("hello").id);
     expect(doc.scenes.filter((scene) => !scene.imageId).every((scene) => scene.styleId && scene.logoStyle)).toBe(true);
     expect(() => canvasDocumentSchema.parse({ ...doc, scenes: [{ ...doc.scenes[0], styleId: "unknown" }] })).toThrow();
@@ -33,9 +33,9 @@ describe("ready-made scene rendering", () => {
     for (const size of Object.values(MOTION_ASPECTS)) for (const preset of SCENE_PRESETS) {
       const scene = sceneFromPreset(preset.id);
       for (const long of [false, true]) {
-        if (long) { scene.title = "A little time for yourself. ".repeat(9).slice(0, 240); scene.subtitle = "Space to move and be together. ".repeat(15).slice(0, 400); scene.kicker = "SUN OAKS ".repeat(18).slice(0, 160); }
+        if (long) { scene.title = "A little time for yourself. ".repeat(9).slice(0, 240); scene.subtitle = "Space to move and be together. ".repeat(15).slice(0, 400); scene.kicker = "SUN OAKS ".repeat(18).slice(0, 160); scene.body = "Pools, courts and group classes for every pace and every age\n".repeat(10).slice(0, 600); scene.statValue = 123456789; scene.statSuffix = "+"; }
         const layout = compositionLayout(context(), scene, size.width, size.height);
-        for (const region of Object.values(layout.regions)) {
+        for (const region of [...Object.values(layout.regions), ...(layout.stat ? [layout.stat] : []), ...(layout.tile ? [{ x: layout.tile.x, y: layout.tile.y, width: layout.tile.w, height: layout.tile.h }] : [])]) {
           expect(region.x).toBeGreaterThanOrEqual(0);
           expect(region.y).toBeGreaterThanOrEqual(0);
           expect(region.x + region.width).toBeLessThanOrEqual(size.width);

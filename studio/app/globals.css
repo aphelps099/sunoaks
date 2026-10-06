@@ -773,7 +773,10 @@ td small { display: block; color: var(--muted); font-size: 12px; }
 .cs-photos button { height:54px; padding:0; border:2px solid transparent; border-radius:5px; overflow:hidden; }
 .cs-photos button.active { border-color:#c48d00; }
 .cs-photos img { width:100%; height:100%; object-fit:cover; }
-.cs-composition { margin-bottom:24px; }
+.cs-composition { margin-bottom:24px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:3px; }
+.cs-composition button { flex:none; padding:8px 4px; }
+.cs-stat-fields { display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:8px; }
+.cs-stat-fields input { width:100%; min-width:0; }
 .cs-positions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; margin-bottom:24px; }
 .cs-positions button { font-size:12px; line-height:1.2; padding:10px 3px; min-height:43px; border-radius:4px; background:#f2f5f3; }
 .cs-positions button.active { background:#dceae5; font-weight:500; }

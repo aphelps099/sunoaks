@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { canvasEditorDocumentSchema } from "../lib/canvas-document";
 import { MOTION_ANIMATIONS, TRANSITION_MS, renderMotionFrame, sceneKenBurns, type MotionDocument, type MotionImage } from "../lib/motion-engine";
-import { EXIT_MS, drawPhotoComposition, linesFor } from "../lib/photo-composition";
+import { EXIT_MS, compositionLayout, drawPhotoComposition, eventDateParts, linesFor, statText } from "../lib/photo-composition";
+import { newCanvasDocument } from "../lib/canvas-document";
+import { fixtureDatabase } from "./fixtures";
 import { sceneFromPreset } from "../lib/scene-presets";
 
 function context() {
@@ -9,6 +11,7 @@ function context() {
     font: "", fillStyle: "", globalAlpha: 1, filter: "none", textAlign: "left", textBaseline: "top", globalCompositeOperation: "source-over",
     measureText(text: string) { return { width: text.length * Number(this.font.match(/([\d.]+)px/)?.[1] || 20) * .55 }; },
     save: vi.fn(), restore: vi.fn(), beginPath: vi.fn(), rect: vi.fn(), clip: vi.fn(), fillRect: vi.fn(), setTransform: vi.fn(),
+    roundRect: vi.fn(), fill: vi.fn(), stroke: vi.fn(), letterSpacing: "0px", lineWidth: 1, strokeStyle: "",
     drawImage: vi.fn(), fillText: vi.fn(), translate: vi.fn(), scale: vi.fn(),
     createLinearGradient: () => ({ addColorStop: vi.fn() }),
   };
@@ -109,5 +112,62 @@ describe("scene transitions", () => {
     expect(parsed.grain).toBe(true); expect(parsed.scenes[1]).toMatchObject({ animation: "letters", transition: "wipe", kenBurns: "pan-right" });
     expect(canvasEditorDocumentSchema.parse({ aspect: "4:5", fps: 30, scenes: [{ ...sceneFromPreset("hello"), zoom: false }] }).scenes[0].kenBurns).toBeUndefined();
     expect(() => canvasEditorDocumentSchema.parse({ ...doc("fade"), scenes: [{ ...doc("fade").scenes[0], animation: "bounce" }] })).toThrow();
+  });
+});
+
+describe("scene types", () => {
+  it("counts a number up to its final figure and draws it in accent", () => {
+    const scene = { ...sceneFromPreset("numbers"), statValue: 1234, statPrefix: "$", statSuffix: "+" };
+    expect(statText(scene, 0)).toBe("$0+");
+    expect(statText(scene, 3000)).toBe("$1,234+");
+    expect(Number(statText(scene, 800).replace(/[^0-9]/g, ""))).toBeGreaterThan(0);
+    const ctx = context();
+    drawPhotoComposition(ctx, scene, 1080, 1350, 3000, {});
+    const figure = vi.mocked(ctx.fillText).mock.calls.find(([text]) => text === "$1,234+");
+    expect(figure).toBeTruthy();
+    const layout = compositionLayout(context(), scene, 1080, 1350);
+    expect(layout.stat!.size).toBeGreaterThan(layout.regions.title.size * 3);
+    expect(layout.stat!.y).toBeLessThan(layout.regions.title.y);
+  });
+
+  it("lays list rows out under the headline, one per line, each with its own tick", () => {
+    const scene = { ...sceneFromPreset("included"), body: "Pools and courts\nGroup classes\n\nSauna" };
+    const layout = compositionLayout(context(), scene, 1080, 1350);
+    expect(layout.regions.body!.lines).toEqual(["Pools and courts", "Group classes", "Sauna"]);
+    expect(layout.regions.body!.y).toBeGreaterThan(layout.regions.title.y + layout.regions.title.height);
+    expect(layout.regions.subtitle.y).toBeGreaterThanOrEqual(layout.regions.body!.y + layout.regions.body!.height);
+    expect(layout.tick).toBeTruthy();
+    const settled = context();
+    drawPhotoComposition(settled, scene, 1080, 1350, 4000, {});
+    expect(vi.mocked(settled.fillText).mock.calls.map(([text]) => text)).toEqual(expect.arrayContaining(["Pools and courts", "Group classes", "Sauna"]));
+    const early = context();
+    drawPhotoComposition(early, scene, 1080, 1350, 250, {});
+    expect(vi.mocked(early.fillText).mock.calls.map(([text]) => text)).not.toContain("Sauna");
+  });
+
+  it("draws a Save the Date tile from an ISO date and says TBD until one is known", () => {
+    expect(eventDateParts("2026-09-18")).toEqual({ month: "SEP", day: "18", known: true });
+    expect(eventDateParts("")).toEqual({ month: "DATE", day: "TBD", known: false });
+    expect(eventDateParts("2026-13-40").known).toBe(false);
+    const scene = { ...sceneFromPreset("date"), eventDate: "2026-09-18" };
+    const ctx = context();
+    drawPhotoComposition(ctx, scene, 1920, 1080, 3000, {});
+    const drawn = vi.mocked(ctx.fillText).mock.calls.map(([text]) => text);
+    expect(drawn).toEqual(expect.arrayContaining(["SEP", "18"]));
+    expect(vi.mocked(ctx.roundRect)).toHaveBeenCalledTimes(1);
+    const wide = compositionLayout(context(), scene, 1920, 1080), tall = compositionLayout(context(), scene, 1080, 1920);
+    expect(wide.regions.title.x).toBeGreaterThan(wide.tile!.x + wide.tile!.w);
+    expect(tall.regions.title.y).toBeGreaterThan(tall.tile!.y + tall.tile!.h);
+  });
+
+  it("adds a Save the Date beat from a verified dated event, never from a class without a date", () => {
+    const db = fixtureDatabase();
+    const event = db.records.find((record) => record.id === "record-event")!;
+    const doc = newCanvasDocument(event, null, db.scheduleRules);
+    expect(doc.scenes.map((scene) => scene.template)).toEqual(["image", "calendar", "endcard"]);
+    expect(doc.scenes[1]).toMatchObject({ title: "Poolside Family Night", eventDate: "2026-09-18", subtitle: "6:30 PM–8:30 PM · Outdoor Pool" });
+    const klass = db.records.find((record) => record.id === "record-class")!;
+    expect(newCanvasDocument(klass, null, db.scheduleRules).scenes.map((scene) => scene.template)).toEqual(["image", "endcard"]);
+    expect(() => canvasEditorDocumentSchema.parse({ ...doc, scenes: [{ ...doc.scenes[1], eventDate: "next friday" }] })).toThrow();
   });
 });
