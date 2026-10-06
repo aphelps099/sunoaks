@@ -4,13 +4,17 @@ import { KEN_BURNS, MOTION_ANIMATIONS, MOTION_TRANSITIONS, type MotionDocument }
 import { formatTime, recordSchedule } from "./promotion";
 import { sceneFromPreset } from "./scene-presets";
 
+/** How long one scene may stay on screen, in milliseconds. The timeline trims in tenths of a second. */
+export const SCENE_LENGTH = { min: 1500, max: 12000, step: 100 } as const;
+export const clampSceneLength = (ms: number) => Math.min(SCENE_LENGTH.max, Math.max(SCENE_LENGTH.min, Math.round(ms / SCENE_LENGTH.step) * SCENE_LENGTH.step));
+
 export const canvasDocumentSchema = z.object({
   designVersion: z.literal(2),
   aspect: z.enum(["16:9", "1:1", "9:16", "4:5"]),
   fps: z.literal(30),
   scenes: z.array(z.object({
     id: z.string().min(1), template: z.enum(["title", "statement", "stat", "list", "quote", "image", "details", "calendar", "presenter", "disclaimer", "endcard"]),
-    duration: z.number().min(1500).max(12000), kicker: z.string().max(160), title: z.string().max(240), subtitle: z.string().max(400),
+    duration: z.number().min(SCENE_LENGTH.min).max(SCENE_LENGTH.max), kicker: z.string().max(160), title: z.string().max(240), subtitle: z.string().max(400),
     animation: z.enum(MOTION_ANIMATIONS), transition: z.enum(MOTION_TRANSITIONS), imageId: z.string().nullable(),
     position: z.enum(["top-left", "center-left", "bottom-left", "center", "bottom-center", "bottom-right"]).optional(),
     shade: z.number().min(0).max(1).optional(), zoom: z.boolean().optional(), kenBurns: z.enum(KEN_BURNS).optional(),

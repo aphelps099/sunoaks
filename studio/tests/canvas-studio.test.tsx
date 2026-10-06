@@ -138,6 +138,83 @@ describe("canvas workspace", () => {
   });
 });
 
+// jsdom has neither PointerEvent nor layout, so pointer gestures are mouse events carrying a pointer id,
+// and element boxes come from a stand-in: scene cards stack 130px apart, timeline clips sit 300px apart.
+const pointer = (element: Element, type: string, clientX: number, clientY: number) => {
+  const event = new MouseEvent(type, { bubbles: true, cancelable: true, clientX, clientY, button: 0 });
+  Object.defineProperty(event, "pointerId", { value: 1 }); Object.defineProperty(event, "pointerType", { value: "mouse" });
+  fireEvent(element, event);
+};
+const box = (left: number, top: number, width: number, height: number) => ({ left, top, width, height, right: left + width, bottom: top + height, x: left, y: top, toJSON: () => ({}) }) as DOMRect;
+const layout = () => vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
+  const index = Array.from(this.parentElement?.querySelectorAll(":scope > [data-reorder-item]") ?? []).indexOf(this);
+  if (this.classList.contains("cs-scene")) return box(0, index * 130, 140, 120);
+  if (this.classList.contains("cs-clip")) return box(index * 300, 0, 290, 38);
+  if (this.classList.contains("cs-track")) return box(0, 0, 1250, 38);
+  return box(0, 0, 0, 0);
+});
+const savedScenes = () => (db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).scenes;
+
+describe("timeline editing", () => {
+  it("changes a scene’s length by pulling its edge on the timeline, or with the keyboard", async () => {
+    layout();
+    render(<CanvasStudio {...props()} />);
+    const edge = screen.getByRole("slider", { name: "Length of scene 1" });
+    expect(edge).toHaveProperty("ariaValueNow", "5");
+    pointer(edge, "pointerdown", 100, 10);
+    pointer(edge, "pointermove", 160, 10);
+    expect(edge.getAttribute("aria-valuenow")).toBe("5.6");
+    expect(edge.getAttribute("aria-valuetext")).toBe("5.6s");
+    pointer(edge, "pointermove", 20, 10);
+    expect(edge.getAttribute("aria-valuenow")).toBe("4.2");
+    pointer(edge, "pointerup", 20, 10);
+    expect(screen.getByRole("button", { name: /^Scene 1:/ }).getAttribute("aria-current")).toBe("true");
+    expect((screen.getByLabelText(/Scene length/) as HTMLInputElement).value).toBe("4200");
+    fireEvent.keyDown(edge, { key: "ArrowRight" });
+    fireEvent.keyDown(edge, { key: "ArrowRight", shiftKey: true });
+    expect(edge.getAttribute("aria-valuenow")).toBe("5.7");
+    fireEvent.keyDown(edge, { key: "End" });
+    expect(edge.getAttribute("aria-valuenow")).toBe("12");
+    fireEvent.keyDown(edge, { key: "Home" });
+    expect(edge.getAttribute("aria-valuenow")).toBe("1.5");
+    pointer(edge, "pointerdown", 100, 10);
+    pointer(edge, "pointermove", 1600, 10);
+    pointer(edge, "pointerup", 1600, 10);
+    expect(edge.getAttribute("aria-valuenow")).toBe("12");
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    await waitFor(() => expect(savedScenes()[0].duration).toBe(12000), { timeout: 2500 });
+    expect(savedScenes().map((scene) => scene.duration)).toEqual([12000, 4000, 3500]);
+  });
+
+  it("moves scenes by dragging them in the scene list or on the timeline, or with Alt + arrows", async () => {
+    layout();
+    render(<CanvasStudio {...props()} />);
+    const titles = () => Array.from(document.querySelectorAll(".cs-clip-body i")).map((clip) => clip.textContent);
+    const [opener, energy, ending] = titles();
+    const card = () => document.querySelectorAll<HTMLButtonElement>(".cs-scene");
+    pointer(card()[0], "pointerdown", 50, 60);
+    pointer(card()[0], "pointermove", 50, 70);
+    pointer(card()[0], "pointermove", 50, 330);
+    expect(card()[0].className).toContain("is-dragging");
+    pointer(card()[0], "pointerup", 50, 330);
+    expect(titles()).toEqual([energy, ending, opener]);
+    expect(card()[2].getAttribute("aria-current")).toBe("true");
+    fireEvent.keyDown(card()[2], { key: "ArrowUp", altKey: true });
+    expect(titles()).toEqual([energy, opener, ending]);
+    const clip = () => document.querySelectorAll<HTMLButtonElement>(".cs-clip-body");
+    pointer(clip()[2], "pointerdown", 750, 20);
+    pointer(clip()[2], "pointermove", 740, 20);
+    pointer(clip()[2], "pointermove", 100, 20);
+    pointer(clip()[2], "pointerup", 100, 20);
+    expect(titles()).toEqual([ending, energy, opener]);
+    fireEvent.click(screen.getByRole("button", { name: "Undo" }));
+    expect(titles()).toEqual([energy, opener, ending]);
+    fireEvent.click(screen.getByRole("button", { name: "Redo" }));
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    await waitFor(() => expect(savedScenes().map((scene) => scene.title)).toEqual([ending, energy, opener]), { timeout: 2500 });
+  });
+});
+
 describe("canvas document persistence", () => {
   it("rejects unavailable media and malformed timing before writing a design", () => {
     const doc = newCanvasDocument(undefined, "library-asset-review");

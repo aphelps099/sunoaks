@@ -741,8 +741,10 @@ td small { display: block; color: var(--muted); font-size: 12px; }
 .cs-scenes { background:#fbfcfb; padding:20px 12px; border-right:1px solid var(--cs-line); overflow-y:auto; max-height:calc(100dvh - 146px); }
 .cs-panel-title { display:flex; align-items:center; justify-content:space-between; font-size:14px; font-weight:500; margin:0 0 12px; }
 .cs-panel-title>span { font-size:12px; color:var(--cs-muted); }
-.canvas-studio .cs-scene { display:block; width:100%; text-align:left; padding:5px; border:2px solid transparent; border-radius:5px; margin-bottom:14px; }
+.canvas-studio .cs-scene { position:relative; display:block; width:100%; text-align:left; padding:5px; border:2px solid transparent; border-radius:5px; margin-bottom:14px; cursor:grab; user-select:none; -webkit-user-select:none; transition:transform .18s ease, box-shadow .18s ease; }
 .canvas-studio .cs-scene.active { border-color:#d89e00; background:#fffae9; }
+.canvas-studio .cs-scene.is-dragging { cursor:grabbing; background:#fff; box-shadow:0 14px 32px #10303326; }
+.canvas-studio .cs-scene.is-dragging canvas { pointer-events:none; }
 .cs-scene canvas { display:block; width:100%; height:92px; object-fit:cover; border-radius:2px; }
 .cs-scene>span { display:flex; align-items:baseline; gap:5px; font-size:12px; margin-top:7px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .cs-scene b { font-weight:500; color:var(--cs-muted); }
@@ -757,9 +759,32 @@ td small { display: block; color: var(--muted); font-size: 12px; }
 .cs-icon { display:inline-grid; place-items:center; width:32px; height:32px; flex-shrink:0; }
 .cs-stage-hint { margin-left:auto; color:var(--cs-muted); }
 .cs-timeline { padding:4px 0 0; }
-.cs-timeline-labels { display:flex; gap:4px; }
-.cs-timeline-labels button { height:30px; padding:5px 8px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; background:#d7e1dd; border-radius:3px; text-align:left; }
 .cs-timeline input { width:100%; accent-color:#ad7e00; cursor:ew-resize; }
+/* One clip per scene, as wide as it is long. Drag to move; pull the right edge to trim. */
+.cs-track { position:relative; display:flex; gap:4px; height:38px; margin-bottom:6px; }
+.cs-track.is-trimming { overflow:hidden; }
+.cs-clip { position:relative; display:flex; flex:0 1 auto; min-width:0; transition:flex-basis .22s ease, transform .18s ease; }
+.cs-track.is-trimming .cs-clip { flex-shrink:0; transition:none; }
+.canvas-studio .cs-clip-body { flex:1; min-width:0; height:100%; display:flex; align-items:center; gap:6px; padding:0 16px 0 9px; border-radius:4px; background:#d7e1dd; color:var(--cs-ink); font-size:12px; text-align:left; white-space:nowrap; overflow:hidden; cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; transition:background .15s; }
+.canvas-studio .cs-clip-body:hover { background:#cdd9d4; }
+.cs-clip-body b { font-weight:500; color:var(--cs-muted); }
+.cs-clip-body i { font-style:normal; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.cs-clip-body small { margin-left:auto; padding-left:6px; font-size:11px; font-variant-numeric:tabular-nums; color:var(--cs-muted); }
+.cs-clip.active .cs-clip-body { background:#fff3c8; box-shadow:inset 0 0 0 1.5px #d89e00; }
+.cs-clip.active .cs-clip-body small { color:#7a5a00; }
+.cs-clip.is-dragging { z-index:3; }
+.cs-clip.is-dragging .cs-clip-body { cursor:grabbing; background:#fff; box-shadow:0 10px 24px #10303326, inset 0 0 0 1.5px #d89e00; }
+.cs-track.is-moving .cs-clip-body, .cs-track.is-moving .cs-trim { pointer-events:none; }
+.cs-track.is-moving .cs-clip.is-dragging .cs-clip-body { pointer-events:auto; }
+.cs-trim { position:absolute; top:0; right:0; bottom:0; width:14px; display:grid; place-items:center; border-radius:0 4px 4px 0; cursor:ew-resize; touch-action:none; user-select:none; }
+.cs-trim::before { content:""; width:3px; height:12px; border-radius:2px; background:#16343955; transition:background .15s, height .15s; }
+.cs-clip:hover .cs-trim::before, .cs-trim:focus-visible::before, .cs-clip.is-trimming .cs-trim::before { height:20px; background:var(--cs-ink); }
+.cs-trim:focus-visible { outline-offset:-3px; }
+.cs-clip.is-trimming .cs-clip-body small { color:var(--cs-ink); font-weight:600; }
+.cs-playhead { position:absolute; top:-4px; bottom:-4px; width:2px; margin-left:-1px; background:var(--cs-ink); pointer-events:none; }
+.cs-playhead::before { content:""; position:absolute; top:0; left:-4px; width:10px; height:5px; border-radius:0 0 3px 3px; background:var(--cs-ink); }
+.cs-timeline-hint { margin:2px 0 0; font-size:11px; color:var(--cs-muted); }
+@media(max-width:760px) { .cs-track { height:44px; } .cs-trim { width:22px; } .cs-trim::before { height:16px; } }
 .cs-inspector { padding:22px 22px 18px; overflow-y:auto; max-height:calc(100dvh - 146px); }
 .cs-inspector fieldset { border:0; margin:0; padding:0; min-width:0; }
 .cs-inspector-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:18px; }
@@ -878,4 +903,4 @@ td small { display: block; color: var(--muted); font-size: 12px; }
   .cs-logo-choices strong { font-size:14px; }
   .cs-text-empty { opacity:1; }
 }
-@media(prefers-reduced-motion:reduce) { .cs-preset>div { transition:none; } }
+@media(prefers-reduced-motion:reduce) { .cs-preset>div, .cs-clip, .canvas-studio .cs-scene { transition:none; } }
