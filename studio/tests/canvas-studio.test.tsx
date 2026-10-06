@@ -106,6 +106,25 @@ describe("canvas workspace", () => {
     expect(saved.scenes[1]).toMatchObject({ kenBurns: "pan-left", zoom: true });
   });
 
+  it("switches a scene to a number, a list, and a date from the inspector and saves their fields", async () => {
+    render(<CanvasStudio {...props()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Number" }));
+    fireEvent.change(screen.getByLabelText("Big number"), { target: { value: "48" } });
+    fireEvent.change(screen.getByLabelText("After"), { target: { value: "+" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add What’s included scene" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Edit list lines on canvas" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Edit list lines on canvas" }), { target: { value: "Lap lanes\nPickleball" } });
+    fireEvent.keyDown(screen.getByRole("textbox", { name: "Edit list lines on canvas" }), { key: "Escape" });
+    expect((screen.getByLabelText("List lines") as HTMLTextAreaElement).value).toBe("Lap lanes\nPickleball");
+    fireEvent.click(screen.getByRole("button", { name: "Date" }));
+    fireEvent.change(screen.getByLabelText("Event date"), { target: { value: "2026-10-31" } });
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    await waitFor(() => expect((db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).scenes[1].eventDate).toBe("2026-10-31"), { timeout: 2500 });
+    const saved = db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>;
+    expect(saved.scenes[0]).toMatchObject({ template: "stat", statValue: 48, statSuffix: "+", imageId: "library-asset-approved" });
+    expect(saved.scenes[1]).toMatchObject({ template: "calendar", body: "Lap lanes\nPickleball", eventDate: "2026-10-31" });
+  });
+
   it("preserves the draft and surfaces a save conflict", async () => {
     const doc = newCanvasDocument(undefined, "library-asset-approved");
     applyAction(actionRequestSchema.parse({ action: "saveCreativeProject", kind: "motion", recordId: null, title: "My design", payload: { editor: "canvas-v2", mode: "video", plannedDate: null, doc, artworks: [{ key: "canvas-preview", dataUrl: "data:image/jpeg;base64,preview" }] } }), db);

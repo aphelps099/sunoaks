@@ -12,6 +12,16 @@ export const MOTION_ASPECTS = {
 
 export type MotionAspect = keyof typeof MOTION_ASPECTS;
 export type MotionTemplate = "title" | "statement" | "stat" | "list" | "quote" | "image" | "details" | "calendar" | "presenter" | "disclaimer" | "endcard";
+/** The scene types the canvas draws. Older template ids still load and fall back to a type scene. */
+export const CANVAS_TEMPLATES = [
+  { id: "image", label: "Photo" }, { id: "title", label: "Type" }, { id: "stat", label: "Number" },
+  { id: "list", label: "List" }, { id: "calendar", label: "Date" }, { id: "endcard", label: "Logo" },
+] as const;
+export type CanvasTemplate = typeof CANVAS_TEMPLATES[number]["id"];
+export function canvasTemplate(scene: Pick<MotionScene, "template">): CanvasTemplate {
+  const known = CANVAS_TEMPLATES.find((item) => item.id === scene.template);
+  return known ? known.id : "title";
+}
 export const MOTION_ANIMATIONS = ["stagger", "rise", "fade", "scale", "wipe", "words", "letters", "typewriter", "blur"] as const;
 export type MotionAnimation = typeof MOTION_ANIMATIONS[number];
 export const MOTION_TRANSITIONS = ["cut", "fade", "slide", "wipe"] as const;
@@ -35,6 +45,12 @@ export type MotionScene = {
   shade?: number; zoom?: boolean; focalX?: number; focalY?: number;
   /** Photo movement. `zoom: false` turns it off; otherwise defaults to a slow push in. */
   kenBurns?: KenBurns;
+  /** List scenes: one line per row. */
+  body?: string;
+  /** Number scenes: the figure that counts up, with optional text before and after it. */
+  statValue?: number; statPrefix?: string; statSuffix?: string;
+  /** Save the Date scenes: an ISO date (YYYY-MM-DD) drawn on the date tile. Empty until a real date is known. */
+  eventDate?: string;
   styleId?: SceneStyleId;
   logoStyle?: LogoStyle;
 };

@@ -4,8 +4,8 @@ import { useEffect, useState, type RefObject } from "react";
 import { compositionLayout, type CanvasTextField } from "@/lib/photo-composition";
 import { MOTION_ASPECTS, type MotionDocument, type MotionScene } from "@/lib/motion-engine";
 
-const labels = { title: "headline", subtitle: "small line", kicker: "small label" };
-const limits = { title: 240, subtitle: 400, kicker: 160 };
+const labels = { title: "headline", subtitle: "small line", kicker: "small label", body: "list lines" };
+const limits = { title: 240, subtitle: 400, kicker: 160, body: 600 };
 type Props = { canvasRef: RefObject<HTMLCanvasElement | null>; scene: MotionScene; aspect: MotionDocument["aspect"]; ready: boolean; onChange: (patch: Partial<MotionScene>) => void };
 
 export default function CanvasTextEditor({ canvasRef, scene, aspect, ready, onChange }: Props) {
@@ -28,11 +28,12 @@ export default function CanvasTextEditor({ canvasRef, scene, aspect, ready, onCh
 
   if (!geometry) return null;
   return <div className="cs-text-targets" aria-label="Edit canvas text">
-    {(["kicker", "title", "subtitle"] as const).map((name) => {
-      const region = geometry.layout.regions[name];
+    {(["kicker", "title", "subtitle", "body"] as const).filter((name) => geometry.layout.regions[name]).map((name) => {
+      const region = geometry.layout.regions[name]!;
+      const value = scene[name] ?? "";
       const style = { left: geometry.left + region.x * geometry.scale, top: geometry.top + region.y * geometry.scale, width: region.width * geometry.scale, height: Math.max(22, region.height * geometry.scale), textAlign: geometry.layout.align };
-      return field === name ? <textarea key={name} autoFocus aria-label={`Edit ${labels[name]} on canvas`} className="cs-inline-text" maxLength={limits[name]} value={scene[name]} style={{ ...style, fontSize: Math.max(14, region.size * geometry.scale), lineHeight: region.lineHeight, fontWeight: name === "title" ? 600 : 400 }} onFocus={(event) => event.target.select()} onChange={(event) => onChange({ [name]: event.target.value })} onBlur={() => setField(null)} onKeyDown={(event) => { if (event.key === "Escape" || (event.key === "Enter" && (event.metaKey || event.ctrlKey))) { event.preventDefault(); setField(null); } }} />
-        : <button key={name} className={`cs-text-target ${scene[name] ? "" : "cs-text-empty"}`} aria-label={`Edit ${labels[name]} on canvas`} style={style} onClick={() => setField(name)}><span>{scene[name] ? `Edit ${labels[name]}` : `+ Add ${labels[name]}`}</span></button>;
+      return field === name ? <textarea key={name} autoFocus aria-label={`Edit ${labels[name]} on canvas`} className="cs-inline-text" maxLength={limits[name]} value={value} style={{ ...style, fontSize: Math.max(14, region.size * geometry.scale), lineHeight: region.lineHeight, fontWeight: name === "title" ? 600 : 400 }} onFocus={(event) => event.target.select()} onChange={(event) => onChange({ [name]: event.target.value })} onBlur={() => setField(null)} onKeyDown={(event) => { if (event.key === "Escape" || (event.key === "Enter" && (event.metaKey || event.ctrlKey))) { event.preventDefault(); setField(null); } }} />
+        : <button key={name} className={`cs-text-target ${value ? "" : "cs-text-empty"}`} aria-label={`Edit ${labels[name]} on canvas`} style={style} onClick={() => setField(name)}><span>{value ? `Edit ${labels[name]}` : `+ Add ${labels[name]}`}</span></button>;
     })}
   </div>;
 }
