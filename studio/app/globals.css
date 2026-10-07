@@ -791,7 +791,8 @@ td small { display: block; color: var(--muted); font-size: 12px; }
 .cs-inspector-head strong { font-size:16px; font-weight:500; }
 .canvas-studio .cs-link { display:inline-flex; align-items:center; gap:5px; padding:0; color:#087582; font-size:12px; text-decoration:underline; text-underline-offset:3px; }
 .cs-inspector label { display:block; font-size:14px; margin-bottom:16px; }
-.cs-inspector textarea, .cs-inspector input:not([type=range]):not([type=checkbox]), .cs-inspector select { width:100%; display:block; border:1px solid #dce3df; border-radius:6px; padding:10px; background:#fbfcfb; color:var(--cs-ink); margin-top:6px; }
+.cs-inspector input[hidden] { display:none; }
+.cs-inspector textarea, .cs-inspector input:not([type=range]):not([type=checkbox]):not([type=file]), .cs-inspector select { width:100%; display:block; border:1px solid #dce3df; border-radius:6px; padding:10px; background:#fbfcfb; color:var(--cs-ink); margin-top:6px; }
 .cs-inspector textarea { resize:vertical; }
 .cs-inspector #cs-headline { font-size:22px; line-height:1.2; font-weight:500; min-height:103px; }
 .cs-photos { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; max-height:146px; overflow:auto; margin-bottom:14px; }
@@ -904,3 +905,31 @@ td small { display: block; color: var(--muted); font-size: 12px; }
   .cs-text-empty { opacity:1; }
 }
 @media(prefers-reduced-motion:reduce) { .cs-preset>div, .cs-clip, .canvas-studio .cs-scene { transition:none; } }
+
+/* Phase 3: a start step, grouped controls, size buttons, and quieter motion in the chrome. */
+.cs-start { position:relative; display:flex; align-items:center; gap:20px; padding:16px 18px; margin-bottom:14px; background:#fff; border:1px solid #d3ddd7; border-radius:10px; animation:cs-rise .32s ease both; }
+.cs-start-copy { display:flex; flex-direction:column; gap:2px; min-width:170px; }
+.cs-start-copy strong { font-size:18px; font-weight:500; }
+.cs-start-copy span { font-size:13px; color:var(--cs-muted); }
+.cs-start-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; flex:1; }
+.canvas-studio .cs-start-cards button { display:flex; flex-direction:column; align-items:flex-start; gap:4px; padding:12px 14px; text-align:left; border:1px solid var(--cs-line); border-radius:8px; background:#fbfcfb; transition:border-color .15s, background .15s, transform .15s; }
+.canvas-studio .cs-start-cards button:hover, .canvas-studio .cs-start-cards button:focus-visible { border-color:#c48d00; background:#fffae9; transform:translateY(-1px); }
+.cs-start-cards svg { color:#ad7e00; }
+.cs-start-cards strong { font-size:14px; font-weight:600; }
+.cs-start-cards small { font-size:12px; line-height:1.4; color:var(--cs-muted); }
+.cs-start-close { position:absolute; top:6px; right:6px; color:var(--cs-muted); }
+.cs-group { padding-bottom:6px; margin-bottom:18px; border-bottom:1px solid var(--cs-line); }
+.cs-group .cs-inspector-head { margin-bottom:14px; }
+.cs-group .cs-inspector-head strong { font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--cs-muted); }
+.cs-sizes button { display:inline-flex; align-items:center; gap:7px; font-size:13px; padding:7px 11px; }
+.cs-sizes i { display:block; height:14px; border:1.5px solid currentColor; border-radius:2px; opacity:.75; }
+.cs-sizes button.active i { opacity:1; border-color:#ad7e00; }
+.cs-stage.is-loading { background:linear-gradient(110deg,#e4e9e6 30%,#eef1ef 50%,#e4e9e6 70%); background-size:200% 100%; animation:cs-shimmer 1.6s linear infinite; border-radius:6px; }
+.canvas-studio .cs-scene, .cs-clip { animation:cs-rise .28s ease both; }
+.cs-colors button>span, .cs-logo-choices button, .cs-positions button, .cs-segment button { transition:background .15s, outline-color .15s, box-shadow .15s, transform .15s; }
+.cs-colors button:hover>span { transform:translateY(-1px); }
+@keyframes cs-rise { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+@keyframes cs-shimmer { from { background-position:200% 0; } to { background-position:-200% 0; } }
+@media(max-width:1050px) { .cs-start { flex-direction:column; align-items:stretch; } .cs-start-cards { grid-template-columns:1fr; } .cs-sizes button { padding:7px 8px; font-size:12px; } }
+@media(max-width:760px) { .cs-toolbar>.cs-sizes { grid-column:1/-1; } }
+@media(prefers-reduced-motion:reduce) { .cs-start, .canvas-studio .cs-scene, .cs-clip, .cs-stage.is-loading { animation:none; } }
