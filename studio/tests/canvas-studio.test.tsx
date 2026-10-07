@@ -138,6 +138,59 @@ describe("canvas workspace", () => {
   });
 });
 
+describe("start step and shortcuts", () => {
+  it("opens a fresh design with a start step that hides once work begins and returns for a new design", async () => {
+    render(<CanvasStudio {...props()} />);
+    expect(screen.getByText("What are you promoting?")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: /A class or event/ }));
+    expect(screen.getByRole("button", { name: /Poolside Family Night/ })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Close panel" }));
+    fireEvent.click(screen.getByRole("button", { name: /Start with this/ }));
+    expect(screen.queryByText("What are you promoting?")).toBeNull();
+    fireEvent.change(screen.getByLabelText("Headline"), { target: { value: "Open swim all week." } });
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    fireEvent.click(screen.getByRole("button", { name: "New design" }));
+    await screen.findByText("What are you promoting?");
+    fireEvent.change(screen.getByLabelText("Small label"), { target: { value: "THIS WEEK" } });
+    expect(screen.queryByText("What are you promoting?")).toBeNull();
+  });
+
+  it("plays, steps, deletes, and undoes from the keyboard without touching text fields, and undo keeps the selection", async () => {
+    render(<CanvasStudio {...props()} />);
+    const play = () => screen.getByRole("button", { name: /Play preview|Pause preview/ });
+    fireEvent.keyDown(window, { key: " " });
+    expect(play().getAttribute("aria-label")).toBe("Pause preview");
+    fireEvent.keyDown(window, { key: " " });
+    expect(play().getAttribute("aria-label")).toBe("Play preview");
+    const headline = screen.getByLabelText("Headline") as HTMLTextAreaElement;
+    headline.focus();
+    fireEvent.keyDown(headline, { key: " " });
+    expect(play().getAttribute("aria-label")).toBe("Play preview");
+    fireEvent.keyDown(window, { key: "Home" });
+    fireEvent.keyDown(window, { key: "ArrowRight", shiftKey: true });
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect((screen.getByLabelText("Video playhead") as HTMLInputElement).value).toBe(String(Math.round(1000 + 1000 / 30)));
+    const cards = () => document.querySelectorAll<HTMLButtonElement>(".cs-scene");
+    expect(cards()).toHaveLength(3);
+    fireEvent.click(cards()[1]);
+    cards()[1].focus();
+    fireEvent.keyDown(cards()[1], { key: "Delete" });
+    expect(cards()).toHaveLength(2);
+    expect(cards()[0].getAttribute("aria-current")).toBe("true");
+    fireEvent.click(cards()[1]);
+    fireEvent.change(screen.getByLabelText("Headline"), { target: { value: "Changed ending." } });
+    fireEvent.keyDown(window, { key: "z", metaKey: true });
+    expect((screen.getByLabelText("Headline") as HTMLTextAreaElement).value).toBe("See you\nat Sun Oaks.");
+    expect(cards()[1].getAttribute("aria-current")).toBe("true");
+    fireEvent.keyDown(window, { key: "z", metaKey: true, shiftKey: true });
+    expect((screen.getByLabelText("Headline") as HTMLTextAreaElement).value).toBe("Changed ending.");
+    fireEvent.click(screen.getByRole("button", { name: "Story · 9:16" }));
+    await waitFor(() => expect(db.creativeProjects).toHaveLength(1), { timeout: 2500 });
+    await waitFor(() => expect((db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).aspect).toBe("9:16"), { timeout: 2500 });
+    expect((db.creativeProjects[0].payload.doc as ReturnType<typeof newCanvasDocument>).scenes).toHaveLength(2);
+  });
+});
+
 // jsdom has neither PointerEvent nor layout, so pointer gestures are mouse events carrying a pointer id,
 // and element boxes come from a stand-in: scene cards stack 130px apart, timeline clips sit 300px apart.
 const pointer = (element: Element, type: string, clientX: number, clientY: number) => {
